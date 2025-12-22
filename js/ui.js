@@ -1,5 +1,5 @@
 import { loadMeds } from './data.js';
-import { calcularPesoEstimado, urgenciaFormulas, intubacionFormulas, formatDosis } from './logic.js';
+import { calcularPesoEstimado, obtenerParametrosDeMATRIZ1, obtenerParametrosDeMATRIZ2, urgenciaFormulas, intubacionFormulas, formatDosis } from './logic.js';
 import { setPatientData, getPatientData, setHeaderValues } from './state.js';
 import { compute, DRUGS } from './perfusiones.config.js';
 
@@ -573,27 +573,29 @@ function setupViaAerea(){
   const clearBtn = document.getElementById('limpiarViaAerea');
   const resultadoDiv = document.getElementById('resultadoViaAerea');
   
-  // Función para calcular parámetros de vía aérea
+  // Función para calcular parámetros de vía aérea usando MATRIZ 1 o MATRIZ 2
   function calculateAirway(edad, peso) {
-    // Fórmulas pediátricas estándar
+    // Decidir qué matriz usar: MATRIZ 1 para neonatos/lactantes pequeños, MATRIZ 2 para el resto
+    let ettSize, ettDepth, sondaAspiracion;
     
-    // ETT size
-    const ettCuffed = (edad / 4 + 3.5).toFixed(1);
-    const ettUncuffed = (edad / 4 + 4).toFixed(1);
-    let ettSize = `#${ettCuffed} con balón / #${ettUncuffed} sin balón`;
-    
-    if (edad < 1) {
-      ettSize = '#3.0 - 3.5 (neonato/lactante)';
-    } else if (edad < 2) {
-      ettSize = '#3.5 - 4.0';
+    // MATRIZ 1 se usa para neonatos y lactantes muy pequeños (peso <= 3.1 kg)
+    if (peso <= 3.1) {
+      const matriz1 = obtenerParametrosDeMATRIZ1(peso);
+      const ettSinBalon = matriz1.ettSinBalon;
+      ettSize = `#${ettSinBalon} sin balón (neonato/lactante pequeño)`;
+      ettDepth = matriz1.ettLongitud;
+      sondaAspiracion = `${matriz1.sondaAspiracion} Fr`;
+    } else {
+      // MATRIZ 2 para el resto de población pediátrica
+      const matriz2 = obtenerParametrosDeMATRIZ2(edad);
+      const ettCuffed = matriz2.ettConBalon;
+      const ettUncuffed = (parseFloat(ettCuffed) + 0.5).toFixed(1);
+      ettSize = `#${ettCuffed} con balón / #${ettUncuffed} sin balón`;
+      ettDepth = matriz2.ettOral;
+      sondaAspiracion = `${matriz2.sondaAspiracion} Fr`;
     }
     
-    // ETT depth (profundidad = edad/2 + 12)
-    let ettDepth = (edad / 2 + 12).toFixed(0);
-    if (edad < 1) ettDepth = '9-10';
-    else if (edad < 2) ettDepth = '11-12';
-    
-    // Laryngoscope blade
+    // Laryngoscope blade (basado en edad)
     let laryngoBlade = '2 recta o curva';
     if (edad < 1) laryngoBlade = '0-1 recta';
     else if (edad < 2) laryngoBlade = '1 recta';
@@ -621,14 +623,17 @@ function setupViaAerea(){
     const cardio3 = (peso * 2).toFixed(0);
     const cardioversionDose = `${cardio1} J → ${cardio2} J → ${cardio3} J`;
     
-    // Sonda vesical (peso * 2 Fr)
-    const sondaVesical = `${(peso * 2).toFixed(0)} Fr`;
-    
-    // Sonda de aspiración (ETT * 2)
-    const sondaAspiracion = `${(parseFloat(ettCuffed) * 2).toFixed(0)} Fr`;
-    
-    // Tubo de tórax ((peso/2) + 10 Fr)
-    const tuboTorax = `${((peso / 2) + 10).toFixed(0)} Fr`;
+    // Sonda vesical y tubo de tórax (de MATRIZ 2, no aplica para MATRIZ 1)
+    let sondaVesical, tuboTorax;
+    if (peso > 3.1) {
+      const matriz2 = obtenerParametrosDeMATRIZ2(edad);
+      sondaVesical = `${matriz2.sondaVesical} Fr`;
+      tuboTorax = `${matriz2.tuboTorax} Fr`;
+    } else {
+      // Para neonatos muy pequeños, usar valores estándar básicos
+      sondaVesical = '6 Fr';
+      tuboTorax = '10 Fr';
+    }
     
     return {
       ettSize,

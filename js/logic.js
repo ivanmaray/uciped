@@ -1,3 +1,85 @@
+// MATRIZ 1: Tabla auxiliar para neonatos y lactantes pequeños basada en PESO
+// [peso_kg, ETT_sin_balón_mm, ETT_longitud_cm, sonda_aspiracion_fr, mascarilla_facial]
+const MATRIZ_1 = [
+  [0.7, 2.5, 7.5, 9, 5],
+  [1.1, 2.5, 8.0, 9.5, 5],
+  [1.6, 3.0, 8.5, 10, 6],
+  [2.1, 3.0, 9.0, 10.5, 6],
+  [2.6, 3.0, 9.5, 11, 6],
+  [3.1, 3.0, 10.5, 13, 6]
+];
+
+// MATRIZ 2: Tabla base para seleccionar tamaños de material pediátrico por edad en días
+// [edad_dias, ETT_con_balón_mm, ETT_oral_cm, ETT_nasal_cm, sonda_aspiracion_fr, sonda_vesical_fr, tubo_torax_fr]
+const MATRIZ_2 = [
+  [0, 3.5, 11, 14, 6, 6, 10],
+  [90, 4.0, 12, 15, 8, 6, 10],
+  [180, 4.0, 12.5, 15.5, 8, 6, 10],
+  [365, 4.5, 13, 16, 10, 6, 12],
+  [730, 5.0, 13.5, 16.5, 10, 8, 12],
+  [1095, 5.0, 14, 17, 10, 8, 16],
+  [1460, 5.5, 14.5, 17.5, 10, 8, 16],
+  [1825, 5.5, 15, 18, 10, 8, 16],
+  [2190, 6.0, 15.5, 18.5, 10, 8, 16],
+  [2555, 6.0, 16, 19, 10, 8, 16],
+  [2920, 6.5, 16.5, 19.5, 10, 8, 16],
+  [3285, 6.5, 17, 20, 10, 8, 16],
+  [3650, 7.0, 17.5, 20.5, 10, 10, 18],
+  [4015, 7.0, 18, 21, 12, 10, 18],
+  [4380, 7.5, 18.5, 21.5, 12, 10, 18],
+  [4745, 7.5, 21, 24, 12, 10, 20],
+  [5110, 8.0, 21, 24, 12, 12, 20]
+];
+
+// Función para buscar valores en MATRIZ 1 (basada en peso)
+// Retorna un objeto con los valores para neonatos y lactantes pequeños
+export function obtenerParametrosDeMATRIZ1(pesoEnKg) {
+  // Buscar la fila más cercana por debajo
+  let filaSeleccionada = MATRIZ_1[0];
+  for (let i = 0; i < MATRIZ_1.length; i++) {
+    if (MATRIZ_1[i][0] <= pesoEnKg) {
+      filaSeleccionada = MATRIZ_1[i];
+    } else {
+      break;
+    }
+  }
+  
+  return {
+    ettSinBalon: filaSeleccionada[1],
+    ettLongitud: filaSeleccionada[2],
+    sondaAspiracion: filaSeleccionada[3],
+    mascarillaFacial: filaSeleccionada[4],
+    pesoUsado: filaSeleccionada[0]
+  };
+}
+
+// Función para buscar valores en MATRIZ 2
+// Retorna un objeto con los valores para los diferentes dispositivos
+export function obtenerParametrosDeMATRIZ2(edadEnYears) {
+  // Convertir años a días
+  const edadEnDias = Math.round(edadEnYears * 365.25);
+  
+  // Buscar la fila más cercana por debajo
+  let filaSeleccionada = MATRIZ_2[0];
+  for (let i = 0; i < MATRIZ_2.length; i++) {
+    if (MATRIZ_2[i][0] <= edadEnDias) {
+      filaSeleccionada = MATRIZ_2[i];
+    } else {
+      break;
+    }
+  }
+  
+  return {
+    ettConBalon: filaSeleccionada[1],
+    ettOral: filaSeleccionada[2],
+    ettNasal: filaSeleccionada[3],
+    sondaAspiracion: filaSeleccionada[4],
+    sondaVesical: filaSeleccionada[5],
+    tuboTorax: filaSeleccionada[6],
+    edadDiasUsada: filaSeleccionada[0]
+  };
+}
+
 // Cálculos puros (sin DOM)
 export function calcularPesoEstimado(edad) {
   let peso = 0;
@@ -7,8 +89,8 @@ export function calcularPesoEstimado(edad) {
     peso = 3.5 + (meses * 0.5);
     formula = `3.5 + (${meses} meses × 0.5)`;
   } else if (edad >= 1 && edad < 3) {
-    peso = (edad + 9) * 2;
-    formula = `(${edad} + 9) × 2`;
+    peso = (edad * 2) + 9;
+    formula = `(${edad} × 2) + 9`;
   } else if (edad >= 3 && edad < 6) {
     peso = (edad * 2) + 8;
     formula = `(${edad} × 2) + 8`;
