@@ -1496,8 +1496,11 @@ select:focus {
     padding: 0.6rem 0.8rem;
     border-bottom: 1px solid var(--border-color);
     font-size: 0.9rem;
-    white-space: pre-wrap;
     word-break: break-word;
+}
+
+.medicines-table td > div {
+    margin: 0.2rem 0;
 }
 
 .medicines-table tbody tr {
@@ -1607,6 +1610,10 @@ select:focus {
 .med-info-value {
     color: var(--text-primary);
     flex: 1;
+}
+
+.med-info-value > div {
+    margin: 0.15rem 0;
 }
 
 @keyframes popupSlideIn {

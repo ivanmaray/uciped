@@ -717,8 +717,10 @@ function setupIntubacion(){
       
       // Calcular volumen en mL basado en dosis y concentración
       let volumeML = '-';
+      let volumeMLHtml = '-';
       let concentracionDisplay = '';
       let presentacionDisplay = presentacionText;
+      let presentacionDisplayHtml = presentacionText;
       
       // Check si hay múltiples concentraciones
       if (meta.concentraciones && Array.isArray(meta.concentraciones)) {
@@ -730,16 +732,20 @@ function setupIntubacion(){
           volumesArray.push(`${vol} mL (${concObj.desc})`);
           presentacionesArray.push(concObj.desc);
         }
-        volumeML = volumesArray.join('<br>');
-        presentacionDisplay = presentacionesArray.join('<br>');
+        volumeML = volumesArray.join('\n');
+        volumeMLHtml = volumesArray.map(v => `<div>${v}</div>`).join('');
+        presentacionDisplay = presentacionesArray.join('\n');
+        presentacionDisplayHtml = presentacionesArray.map(p => `<div>${p}</div>`).join('');
         concentracionDisplay = 'Múltiples opciones disponibles';
       } else {
         // Single concentration
         let concentracion = meta.concentracion_mg_ml || meta.concentracion_mcg_ml;
         if (concentracion && dosis_valor > 0) {
           volumeML = (dosis_valor / concentracion).toFixed(2);
+          volumeMLHtml = volumeML;
           concentracionDisplay = `${concentracion} ${meta.unidad || ''}/mL`;
         }
+        presentacionDisplayHtml = presentacionText;
       }
       
       tableHTML += `
@@ -759,7 +765,7 @@ function setupIntubacion(){
                 </div>
                 <div class="med-info-row">
                   <div class="med-info-label">Volumen (mL):</div>
-                  <div class="med-info-value" style="white-space: pre-wrap;">${volumeML}</div>
+                  <div class="med-info-value">${volumeMLHtml}</div>
                 </div>
                 ${concentracionDisplay ? `<div class="med-info-row">
                   <div class="med-info-label">Concentración:</div>
@@ -767,7 +773,7 @@ function setupIntubacion(){
                 </div>` : ''}
                 <div class="med-info-row">
                   <div class="med-info-label">Presentación:</div>
-                  <div class="med-info-value" style="white-space: pre-wrap;">${presentacionDisplay}</div>
+                  <div class="med-info-value">${presentacionDisplayHtml}</div>
                 </div>
                 <div class="med-info-row">
                   <div class="med-info-label">Dilución:</div>
@@ -781,8 +787,8 @@ function setupIntubacion(){
             </div>
           </td>
           <td class="dosis-col">${dosis} ${meta.unidad || ''}</td>
-          <td class="dosis-col" style="font-weight: 600; color: #2196F3;">${volumeML}</td>
-          <td>${presentacionDisplay}</td>
+          <td class="dosis-col" style="font-weight: 600; color: #2196F3;">${volumeMLHtml}</td>
+          <td>${presentacionDisplayHtml}</td>
           <td>${dilucionText}</td>
         </tr>`;
     }
