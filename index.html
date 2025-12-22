@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCI Pediatría - Calculadora de Parámetros</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Encabezado -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">
+                    <i class="fas fa-heartbeat"></i> UCI PEDIATRÍA
+                </h1>
+                <div class="version">v1.0.0 | 16/12/2024</div>
+            </div>
+        </header>
+        <div id="dataLoadWarning" class="result-box hidden" style="margin:10px 0; color:#b00020; font-weight:600;">
+            No se pudo cargar datos de medicamentos. Se muestran placeholders.
+        </div>
+
+        <!-- Datos del paciente -->
+        <section class="patient-section">
+            <div class="patient-wrapper">
+                <div class="patient-input-group">
+                    <label for="headerEdadInput">Edad</label>
+                    <div class="input-row">
+                        <input type="number" id="headerEdadInput" placeholder="años" min="0" max="18" step="0.5" value="">
+                        <span class="input-unit">años</span>
+                    </div>
+                </div>
+
+                <div class="patient-input-group">
+                    <label for="headerPesoInput">Peso</label>
+                    <div class="input-row">
+                        <input type="number" id="headerPesoInput" placeholder="kg" min="0" step="0.1" value="">
+                        <span class="input-unit">kg</span>
+                    </div>
+                </div>
+
+                <div class="weight-estimator">
+                    <button id="estimarPesoBtn" class="btn-estimator" title="Estimar peso por edad">
+                        <i class="fas fa-calculator"></i>
+                        <span>Estimar Peso</span>
+                    </button>
+                </div>
+
+                <div class="patient-actions">
+                    <button id="calcularHeroBtn" class="btn-action" title="Calcular pestaña activa">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button id="limpiarHeroBtn" class="btn-action" title="Limpiar resultados pestaña activa">
+                        <i class="fas fa-eraser"></i>
+                    </button>
+                    <button id="limpiarPacienteBtn" class="btn-action" title="Limpiar datos">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                    <button id="infoBtn" class="btn-action" title="Ver fórmulas">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navegación de pestañas -->
+        <nav class="tab-navigation">
+            <button class="tab-btn active" data-tab="viaaerea"><i class="fas fa-procedures"></i> Vía Aérea</button>
+            <button class="tab-btn" data-tab="intubacion"><i class="fas fa-lungs"></i> Intubación</button>
+            <button class="tab-btn" data-tab="ventilacion"><i class="fas fa-wind"></i> Ventilación</button>
+            <button class="tab-btn" data-tab="urgencia"><i class="fas fa-bolt"></i> Urgencia</button>
+            <button class="tab-btn" data-tab="perfusiones"><i class="fas fa-syringe"></i> Perfusiones</button>
+            <button class="tab-btn" data-tab="signos"><i class="fas fa-heart"></i> Signos Vitales</button>
+            <button class="tab-btn" data-tab="formulas"><i class="fas fa-calculator"></i> Fórmulas</button>
+        </nav>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <div class="tab-content">
+                <!-- Vía Aérea -->
+                <section id="viaaerea" class="tab-panel active">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Vía Aérea y Desfibrilación</h2>
+                            <p>Parámetros de equipo y energía calculados según edad y peso del paciente.</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="button-group toolbar-hidden">
+                                <button id="calcularViaAerea" class="btn btn-primary"><i class="fas fa-calculator"></i> Calcular</button>
+                                <button id="limpiarViaAerea" class="btn btn-secondary"><i class="fas fa-redo"></i> Limpiar</button>
+                            </div>
+                            
+                            <div id="resultadoViaAerea" class="result-box hidden">
+                                <h3><i class="fas fa-lungs"></i> Vía Aérea</h3>
+                                <table class="medicines-table">
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Tubo Endotraqueal (ETT)</strong></td>
+                                            <td id="ettSize">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Profundidad ETT</strong></td>
+                                            <td id="ettDepth">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Hoja de Laringoscopio</strong></td>
+                                            <td id="laryngoBlade">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Máscara Laríngea (LMA)</strong></td>
+                                            <td id="lmaSize">-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <h3><i class="fas fa-heartbeat"></i> Desfibrilación</h3>
+                                <table class="medicines-table">
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Desfibrilación (2-4 J/kg)</strong></td>
+                                            <td id="defibDose">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Cardioversión Sincronizada</strong></td>
+                                            <td id="cardioversionDose">-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <div class="info-note" style="margin-top: 16px;">
+                                    <i class="fas fa-book-medical"></i>
+                                    <div>
+                                        <strong>Referencias:</strong>
+                                        <ul style="margin: 8px 0 0 0; padding-left: 20px; font-size: 0.9em;">
+                                            <li>Tubo endotraqueal: Fórmula de Cole (edad/4 + 4 sin balón; edad/4 + 3.5 con balón) - Pediatric Advanced Life Support (PALS) 2020</li>
+                                            <li>Profundidad ETT: edad/2 + 12 cm (regla de Motoyama) - Pediatric Anesthesia Handbook</li>
+                                            <li>LMA: Selección por peso - Brain LMA® sizing chart, PALS guidelines</li>
+                                            <li>Desfibrilación: 2-4 J/kg (inicial 2 J/kg) - AHA PALS/ACLS Guidelines 2020</li>
+                                            <li>Cardioversión sincronizada: 0.5-1-2 J/kg progresiva - European Resuscitation Council Paediatric Guidelines 2021</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Intubación -->
+                <section id="intubacion" class="tab-panel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Medicamentos para Intubación</h2>
+                            <p>Dosis de sedación, analgesia y relajación muscular.</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="button-group toolbar-hidden">
+                                <button id="calcularIntubacion" class="btn btn-primary"><i class="fas fa-calculator"></i> Calcular</button>
+                                <button id="limpiarIntubacion" class="btn btn-secondary"><i class="fas fa-redo"></i> Limpiar</button>
+                            </div>
+                            
+                            <div id="resultadoIntubacion" class="result-box hidden">
+                                <h3><i class="fas fa-pills"></i> Medicamentos para Intubación</h3>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Ventilación -->
+                <section id="ventilacion" class="tab-panel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Ventilación Mecánica Inicial</h2>
+                            <p>Parámetros de arranque ajustados por edad y peso.</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="input-group" style="max-width:320px; margin-bottom:12px;">
+                                <label for="ventModeSelect">Modo</label>
+                                <select id="ventModeSelect">
+                                    <option value="VC">VC</option>
+                                    <option value="PC">PC</option>
+                                    <option value="PSV">PSV</option>
+                                </select>
+                            </div>
+                            <div class="button-group toolbar-hidden">
+                                <button id="calcularVentilacion" class="btn btn-primary"><i class="fas fa-calculator"></i> Calcular</button>
+                                <button id="limpiarVentilacion" class="btn btn-secondary"><i class="fas fa-redo"></i> Limpiar</button>
+                            </div>
+
+                            <div id="resultadoVentilacion" class="result-box hidden">
+                                <h3><i class="fas fa-wind"></i> Parámetros Sugeridos</h3>
+                                <table class="medicines-table">
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Modo seleccionado</strong></td>
+                                            <td id="ventModeParams">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Volumen tidal</strong></td>
+                                            <td id="ventVt">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Frecuencia respiratoria</strong></td>
+                                            <td id="ventFr">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>PEEP</strong></td>
+                                            <td id="ventPeep">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>FiO2 inicial</strong></td>
+                                            <td id="ventFiO2">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Relación I:E</strong></td>
+                                            <td id="ventIe">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>PIP objetivo</strong></td>
+                                            <td id="ventPip">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Presión soporte (PS)</strong></td>
+                                            <td id="ventPs">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Plateau (Pplat)</strong></td>
+                                            <td id="ventPplat">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Driving Pressure</strong></td>
+                                            <td id="ventDriving">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Flujo inspiratorio</strong></td>
+                                            <td id="ventFlow">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Trigger</strong></td>
+                                            <td id="ventTrigger">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Alarmas VM</strong></td>
+                                            <td id="ventAlarmVm">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Apnea / Backup</strong></td>
+                                            <td id="ventApnea">-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <div class="info-note" style="margin-top: 16px;">
+                                    <i class="fas fa-book-medical"></i>
+                                    <div>
+                                        <strong>Referencias:</strong>
+                                        <ul style="margin: 8px 0 0 0; padding-left: 20px; font-size: 0.9em;">
+                                            <li>Ventilación protectora: Vt 6-8 mL/kg peso ideal (ARDSnet, PALICC 2015)</li>
+                                            <li>PEEP inicial 5-8 cmH2O, titular según SpO2/FiO2 (Pediatric Acute Lung Injury Consensus Conference)</li>
+                                            <li>Pplat <28 cmH2O, Driving Pressure <15 cmH2O (recomendaciones SDRA pediátrico)</li>
+                                            <li>Frecuencia respiratoria según edad: Harriet Lane Handbook 22nd ed., PALS 2020</li>
+                                            <li>Alarmas de volumen minuto: 80-120% del objetivo calculado (práctica clínica estándar UCI pediátrica)</li>
+                                            <li>Tiempo de apnea: RN 10-15s, lactantes 15-20s, niños mayores 20-25s (PALS/NRP guidelines)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Urgencia -->
+                <section id="urgencia" class="tab-panel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Medicamentos de Urgencia</h2>
+                            <p>Dosis inmediatas basadas en el peso.</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="button-group toolbar-hidden">
+                                <button id="calcularUrgencia" class="btn btn-primary"><i class="fas fa-calculator"></i> Calcular</button>
+                                <button id="limpiarUrgencia" class="btn btn-secondary"><i class="fas fa-redo"></i> Limpiar</button>
+                            </div>
+                            <div id="resultadoUrgencia" class="result-box hidden"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Perfusiones -->
+                <section id="perfusiones" class="tab-panel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Perfusiones</h2>
+                            <p>Referencias de perfusiones inotrópicas y sedoanalgesia.</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="button-group toolbar-hidden">
+                                <button id="calcularPerfusiones" class="btn btn-primary"><i class="fas fa-eye"></i> Ver tablas</button>
+                                <button id="limpiarPerfusiones" class="btn btn-secondary"><i class="fas fa-redo"></i> Limpiar</button>
+                            </div>
+                            <div id="resultadoPerfusiones" class="hidden">
+                                <h3>Perfusiones Inotrópicas</h3>
+                                <table class="medicines-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Medicamento</th>
+                                            <th>Rango (por kg)</th>
+                                            <th>Dosis calculada (por hora)</th>
+                                            <th>Ritmo (mL/h)</th>
+                                            <th>Presentación</th>
+                                            <th>Dilución</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="perfusionesInoTableBody"></tbody>
+                                </table>
+
+                                <h3>Perfusiones Sedoanalgesia</h3>
+                                <table class="medicines-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Medicamento</th>
+                                            <th>Rango (por kg)</th>
+                                            <th>Dosis calculada (por hora)</th>
+                                            <th>Ritmo (mL/h)</th>
+                                            <th>Presentación</th>
+                                            <th>Dilución</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="perfusionesSedoTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Signos Vitales -->
+                <section id="signos" class="tab-panel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Signos Vitales de Referencia</h2>
+                            <p>Rangos esperados según edad.</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="input-group">
+                                <label for="edadSignos">Edad del paciente (años)</label>
+                                <input type="number" id="edadSignos" min="0" max="18" step="0.1" placeholder="Ej: 4">
+                            </div>
+                            <div class="button-group toolbar-hidden">
+                                <button id="obtenerSignos" class="btn btn-primary"><i class="fas fa-heartbeat"></i> Obtener rangos</button>
+                            </div>
+                            <div id="resultadoSignos" class="result-box hidden">
+                                <h3><i class="fas fa-heartbeat"></i> Parámetros Vitales</h3>
+                                <table class="medicines-table">
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Frecuencia Cardíaca</strong></td>
+                                            <td id="fc">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Frecuencia Respiratoria</strong></td>
+                                            <td id="fr">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>PAS (sistólica)</strong></td>
+                                            <td id="pas">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>PAD (diastólica)</strong></td>
+                                            <td id="pad">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>PAM (media)</strong></td>
+                                            <td id="pam">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>SpO2 objetivo</strong></td>
+                                            <td id="spo2">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Temperatura</strong></td>
+                                            <td id="temperatura">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Glucemia</strong></td>
+                                            <td id="glucemia">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Diuresis mínima</strong></td>
+                                            <td id="diuresis">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Relleno capilar</strong></td>
+                                            <td id="relleno">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Glasgow (normal)</strong></td>
+                                            <td id="glasgow">-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <div class="info-note" style="margin-top: 16px;">
+                                    <i class="fas fa-book-medical"></i>
+                                    <div>
+                                        <strong>Referencias:</strong>
+                                        <ul style="margin: 8px 0 0 0; padding-left: 20px; font-size: 0.9em;">
+                                            <li>FC, FR, PA: PALS 2020, Harriet Lane Handbook 22nd ed.</li>
+                                            <li>PAM: 2/3 PAD + 1/3 PAS. PAM mínima = edad + 40 mmHg</li>
+                                            <li>Diuresis: >1 mL/kg/h (lactantes >2 mL/kg/h) - Pediatric Critical Care Medicine</li>
+                                            <li>Glasgow pediátrico: <2 años escala modificada, ≥2 años escala adulta</li>
+                                            <li>Glucemia: American Diabetes Association pediatric guidelines</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Fórmulas -->
+                <section id="formulas" class="tab-panel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Fórmulas Frecuentes</h2>
+                            <p>Referencias rápidas.</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="formulas-grid">
+                                <div class="formula-item">
+                                    <h3>Volumen de Reposición - Depleción 10%</h3>
+                                    <p class="formula">Volumen = Peso (kg) × 100 mL</p>
+                                </div>
+
+                                <div class="formula-item">
+                                    <h3>Mantenimiento de Líquidos (Regla de Holliday)</h3>
+                                    <p class="formula">
+                                        Primeros 10 kg: 100 mL/kg/día<br>
+                                        Siguientes 10 kg: 50 mL/kg/día<br>
+                                        Resto: 20 mL/kg/día
+                                    </p>
+                                </div>
+
+                                <div class="formula-item">
+                                    <h3>Cálculo de Calorías Diarias</h3>
+                                    <p class="formula">
+                                        RN: 60 kcal/kg/día<br>
+                                        Lactantes: 100-150 kcal/kg/día<br>
+                                        Preescolares: 75-100 kcal/kg/día<br>
+                                        Escolares: 50-75 kcal/kg/día
+                                    </p>
+                                </div>
+
+                                <div class="formula-item">
+                                    <h3>Endotraqueal Pediátrico</h3>
+                                    <p class="formula">Diámetro = (edad/4) + 4</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Modal de Información con Fórmulas -->
+        <div id="infoModal" class="modal hidden">
+            <div class="modal-content modal-info">
+                <div class="modal-header">
+                    <h2>Fórmulas de Estimación de Peso</h2>
+                    <button class="modal-close" id="closeInfoModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="formulas-list">
+                        <div class="formula-item">
+                            <div class="formula-age-range">0 a 12 meses</div>
+                            <div class="formula-expression">Peso (kg) = <strong>3.5 + (edad en meses × 0.5)</strong></div>
+                            <div class="formula-example">Ejemplo: 6 meses = 3.5 + (6 × 0.5) = 6.5 kg</div>
+                        </div>
+
+                        <div class="formula-item">
+                            <div class="formula-age-range">1 a 3 años</div>
+                            <div class="formula-expression">Peso (kg) = <strong>(edad en años + 9) × 2</strong></div>
+                            <div class="formula-example">Ejemplo: 2 años = (2 + 9) × 2 = 22 kg</div>
+                        </div>
+
+                        <div class="formula-item">
+                            <div class="formula-age-range">3 a 6 años</div>
+                            <div class="formula-expression">Peso (kg) = <strong>(edad en años × 2) + 8</strong></div>
+                            <div class="formula-example">Ejemplo: 5 años = (5 × 2) + 8 = 18 kg</div>
+                        </div>
+
+                        <div class="formula-item">
+                            <div class="formula-age-range">6 a 12 años</div>
+                            <div class="formula-expression">Peso (kg) = <strong>(edad en años × 3) + 7</strong></div>
+                            <div class="formula-example">Ejemplo: 10 años = (10 × 3) + 7 = 37 kg</div>
+                        </div>
+
+                        <div class="formula-item">
+                            <div class="formula-age-range">Mayor de 12 años</div>
+                            <div class="formula-expression">Peso (kg) = <strong>(edad en años × 3.5) + 10</strong></div>
+                            <div class="formula-example">Ejemplo: 15 años = (15 × 3.5) + 10 = 62.5 kg</div>
+                        </div>
+                    </div>
+
+                    <div class="info-note">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Estas fórmulas son referencias aproximadas. Para cálculos precisos, utiliza el peso real del paciente.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para Fórmulas de Peso (completa) -->
+        <div id="formulasModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Estimación de Peso por Edad</h2>
+                    <button class="modal-close" id="closeFormulasModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="peso-estimation-container">
+                        <div class="peso-input-section">
+                            <label for="edadModalInput">Edad del paciente</label>
+                            <div class="edad-input-wrapper">
+                                <input type="number" id="edadModalInput" placeholder="0" min="0" max="18" class="edad-input">
+                                <span class="edad-unit">años</span>
+                            </div>
+                            <div class="slider-wrapper">
+                                <input type="range" id="edadSlider" min="0" max="18" value="0" class="edad-slider">
+                                <div class="slider-labels">
+                                    <span>RN</span><span>1 año</span><span>3 años</span><span>6 años</span><span>12 años</span><span>18 años</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="peso-formula-section">
+                            <h3>Fórmula aplicada</h3>
+                            <div class="formula-card" id="formulaCard">
+                                <div class="formula-range"><strong>Selecciona una edad</strong></div>
+                                <div class="formula-text" id="formulaText"></div>
+                            </div>
+                        </div>
+
+                        <div class="peso-result-section hidden" id="resultadoPesoModal">
+                            <div class="result-box-peso">
+                                <div class="result-peso-value">
+                                    <span id="pesoResultadoModal" class="peso-numero">-</span>
+                                    <span class="peso-unidad">kg</span>
+                                </div>
+                                <div class="result-peso-detail">
+                                    <p id="detalleResultadoModal"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="peso-button-group">
+                            <button id="calcularPesoModal" class="btn btn-primary btn-large"><i class="fas fa-calculator"></i> Calcular Peso</button>
+                            <button id="guardarPesoBtn" class="btn btn-success btn-large hidden"><i class="fas fa-check"></i> Confirmar y Guardar</button>
+                            <button id="limpiarPesoModal" class="btn btn-secondary btn-large"><i class="fas fa-redo"></i> Limpiar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Estimador de Peso Simple -->
+        <div id="estimadorModal" class="modal hidden">
+            <div class="modal-content modal-small">
+                <div class="modal-header">
+                    <h2>Estimar Peso por Edad</h2>
+                    <button class="modal-close" id="closeEstimadorModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="estimador-content">
+                        <div class="estimador-input-group">
+                            <label>Edad del paciente</label>
+                            <input type="number" id="estimadorEdadInput" placeholder="Ej: 5" min="0" max="18" step="0.5" value="1">
+                            <span class="input-unit-inline">años</span>
+                        </div>
+                        <div class="estimador-slider-group">
+                            <input type="range" id="estimadorSlider" min="0" max="18" step="0.01" value="1">
+                            <div class="slider-value-display"><span id="estimadorSliderValue">1.0</span> <span id="estimadorSliderUnit">años</span></div>
+                        </div>
+                        <div class="estimador-result">
+                            <div class="estimador-weight"><span id="estimadorPesoResultado">-</span> kg</div>
+                            <div class="estimador-formula"><strong id="estimadorFormula">Selecciona una edad para ver la fórmula</strong></div>
+                        </div>
+                        <div class="estimador-actions">
+                            <button id="aplicarEstimacionBtn" class="btn btn-primary"><i class="fas fa-check"></i> Aplicar a Paciente</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de dosis -->
+        <div id="dosisModal" class="dosis-modal">
+            <div class="dosis-modal-content">
+                <div class="dosis-modal-header">
+                    <h2 id="dosisModalTitle">Medicamentos</h2>
+                    <button class="dosis-modal-close"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="dosis-modal-body" id="dosisModalBody"></div>
+            </div>
+        </div>
+
+        <!-- Modal de Disclaimer Legal -->
+        <div id="disclaimerModal" class="modal" style="display: none;">
+            <div class="modal-content modal-disclaimer">
+                <div class="modal-header">
+                    <h2><i class="fas fa-exclamation-triangle"></i> Aviso Legal y Responsabilidad</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="disclaimer-content">
+                        <p><strong>Esta aplicación nace con la idea de servir de ayuda en situaciones de estrés para el empleo de medicación y material en el niño crítico.</strong></p>
+                        
+                        <p>Contiene solamente algunas de las drogas que potencialmente serían necesarias para el manejo de un niño crítico. La aplicación contiene información de seguridad de algunas medicaciones, enfocada a ser de ayuda en situaciones de urgencia.</p>
+                        
+                        <p><strong>Sin embargo, el usuario debe conocer las medicaciones a emplear y consultar otras fuentes en caso de precisarlo. Debe ajustarse a la situación clínica de cada paciente.</strong></p>
+                        
+                        <div class="disclaimer-warning">
+                            <p><i class="fas fa-exclamation-circle"></i> <strong>Por favor, tenga en cuenta que los creadores de esta aplicación no tendrán ninguna responsabilidad en relación al uso de la misma en la práctica clínica.</strong></p>
+                            
+                            <p>Aunque hemos extremado los controles y comprobaciones para minimizar la posibilidad de errores, el usuario debe conocer que es <strong>responsable de las medicaciones y del material que emplea</strong> en la estabilización del paciente pediátrico a su cargo.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="disclaimer-actions">
+                        <button id="acceptDisclaimerBtn" class="btn btn-primary btn-large">
+                            <i class="fas fa-check"></i> Acepto y Entiendo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pie de página -->
+        <footer class="footer">
+            <p>&copy; 2025 UCI Pediatría. Calculadora Clínica v1.0.0</p>
+            <p class="disclaimer">⚠️ Herramienta de referencia. Siempre consulte con profesionales médicos.</p>
+            <p class="footer-credits">
+                <small>
+                    <a href="#" id="showDisclaimerLink">Ver Aviso Legal</a>
+                </small>
+            </p>
+        </footer>
+    </div>
+
+    <script type="module">
+        import { initTabs } from './js/tabs.js';
+        import { initUI } from './js/ui.js';
+        initTabs();
+        await initUI();
+    </script>
+</body>
+</html>
