@@ -621,13 +621,21 @@ function setupViaAerea(){
     const cardio3 = (peso * 2).toFixed(0);
     const cardioversionDose = `${cardio1} J → ${cardio2} J → ${cardio3} J`;
     
+    // Sonda vesical (peso * 2 Fr)
+    const sondaVesical = `${(peso * 2).toFixed(0)} Fr`;
+    
+    // Tubo de tórax ((peso/2) + 10 Fr)
+    const tuboTorax = `${((peso / 2) + 10).toFixed(0)} Fr`;
+    
     return {
       ettSize,
       ettDepth: `${ettDepth} cm`,
       laryngoBlade,
       lmaSize: `Tamaño ${lmaSize}`,
       defibDose,
-      cardioversionDose
+      cardioversionDose,
+      sondaVesical,
+      tuboTorax
     };
   }
   
@@ -648,6 +656,8 @@ function setupViaAerea(){
       document.getElementById('lmaSize').textContent = airway.lmaSize;
       document.getElementById('defibDose').textContent = airway.defibDose;
       document.getElementById('cardioversionDose').textContent = airway.cardioversionDose;
+      document.getElementById('sondaVesical').textContent = airway.sondaVesical;
+      document.getElementById('tuboTorax').textContent = airway.tuboTorax;
       show(resultadoDiv);
     }
   }
