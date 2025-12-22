@@ -582,15 +582,14 @@ function setupViaAerea(){
     if (peso <= 3.1) {
       const matriz1 = obtenerParametrosDeMATRIZ1(peso);
       const ettSinBalon = matriz1.ettSinBalon;
-      ettSize = `#${ettSinBalon} sin balón (neonato/lactante pequeño)`;
+      ettSize = `#${ettSinBalon} mm`;
       ettDepth = matriz1.ettLongitud;
       sondaAspiracion = `${matriz1.sondaAspiracion} Fr`;
     } else {
       // MATRIZ 2 para el resto de población pediátrica
       const matriz2 = obtenerParametrosDeMATRIZ2(edad);
       const ettCuffed = matriz2.ettConBalon;
-      const ettUncuffed = (parseFloat(ettCuffed) + 0.5).toFixed(1);
-      ettSize = `#${ettCuffed} con balón / #${ettUncuffed} sin balón`;
+      ettSize = `#${ettCuffed} mm (con balón)`;
       ettDepth = matriz2.ettOral;
       sondaAspiracion = `${matriz2.sondaAspiracion} Fr`;
     }
