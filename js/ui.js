@@ -624,6 +624,9 @@ function setupViaAerea(){
     // Sonda vesical (peso * 2 Fr)
     const sondaVesical = `${(peso * 2).toFixed(0)} Fr`;
     
+    // Sonda de aspiración (ETT * 2)
+    const sondaAspiracion = `${(parseFloat(ettCuffed) * 2).toFixed(0)} Fr`;
+    
     // Tubo de tórax ((peso/2) + 10 Fr)
     const tuboTorax = `${((peso / 2) + 10).toFixed(0)} Fr`;
     
@@ -635,6 +638,7 @@ function setupViaAerea(){
       defibDose,
       cardioversionDose,
       sondaVesical,
+      sondaAspiracion,
       tuboTorax
     };
   }
@@ -657,6 +661,7 @@ function setupViaAerea(){
       document.getElementById('defibDose').textContent = airway.defibDose;
       document.getElementById('cardioversionDose').textContent = airway.cardioversionDose;
       document.getElementById('sondaVesical').textContent = airway.sondaVesical;
+      document.getElementById('sondaAspiracion').textContent = airway.sondaAspiracion;
       document.getElementById('tuboTorax').textContent = airway.tuboTorax;
       show(resultadoDiv);
     }

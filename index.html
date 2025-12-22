@@ -68,11 +68,11 @@
 
         <!-- Navegación de pestañas -->
         <nav class="tab-navigation">
-            <button class="tab-btn active" data-tab="viaaerea"><i class="fas fa-procedures"></i> Vía Aérea</button>
+            <button class="tab-btn active" data-tab="urgencia"><i class="fas fa-bolt"></i> Urgencia</button>
             <button class="tab-btn" data-tab="intubacion"><i class="fas fa-lungs"></i> Intubación</button>
-            <button class="tab-btn" data-tab="ventilacion"><i class="fas fa-wind"></i> Ventilación</button>
-            <button class="tab-btn" data-tab="urgencia"><i class="fas fa-bolt"></i> Urgencia</button>
             <button class="tab-btn" data-tab="perfusiones"><i class="fas fa-syringe"></i> Perfusiones</button>
+            <button class="tab-btn" data-tab="viaaerea"><i class="fas fa-procedures"></i> Vía Aérea</button>
+            <button class="tab-btn" data-tab="ventilacion"><i class="fas fa-wind"></i> Ventilación</button>
             <button class="tab-btn" data-tab="signos"><i class="fas fa-heart"></i> Signos Vitales</button>
             <button class="tab-btn" data-tab="formulas"><i class="fas fa-calculator"></i> Fórmulas</button>
         </nav>
@@ -81,7 +81,7 @@
         <main class="main-content">
             <div class="tab-content">
                 <!-- Vía Aérea -->
-                <section id="viaaerea" class="tab-panel active">
+                <section id="viaaerea" class="tab-panel">
                     <div class="card">
                         <div class="card-header">
                             <h2>Vía Aérea y Desfibrilación</h2>
@@ -134,6 +134,10 @@
                                 <table class="medicines-table">
                                     <tbody>
                                         <tr>
+                                            <td><strong>Sonda de Aspiración</strong></td>
+                                            <td id="sondaAspiracion">-</td>
+                                        </tr>
+                                        <tr>
                                             <td><strong>Sonda Vesical</strong></td>
                                             <td id="sondaVesical">-</td>
                                         </tr>
@@ -154,6 +158,7 @@
                                             <li>LMA: Selección por peso - Brain LMA® sizing chart, PALS guidelines</li>
                                             <li>Desfibrilación: 2-4 J/kg (inicial 2 J/kg) - AHA PALS/ACLS Guidelines 2020</li>
                                             <li>Cardioversión sincronizada: 0.5-1-2 J/kg progresiva - European Resuscitation Council Paediatric Guidelines 2021</li>
+                                            <li>Sonda de aspiración: ETT diámetro × 2 Fr - Pediatric Airway Management Guidelines</li>
                                             <li>Sonda vesical: peso × 2 Fr - Pediatric Emergency Medicine Practice Guidelines</li>
                                             <li>Tubo de tórax: (peso/2) + 10 Fr - Advanced Trauma Life Support (ATLS) Pediatric Guidelines</li>
                                         </ul>
@@ -288,7 +293,7 @@
                 </section>
 
                 <!-- Urgencia -->
-                <section id="urgencia" class="tab-panel">
+                <section id="urgencia" class="tab-panel active">
                     <div class="card">
                         <div class="card-header">
                             <h2>Medicamentos de Urgencia</h2>
