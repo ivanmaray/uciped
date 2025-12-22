@@ -701,9 +701,9 @@
     "salinoHiper": {
       "nombre": "Salino hipertónico 3%",
       "unidad": "mL",
-      "presentacion": "NaCl 3%",
-      "dilucion": "Preparación: 10 mL NaCl 20% + 90 mL SSF (o 50 mL + 450 mL)",
-      "nota": "Para HTIC o hiponatremia sintomática (bolos 2 mL/kg, máx 3).",
+      "presentacion": "NaCl 3% (SSH 3%)",
+      "dilucion": "Administrar 5 mL/kg de SSH 3% en bolo IV lento (estándar en HTIC)",
+      "nota": "Para HTIC o hiponatremia sintomática. Máximo 3 bolos. Administrar lentamente.",
       "es_volumen_puro": true,
       "unidad_especial": "mL"
     },
