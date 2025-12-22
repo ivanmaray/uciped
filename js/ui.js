@@ -1421,11 +1421,17 @@ function setupUrgencia(){
         // Para medicamentos que se dan en volumen puro (bolos, etc)
         volumeML = dosis;
         volumeMLHtml = dosis;
-      } else if (meta.concentracion_mg_ml && dosis_valor > 0) {
-        // Para medicamentos con concentración conocida
-        const vol = (dosis_valor / meta.concentracion_mg_ml).toFixed(2);
-        volumeML = vol;
-        volumeMLHtml = vol;
+      } else {
+        // Buscar cualquier tipo de concentración (mg_ml, mEq_ml, g_ml, etc)
+        let concentracion = meta.concentracion_mg_ml || 
+                           meta.concentracion_mEq_ml || 
+                           meta.concentracion_g_ml ||
+                           meta.concentracion_mcg_ml;
+        if (concentracion && dosis_valor > 0) {
+          const vol = (dosis_valor / concentracion).toFixed(2);
+          volumeML = vol;
+          volumeMLHtml = vol;
+        }
       }
       
       tableHTML += `

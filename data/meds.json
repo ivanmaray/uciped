@@ -629,12 +629,13 @@
     "bicarbonato": {
       "nombre": "Bicarbonato 1M",
       "unidad": "mL",
-      "presentacion": "1 M (84 mg/10 mL)",
-      "dilucion": "Usar sin diluir",
+      "presentacion": "Bicarbonato 1M (1 mEq/mL)",
+      "dilucion": "Diluir 1:1 en SSF: 18 mL HCO3 1M + 18 mL SSF = 36 mL de solución 0.5M",
       "nota": "IV lenta.",
       "concentracion_mg_ml": null,
       "unidad_especial": "mEq",
-      "es_volumen_puro": true
+      "es_volumen_puro": true,
+      "concentracion_mEq_ml": 0.5
     },
     "boloLiquidos": {
       "nombre": "Bolo de Líquidos",
