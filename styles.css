@@ -1496,6 +1496,8 @@ select:focus {
     padding: 0.6rem 0.8rem;
     border-bottom: 1px solid var(--border-color);
     font-size: 0.9rem;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 .medicines-table tbody tr {
