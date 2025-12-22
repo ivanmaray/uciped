@@ -1394,6 +1394,7 @@ function setupUrgencia(){
           <tr>
             <th>Medicamento</th>
             <th>Dosis</th>
+            <th>Volumen</th>
             <th>Presentación</th>
             <th>Dilución</th>
           </tr>
@@ -1404,13 +1405,28 @@ function setupUrgencia(){
     console.log('Urgencia: meds cargados?', !!meds, 'ds keys:', ds ? Object.keys(ds) : 'null');
     for(const key of Object.keys(urgenciaFormulas)){
       const calc = urgenciaFormulas[key];
-      const dosis = formatDosis(calc(peso));
+      const dosis_valor = calc(peso);
+      const dosis = formatDosis(dosis_valor);
       const meta = ds ? ds[key] : { nombre: key, unidad: '', presentacion: '', dilucion: '', nota: '' };
       if (!meta) {
         console.warn('Urgencia: no hay metadata para', key);
       }
       const presentacionText = meta.presentacion && meta.presentacion.trim() !== '' ? meta.presentacion : 'Revisar presentación';
       const dilucionText = meta.dilucion && meta.dilucion.trim() !== '' ? meta.dilucion : 'Revisar dilución';
+      
+      // Calcular volumen
+      let volumeML = '-';
+      let volumeMLHtml = '-';
+      if (meta.es_volumen_puro) {
+        // Para medicamentos que se dan en volumen puro (bolos, etc)
+        volumeML = dosis;
+        volumeMLHtml = dosis;
+      } else if (meta.concentracion_mg_ml && dosis_valor > 0) {
+        // Para medicamentos con concentración conocida
+        const vol = (dosis_valor / meta.concentracion_mg_ml).toFixed(2);
+        volumeML = vol;
+        volumeMLHtml = vol;
+      }
       
       tableHTML += `
         <tr class="med-row">
@@ -1427,6 +1443,10 @@ function setupUrgencia(){
                   <div class="med-info-label">Dosis:</div>
                   <div class="med-info-value">${dosis} ${meta.unidad || ''}</div>
                 </div>
+                ${volumeML !== '-' ? `<div class="med-info-row">
+                  <div class="med-info-label">Volumen:</div>
+                  <div class="med-info-value">${volumeMLHtml} mL</div>
+                </div>` : ''}
                 <div class="med-info-row">
                   <div class="med-info-label">Presentación:</div>
                   <div class="med-info-value">${presentacionText}</div>
@@ -1439,6 +1459,7 @@ function setupUrgencia(){
             </div>
           </td>
           <td class="dosis-col">${dosis} ${meta.unidad || ''}</td>
+          <td class="dosis-col" style="font-weight: 600; color: #2196F3;">${volumeMLHtml} mL</td>
           <td>${presentacionText}</td>
           <td><strong>${dilucionText}</strong><br><small>${meta.nota || ''}</small></td>
         </tr>`;

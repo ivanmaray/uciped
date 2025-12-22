@@ -597,100 +597,121 @@
     "adenosina": {
       "nombre": "Adenosina",
       "unidad": "mg",
-      "presentacion": "Ampolla 6 mg/2 mL",
+      "presentacion": "Ampolla 6 mg/2 mL = 3 mg/mL",
       "dilucion": "Diluir hasta 6 mL con SSF o SG5%",
-      "nota": "Vía proximal al corazón con llave de 3 pasos; bolo seguido de 5-10 mL SSF. Puede escalar hasta 0.3 mg/kg si no respuesta."
+      "nota": "Vía proximal al corazón con llave de 3 pasos; bolo seguido de 5-10 mL SSF. Puede escalar hasta 0.3 mg/kg si no respuesta.",
+      "concentracion_mg_ml": 3
     },
     "adrenalina": {
       "nombre": "Adrenalina",
       "unidad": "mg",
-      "presentacion": "1 mg/mL",
+      "presentacion": "Solución 1 mg/mL (1:10.000)",
       "dilucion": "Diluir hasta 10 mL con SSF o SG5%",
-      "nota": "Vía IV/IO; preparar 0.1 mg/mL."
+      "nota": "Vía IV/IO; preparar 0.1 mg/mL.",
+      "concentracion_mg_ml": 1
     },
     "amiodarona": {
       "nombre": "Amiodarona",
       "unidad": "mg",
-      "presentacion": "Ampolla 150 mg/3 mL",
+      "presentacion": "Ampolla 150 mg/3 mL = 50 mg/mL",
       "dilucion": "Pura en PCR; diluir en otras situaciones",
-      "nota": "Pasar en 3 minutos."
+      "nota": "Pasar en 3 minutos.",
+      "concentracion_mg_ml": 50
     },
     "atropina_urgencia": {
       "nombre": "Atropina (Urgencia)",
       "unidad": "mg",
       "presentacion": "Ampolla 1 mg/1 mL",
       "dilucion": "Diluir hasta 10 mL con SSF o SG5%",
-      "nota": "Mínimo 0.1 mg."
+      "nota": "Mínimo 0.1 mg.",
+      "concentracion_mg_ml": 1
     },
     "bicarbonato": {
       "nombre": "Bicarbonato 1M",
       "unidad": "mL",
       "presentacion": "1 M (84 mg/10 mL)",
       "dilucion": "Usar sin diluir",
-      "nota": "IV lenta."
+      "nota": "IV lenta.",
+      "concentracion_mg_ml": null,
+      "unidad_especial": "mEq",
+      "es_volumen_puro": true
     },
     "boloLiquidos": {
       "nombre": "Bolo de Líquidos",
       "unidad": "mL",
       "presentacion": "SF o Ringer",
       "dilucion": "Usar directamente",
-      "nota": "IV rápida."
+      "nota": "IV rápida.",
+      "es_volumen_puro": true,
+      "unidad_especial": "mL"
     },
     "gluconato": {
       "nombre": "Gluconato Cálcico 10%",
       "unidad": "mL",
       "presentacion": "Ampolla 10 mL / 4.6 mEq",
       "dilucion": "Diluir en igual volumen de SSF",
-      "nota": "No usar en la misma vía que bicarbonato sódico."
+      "nota": "No usar en la misma vía que bicarbonato sódico.",
+      "es_volumen_puro": true,
+      "unidad_especial": "mL"
     },
     "glucosa": {
       "nombre": "Glucosa 10%",
       "unidad": "mL",
-      "presentacion": "100 mg/mL",
+      "presentacion": "Solución 10% = 100 mg/mL",
       "dilucion": "Usar directamente",
-      "nota": "Hipoglucemia."
+      "nota": "Hipoglucemia.",
+      "concentracion_mg_ml": 100
     },
     "flumazenilo": {
       "nombre": "Flumazenilo",
       "unidad": "mg",
-      "presentacion": "0.1 mg/mL",
+      "presentacion": "Solución 0.1 mg/mL",
       "dilucion": "Usar puro",
-      "nota": "Antagonista benzodiacepinas."
+      "nota": "Antagonista benzodiacepinas.",
+      "concentracion_mg_ml": 0.1
     },
     "naloxona": {
       "nombre": "Naloxona",
       "unidad": "mg",
-      "presentacion": "0.4 mg/mL",
+      "presentacion": "Solución 0.4 mg/mL",
       "dilucion": "Usar puro",
-      "nota": "Antagonista opioides."
+      "nota": "Antagonista opioides.",
+      "concentracion_mg_ml": 0.4
     },
     "manitol": {
       "nombre": "Manitol",
       "unidad": "g",
       "presentacion": "10% (10 g/100 mL) y 20% (20 g/100 mL)",
       "dilucion": "Usar según presentación",
-      "nota": "Edema cerebral; verificar concentración."
+      "nota": "Edema cerebral; verificar concentración.",
+      "concentracion_mg_ml": null,
+      "es_volumen_puro": false,
+      "unidad_especial": "g"
     },
     "salinoHiper": {
       "nombre": "Salino hipertónico 3%",
       "unidad": "mL",
       "presentacion": "NaCl 3%",
       "dilucion": "Preparación: 10 mL NaCl 20% + 90 mL SSF (o 50 mL + 450 mL)",
-      "nota": "Para HTIC o hiponatremia sintomática (bolos 2 mL/kg, máx 3)."
+      "nota": "Para HTIC o hiponatremia sintomática (bolos 2 mL/kg, máx 3).",
+      "es_volumen_puro": true,
+      "unidad_especial": "mL"
     },
     "sulfatoMg": {
       "nombre": "Sulfato de Magnesio",
       "unidad": "mg",
-      "presentacion": "Ampolla 1.5 g/10 mL",
+      "presentacion": "Ampolla 1.5 g/10 mL = 150 mg/mL",
       "dilucion": "Diluir hasta 20 mL con SSF",
-      "nota": "Uso IV."
+      "nota": "Uso IV.",
+      "concentracion_mg_ml": 150
     },
     "tranexamico": {
       "nombre": "Ácido Tranexámico",
       "unidad": "mg",
-      "presentacion": "Puro 100 mg/mL",
+      "presentacion": "Solución 100 mg/mL",
       "dilucion": "Usar directo",
-      "nota": "Hemorragia."
+      "nota": "Hemorragia.",
+      "concentracion_mg_ml": 100
     }
   },
   "perfusiones": {
