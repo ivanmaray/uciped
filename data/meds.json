@@ -682,12 +682,21 @@
     "manitol": {
       "nombre": "Manitol",
       "unidad": "g",
-      "presentacion": "10% (10 g/100 mL) y 20% (20 g/100 mL)",
-      "dilucion": "Usar según presentación",
+      "presentacion": "Varias presentaciones (10% o 20%)",
+      "dilucion": "Usar según presentación disponible",
       "nota": "Edema cerebral; verificar concentración.",
-      "concentracion_mg_ml": null,
       "es_volumen_puro": false,
-      "unidad_especial": "g"
+      "unidad_especial": "g",
+      "concentraciones": [
+        {
+          "conc_g_ml": 0.1,
+          "desc": "10% (0.1 g/mL, 10 g/100 mL)"
+        },
+        {
+          "conc_g_ml": 0.2,
+          "desc": "20% (0.2 g/mL, 20 g/100 mL)"
+        }
+      ]
     },
     "salinoHiper": {
       "nombre": "Salino hipertónico 3%",

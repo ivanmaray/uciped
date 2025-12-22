@@ -1421,6 +1421,17 @@ function setupUrgencia(){
         // Para medicamentos que se dan en volumen puro (bolos, etc)
         volumeML = dosis;
         volumeMLHtml = dosis;
+      } else if (meta.concentraciones && Array.isArray(meta.concentraciones)) {
+        // Múltiples concentraciones (como manitol 10% y 20%)
+        let volumesArray = [];
+        for (const concObj of meta.concentraciones) {
+          // Buscar la unidad correcta (conc_g_ml, conc_mg_ml, etc)
+          let concValue = concObj.conc_g_ml || concObj.conc_mg_ml || concObj.conc_mEq_ml || concObj.conc_mcg_ml;
+          const vol = (dosis_valor / concValue).toFixed(2);
+          volumesArray.push(`${vol} mL (${concObj.desc})`);
+        }
+        volumeML = volumesArray.join('\n');
+        volumeMLHtml = volumesArray.map(v => `<div>${v}</div>`).join('');
       } else {
         // Buscar cualquier tipo de concentración (mg_ml, mEq_ml, g_ml, etc)
         let concentracion = meta.concentracion_mg_ml || 
