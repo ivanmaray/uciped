@@ -597,23 +597,23 @@
     "adenosina": {
       "nombre": "Adenosina",
       "unidad": "mg",
-      "presentacion": "Ampolla 6 mg/2 mL = 3 mg/mL",
+      "presentacion": "Ampolla 6 mg/2 mL, dilución: 6 mg + 4 mL SSF/SG5% = 1 mg/mL",
       "dilucion": "Diluir hasta 6 mL con SSF o SG5%",
       "nota": "Vía proximal al corazón con llave de 3 pasos; bolo seguido de 5-10 mL SSF. Puede escalar hasta 0.3 mg/kg si no respuesta.",
-      "concentracion_mg_ml": 3
+      "concentracion_mg_ml": 1.0
     },
     "adrenalina": {
       "nombre": "Adrenalina",
       "unidad": "mg",
-      "presentacion": "Solución 1 mg/mL (1:10.000)",
+      "presentacion": "Solución 1 mg/mL, dilución: 1 mg + 9 mL SSF/SG5% = 0.1 mg/mL",
       "dilucion": "Diluir hasta 10 mL con SSF o SG5%",
       "nota": "Vía IV/IO; preparar 0.1 mg/mL.",
-      "concentracion_mg_ml": 1
+      "concentracion_mg_ml": 0.1
     },
     "amiodarona": {
       "nombre": "Amiodarona",
       "unidad": "mg",
-      "presentacion": "Ampolla 150 mg/3 mL = 50 mg/mL",
+      "presentacion": "Ampolla 150 mg/3 mL = 50 mg/mL (puro en PCR)",
       "dilucion": "Pura en PCR; diluir en otras situaciones",
       "nota": "Pasar en 3 minutos.",
       "concentracion_mg_ml": 50
@@ -621,10 +621,10 @@
     "atropina_urgencia": {
       "nombre": "Atropina (Urgencia)",
       "unidad": "mg",
-      "presentacion": "Ampolla 1 mg/1 mL",
+      "presentacion": "Ampolla 1 mg/1 mL, dilución: 1 mg + 9 mL SSF/SG5% = 0.1 mg/mL",
       "dilucion": "Diluir hasta 10 mL con SSF o SG5%",
       "nota": "Mínimo 0.1 mg.",
-      "concentracion_mg_ml": 1
+      "concentracion_mg_ml": 0.1
     },
     "bicarbonato": {
       "nombre": "Bicarbonato 1M",
