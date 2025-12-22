@@ -710,10 +710,10 @@
     "sulfatoMg": {
       "nombre": "Sulfato de Magnesio",
       "unidad": "mg",
-      "presentacion": "Ampolla 1.5 g/10 mL = 150 mg/mL",
-      "dilucion": "Diluir hasta 20 mL con SSF",
+      "presentacion": "Ampolla 1.5 g/10 mL",
+      "dilucion": "Diluir hasta 20 mL con SSF (1.5 g + 10 mL SSF = 75 mg/mL)",
       "nota": "Uso IV.",
-      "concentracion_mg_ml": 150
+      "concentracion_mg_ml": 75
     },
     "tranexamico": {
       "nombre": "Ácido Tranexámico",
