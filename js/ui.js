@@ -717,9 +717,25 @@ function setupIntubacion(){
       
       // Calcular volumen en mL basado en dosis y concentración
       let volumeML = '-';
-      let concentracion = meta.concentracion_mg_ml || meta.concentracion_mcg_ml;
-      if (concentracion && dosis_valor > 0) {
-        volumeML = (dosis_valor / concentracion).toFixed(2);
+      let concentracionDisplay = '';
+      
+      // Check si hay múltiples concentraciones
+      if (meta.concentraciones && Array.isArray(meta.concentraciones)) {
+        // Display all concentrations
+        let volumesArray = [];
+        for (const concObj of meta.concentraciones) {
+          const vol = (dosis_valor / concObj.conc_mg_ml).toFixed(2);
+          volumesArray.push(`${vol} mL (${concObj.desc})`);
+        }
+        volumeML = volumesArray.join(' / ');
+        concentracionDisplay = 'Múltiples opciones disponibles';
+      } else {
+        // Single concentration
+        let concentracion = meta.concentracion_mg_ml || meta.concentracion_mcg_ml;
+        if (concentracion && dosis_valor > 0) {
+          volumeML = (dosis_valor / concentracion).toFixed(2);
+          concentracionDisplay = `${concentracion} ${meta.unidad || ''}/mL`;
+        }
       }
       
       tableHTML += `
@@ -739,8 +755,12 @@ function setupIntubacion(){
                 </div>
                 <div class="med-info-row">
                   <div class="med-info-label">Volumen (mL):</div>
-                  <div class="med-info-value">${volumeML} mL (concentración: ${concentracion ? concentracion + ' ' + meta.unidad + '/mL' : 'ver dilución'})</div>
+                  <div class="med-info-value">${volumeML}</div>
                 </div>
+                ${concentracionDisplay ? `<div class="med-info-row">
+                  <div class="med-info-label">Concentración:</div>
+                  <div class="med-info-value">${concentracionDisplay}</div>
+                </div>` : ''}
                 <div class="med-info-row">
                   <div class="med-info-label">Presentación:</div>
                   <div class="med-info-value">${presentacionText}</div>

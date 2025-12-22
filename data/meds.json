@@ -1,117 +1,844 @@
 {
   "dosificacion": {
-    "paracetamol": {"grupo":"ANALGÉSICOS Y ANTIPIRÉTICOS","nombre":"Paracetamol (Acetaminofén)","dosis":15,"unidad":"mg","intervalo":"cada 4-6 horas","maximo":60,"maxunidad":"mg/kg/día","presentacion":"500 mg/5 mL (100 mg/mL)","dilucion":"Usar sin diluir o diluir 1:1 con SF","via":"IV, VO, rectal"},
-    "ibuprofeno": {"grupo":"ANALGÉSICOS Y ANTIPIRÉTICOS","nombre":"Ibuprofeno","dosis":10,"unidad":"mg","intervalo":"cada 6-8 horas","maximo":40,"maxunidad":"mg/kg/día","presentacion":"100 mg/5 mL","dilucion":"Usar sin diluir","via":"VO"},
-    "metamizol": {"grupo":"ANALGÉSICOS Y ANTIPIRÉTICOS","nombre":"Metamizol (Dipirona)","dosis":10,"unidad":"mg","intervalo":"cada 6 horas","maximo":40,"maxunidad":"mg/kg/día","presentacion":"500 mg/mL","dilucion":"Diluir 1:4 con SF (125 mg/mL)","via":"IV, IM, VO"},
-
-    "amoxicilina": {"grupo":"ANTIBIÓTICOS BETA-LACTÁMICOS","nombre":"Amoxicilina","dosis":25,"unidad":"mg","intervalo":"cada 8 horas","maximo":75,"maxunidad":"mg/kg/día","presentacion":"250 mg/5 mL","dilucion":"Suspensión oral directa","via":"VO"},
-    "amoxiclav": {"grupo":"ANTIBIÓTICOS BETA-LACTÁMICOS","nombre":"Amoxicilina-Ácido Clavulánico","dosis":25,"unidad":"mg","intervalo":"cada 8 horas","maximo":75,"maxunidad":"mg/kg/día","presentacion":"250/62.5 mg/5 mL","dilucion":"Suspensión oral directa","via":"VO"},
-    "cefadroxilo": {"grupo":"ANTIBIÓTICOS BETA-LACTÁMICOS","nombre":"Cefadroxilo","dosis":30,"unidad":"mg","intervalo":"cada 12 horas","maximo":60,"maxunidad":"mg/kg/día","presentacion":"250 mg/5 mL, 500 mg/5 mL","dilucion":"Suspensión oral directa","via":"VO"},
-    "cefotaxima": {"grupo":"ANTIBIÓTICOS BETA-LACTÁMICOS","nombre":"Cefotaxima","dosis":50,"unidad":"mg","intervalo":"cada 6-8 horas","maximo":200,"maxunidad":"mg/kg/día","presentacion":"500 mg vial","dilucion":"Diluir vial en 5-10 mL SF, luego diluir 1:10 en SF","via":"IV, IM"},
-    "ceftriaxona": {"grupo":"ANTIBIÓTICOS BETA-LACTÁMICOS","nombre":"Ceftriaxona","dosis":50,"unidad":"mg","intervalo":"cada 12 horas","maximo":100,"maxunidad":"mg/kg/día","presentacion":"500 mg, 1 g vial","dilucion":"Diluir vial en 10 mL SF, luego 1:10","via":"IV, IM"},
-    "ceftazidima": {"grupo":"ANTIBIÓTICOS BETA-LACTÁMICOS","nombre":"Ceftazidima","dosis":30,"unidad":"mg","intervalo":"cada 8 horas","maximo":90,"maxunidad":"mg/kg/día","presentacion":"500 mg, 1 g vial","dilucion":"Diluir vial en 10 mL SF","via":"IV, IM"},
-    "penicilina_g": {"grupo":"ANTIBIÓTICOS BETA-LACTÁMICOS","nombre":"Penicilina G Sódica","dosis":50000,"unidad":"U","intervalo":"cada 4-6 horas","maximo":300000,"maxunidad":"U/kg/día","presentacion":"1.000.000 U vial","dilucion":"Diluir 1.000.000 U en 10 mL SF (100.000 U/mL)","via":"IV, IM"},
-
-    "azitromicina": {"grupo":"ANTIBIÓTICOS MACRÓLIDOS","nombre":"Azitromicina","dosis":10,"unidad":"mg","intervalo":"cada 24 horas","maximo":10,"maxunidad":"mg/kg/día","presentacion":"200 mg/5 mL","dilucion":"Suspensión oral directa","via":"VO"},
-    "eritromicina": {"grupo":"ANTIBIÓTICOS MACRÓLIDOS","nombre":"Eritromicina","dosis":12.5,"unidad":"mg","intervalo":"cada 6 horas","maximo":50,"maxunidad":"mg/kg/día","presentacion":"250 mg/5 mL","dilucion":"Suspensión oral directa","via":"VO, IV"},
-
-    "gentamicina": {"grupo":"AMINOGLUCÓSIDOS","nombre":"Gentamicina","dosis":7.5,"unidad":"mg","intervalo":"cada 24 horas","maximo":7.5,"maxunidad":"mg/kg/día","presentacion":"40 mg/mL","dilucion":"Diluir 1:10 en SF (4 mg/mL)","via":"IV, IM"},
-    "tobramicina": {"grupo":"AMINOGLUCÓSIDOS","nombre":"Tobramicina","dosis":10,"unidad":"mg","intervalo":"cada 24 horas","maximo":10,"maxunidad":"mg/kg/día","presentacion":"40 mg/mL","dilucion":"Diluir 1:10 en SF","via":"IV, IM"},
-
-    "aciclovir": {"grupo":"ANTIVIRALES","nombre":"Aciclovir","dosis":15,"unidad":"mg","intervalo":"cada 8 horas","maximo":45,"maxunidad":"mg/kg/día","presentacion":"200 mg/5 mL","dilucion":"Suspensión oral directa","via":"VO, IV"},
-    "oseltamivir": {"grupo":"ANTIVIRALES","nombre":"Oseltamivir (Tamiflu)","dosis":2,"unidad":"mg","intervalo":"cada 12 horas","maximo":4,"maxunidad":"mg/kg/día","presentacion":"6 mg/mL","dilucion":"Suspensión oral directa","via":"VO"},
-
-    "fluconazol": {"grupo":"ANTIFÚNGICOS","nombre":"Fluconazol","dosis":6,"unidad":"mg","intervalo":"cada 24 horas","maximo":6,"maxunidad":"mg/kg/día","presentacion":"2 mg/mL (200 mg/100 mL)","dilucion":"Usar sin diluir o diluir 1:1 en SF","via":"IV, VO"},
-    "nistatina": {"grupo":"ANTIFÚNGICOS","nombre":"Nistatina","dosis":100000,"unidad":"U","intervalo":"cada 6 horas","maximo":400000,"maxunidad":"U/kg/día","presentacion":"100.000 U/mL","dilucion":"Usar sin diluir (suspensión oral)","via":"VO"},
-
-    "digoxina": {"grupo":"CARDIOVASCULARES","nombre":"Digoxina","dosis":0.01,"unidad":"mg","intervalo":"cada 12 horas","maximo":0.02,"maxunidad":"mg/kg/día","presentacion":"0.25 mg/mL","dilucion":"Diluir 1:10 en SF","via":"IV, VO"},
-    "dopamina": {"grupo":"CARDIOVASCULARES","nombre":"Dopamina","dosis":5,"unidad":"mcg/kg/min","intervalo":"infusión continua","maximo":20,"maxunidad":"mcg/kg/min","presentacion":"40 mg/mL","dilucion":"Diluir en SF: 200 mg en 50 mL = 4 mg/mL","via":"IV"},
-    "epinefrina": {"grupo":"CARDIOVASCULARES","nombre":"Epinefrina","dosis":0.01,"unidad":"mg","intervalo":"cada 5-15 min según necesidad","maximo":0.01,"maxunidad":"mg/dosis","presentacion":"1:1000 (1 mg/mL)","dilucion":"Diluir 1:10 en SF para vía IV (0.1 mg/mL)","via":"IV, IM, SC"},
-    "adrenalina_infusion": {"grupo":"CARDIOVASCULARES","nombre":"Adrenalina (Infusión)","dosis":0.05,"unidad":"mcg/kg/min","intervalo":"infusión continua","maximo":1,"maxunidad":"mcg/kg/min","presentacion":"1 mg/mL","dilucion":"Diluir 1 mL en 50 mL SF = 20 mcg/mL","via":"IV"},
-    "milrinona": {"grupo":"CARDIOVASCULARES","nombre":"Milrinona","dosis":0.25,"unidad":"mcg/kg/min","intervalo":"infusión continua","maximo":0.75,"maxunidad":"mcg/kg/min","presentacion":"1 mg/mL","dilucion":"Diluir en SF o DW a concentración 50-200 mcg/mL","via":"IV"},
-
-    "midazolam": {"grupo":"SEDANTES","nombre":"Midazolam","dosis":0.1,"unidad":"mg","intervalo":"cada 2-4 horas","maximo":0.3,"maxunidad":"mg/kg/dosis","presentacion":"5 mg/mL","dilucion":"Diluir 1:4 en SF (1.25 mg/mL)","via":"IV, IM, IN"},
-    "propofol": {"grupo":"SEDANTES","nombre":"Propofol","dosis":2,"unidad":"mg","intervalo":"inducción IV","maximo":4,"maxunidad":"mg/kg","presentacion":"10 mg/mL","dilucion":"Usar sin diluir","via":"IV"},
-    "tiopental": {"grupo":"SEDANTES","nombre":"Tiopental","dosis":5,"unidad":"mg","intervalo":"inducción IV","maximo":10,"maxunidad":"mg/kg","presentacion":"500 mg vial","dilucion":"Diluir 500 mg en 10 mL SF = 50 mg/mL","via":"IV, IM"},
-
-    "morfina": {"grupo":"OPIOIDES","nombre":"Morfina","dosis":0.1,"unidad":"mg","intervalo":"cada 4-6 horas","maximo":0.3,"maxunidad":"mg/kg/dosis","presentacion":"10 mg/mL","dilucion":"Diluir 1:10 en SF","via":"IV, IM, SC"},
-    "fentanilo": {"grupo":"OPIOIDES","nombre":"Fentanilo","dosis":1,"unidad":"mcg","intervalo":"cada 2-4 horas","maximo":5,"maxunidad":"mcg/kg/dosis","presentacion":"50 mcg/mL","dilucion":"Diluir 1:10 en SF","via":"IV, IM"},
-    "codeína": {"grupo":"OPIOIDES","nombre":"Codeína","dosis":0.5,"unidad":"mg","intervalo":"cada 6 horas","maximo":2,"maxunidad":"mg/kg/día","presentacion":"15 mg/5 mL","dilucion":"Suspensión oral directa","via":"VO"},
-
-    "salbutamol": {"grupo":"BRONCODILATADORES","nombre":"Salbutamol","dosis":0.1,"unidad":"mg","intervalo":"según necesidad","maximo":0.5,"maxunidad":"mg/dosis","presentacion":"100 mcg/dosis (inhalador)","dilucion":"Usar directo inhalador o nebulizar","via":"Inhalado"},
-    "ipratropio": {"grupo":"BRONCODILATADORES","nombre":"Ipratropio","dosis":20,"unidad":"mcg","intervalo":"cada 8 horas","maximo":60,"maxunidad":"mcg/día","presentacion":"20 mcg/dosis (inhalador)","dilucion":"Mezclar con salbutamol para nebulizar","via":"Inhalado"},
-
-    "furosemida": {"grupo":"DIURÉTICOS","nombre":"Furosemida (Lasix)","dosis":1,"unidad":"mg","intervalo":"cada 8-12 horas","maximo":4,"maxunidad":"mg/kg/día","presentacion":"40 mg/mL","dilucion":"Diluir 1:4 en SF","via":"IV, IM, VO"},
-    "espironolactona": {"grupo":"DIURÉTICOS","nombre":"Espironolactona","dosis":1,"unidad":"mg","intervalo":"cada 12 horas","maximo":3,"maxunidad":"mg/kg/día","presentacion":"25 mg/5 mL","dilucion":"Suspensión oral directa","via":"VO"},
-
-    "fenitoína": {"grupo":"ANTICONVULSIVANTES","nombre":"Fenitoína","dosis":15,"unidad":"mg","intervalo":"carga inicial","maximo":15,"maxunidad":"mg/kg","presentacion":"50 mg/mL","dilucion":"Diluir 1:5 en SF (debe usarse filtro)","via":"IV lenta"},
-    "ácido_valproico": {"grupo":"ANTICONVULSIVANTES","nombre":"Ácido Valproico","dosis":15,"unidad":"mg","intervalo":"cada 8 horas","maximo":45,"maxunidad":"mg/kg/día","presentacion":"250 mg/5 mL","dilucion":"Solución oral directa","via":"VO"},
-    "levetiracetam": {"grupo":"ANTICONVULSIVANTES","nombre":"Levetiracetam (Keppra)","dosis":10,"unidad":"mg","intervalo":"cada 12 horas","maximo":30,"maxunidad":"mg/kg/día","presentacion":"100 mg/mL","dilucion":"Solución oral directa","via":"VO, IV"},
-
-    "dexametasona": {"grupo":"GLUCOCORTICOIDES","nombre":"Dexametasona","dosis":0.1,"unidad":"mg","intervalo":"cada 6 horas","maximo":0.3,"maxunidad":"mg/kg/día","presentacion":"4 mg/mL, 0.5 mg/5 mL","dilucion":"Diluir 1:10 en SF","via":"IV, IM, VO"},
-    "metilprednisolona": {"grupo":"GLUCOCORTICOIDES","nombre":"Metilprednisolona","dosis":2,"unidad":"mg","intervalo":"cada 6-8 horas","maximo":8,"maxunidad":"mg/kg/día","presentacion":"125 mg vial (500 mg vial)","dilucion":"Diluir vial en 5-10 mL SF","via":"IV, IM"},
-    "hidrocortisona": {"grupo":"GLUCOCORTICOIDES","nombre":"Hidrocortisona","dosis":5,"unidad":"mg","intervalo":"cada 6 horas","maximo":20,"maxunidad":"mg/kg/día","presentacion":"100 mg vial","dilucion":"Diluir vial en 5-10 mL SF","via":"IV, IM"},
-
-    "benzocaína": {"grupo":"ANTIBACTERIANOS TOPICOS","nombre":"Benzocaína","dosis":3,"unidad":"mg","intervalo":"según necesidad","maximo":7,"maxunidad":"mg/kg","presentacion":"Spray 20% o crema","dilucion":"Usar directamente sobre mucosa","via":"Tópico"},
-
-    "loratadina": {"grupo":"ANTIHISTAMÍNICOS","nombre":"Loratadina","dosis":0.2,"unidad":"mg","intervalo":"cada 24 horas","maximo":0.2,"maxunidad":"mg/kg/día","presentacion":"5 mg/5 mL","dilucion":"Solución oral directa","via":"VO"},
-    "desloratadina": {"grupo":"ANTIHISTAMÍNICOS","nombre":"Desloratadina","dosis":0.15,"unidad":"mg","intervalo":"cada 24 horas","maximo":0.15,"maxunidad":"mg/kg/día","presentacion":"2.5 mg/5 mL","dilucion":"Solución oral directa","via":"VO"}
+    "paracetamol": {
+      "grupo": "ANALGÉSICOS Y ANTIPIRÉTICOS",
+      "nombre": "Paracetamol (Acetaminofén)",
+      "dosis": 15,
+      "unidad": "mg",
+      "intervalo": "cada 4-6 horas",
+      "maximo": 60,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "500 mg/5 mL (100 mg/mL)",
+      "dilucion": "Usar sin diluir o diluir 1:1 con SF",
+      "via": "IV, VO, rectal"
+    },
+    "ibuprofeno": {
+      "grupo": "ANALGÉSICOS Y ANTIPIRÉTICOS",
+      "nombre": "Ibuprofeno",
+      "dosis": 10,
+      "unidad": "mg",
+      "intervalo": "cada 6-8 horas",
+      "maximo": 40,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "100 mg/5 mL",
+      "dilucion": "Usar sin diluir",
+      "via": "VO"
+    },
+    "metamizol": {
+      "grupo": "ANALGÉSICOS Y ANTIPIRÉTICOS",
+      "nombre": "Metamizol (Dipirona)",
+      "dosis": 10,
+      "unidad": "mg",
+      "intervalo": "cada 6 horas",
+      "maximo": 40,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "500 mg/mL",
+      "dilucion": "Diluir 1:4 con SF (125 mg/mL)",
+      "via": "IV, IM, VO"
+    },
+    "amoxicilina": {
+      "grupo": "ANTIBIÓTICOS BETA-LACTÁMICOS",
+      "nombre": "Amoxicilina",
+      "dosis": 25,
+      "unidad": "mg",
+      "intervalo": "cada 8 horas",
+      "maximo": 75,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "250 mg/5 mL",
+      "dilucion": "Suspensión oral directa",
+      "via": "VO"
+    },
+    "amoxiclav": {
+      "grupo": "ANTIBIÓTICOS BETA-LACTÁMICOS",
+      "nombre": "Amoxicilina-Ácido Clavulánico",
+      "dosis": 25,
+      "unidad": "mg",
+      "intervalo": "cada 8 horas",
+      "maximo": 75,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "250/62.5 mg/5 mL",
+      "dilucion": "Suspensión oral directa",
+      "via": "VO"
+    },
+    "cefadroxilo": {
+      "grupo": "ANTIBIÓTICOS BETA-LACTÁMICOS",
+      "nombre": "Cefadroxilo",
+      "dosis": 30,
+      "unidad": "mg",
+      "intervalo": "cada 12 horas",
+      "maximo": 60,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "250 mg/5 mL, 500 mg/5 mL",
+      "dilucion": "Suspensión oral directa",
+      "via": "VO"
+    },
+    "cefotaxima": {
+      "grupo": "ANTIBIÓTICOS BETA-LACTÁMICOS",
+      "nombre": "Cefotaxima",
+      "dosis": 50,
+      "unidad": "mg",
+      "intervalo": "cada 6-8 horas",
+      "maximo": 200,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "500 mg vial",
+      "dilucion": "Diluir vial en 5-10 mL SF, luego diluir 1:10 en SF",
+      "via": "IV, IM"
+    },
+    "ceftriaxona": {
+      "grupo": "ANTIBIÓTICOS BETA-LACTÁMICOS",
+      "nombre": "Ceftriaxona",
+      "dosis": 50,
+      "unidad": "mg",
+      "intervalo": "cada 12 horas",
+      "maximo": 100,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "500 mg, 1 g vial",
+      "dilucion": "Diluir vial en 10 mL SF, luego 1:10",
+      "via": "IV, IM"
+    },
+    "ceftazidima": {
+      "grupo": "ANTIBIÓTICOS BETA-LACTÁMICOS",
+      "nombre": "Ceftazidima",
+      "dosis": 30,
+      "unidad": "mg",
+      "intervalo": "cada 8 horas",
+      "maximo": 90,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "500 mg, 1 g vial",
+      "dilucion": "Diluir vial en 10 mL SF",
+      "via": "IV, IM"
+    },
+    "penicilina_g": {
+      "grupo": "ANTIBIÓTICOS BETA-LACTÁMICOS",
+      "nombre": "Penicilina G Sódica",
+      "dosis": 50000,
+      "unidad": "U",
+      "intervalo": "cada 4-6 horas",
+      "maximo": 300000,
+      "maxunidad": "U/kg/día",
+      "presentacion": "1.000.000 U vial",
+      "dilucion": "Diluir 1.000.000 U en 10 mL SF (100.000 U/mL)",
+      "via": "IV, IM"
+    },
+    "azitromicina": {
+      "grupo": "ANTIBIÓTICOS MACRÓLIDOS",
+      "nombre": "Azitromicina",
+      "dosis": 10,
+      "unidad": "mg",
+      "intervalo": "cada 24 horas",
+      "maximo": 10,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "200 mg/5 mL",
+      "dilucion": "Suspensión oral directa",
+      "via": "VO"
+    },
+    "eritromicina": {
+      "grupo": "ANTIBIÓTICOS MACRÓLIDOS",
+      "nombre": "Eritromicina",
+      "dosis": 12.5,
+      "unidad": "mg",
+      "intervalo": "cada 6 horas",
+      "maximo": 50,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "250 mg/5 mL",
+      "dilucion": "Suspensión oral directa",
+      "via": "VO, IV"
+    },
+    "gentamicina": {
+      "grupo": "AMINOGLUCÓSIDOS",
+      "nombre": "Gentamicina",
+      "dosis": 7.5,
+      "unidad": "mg",
+      "intervalo": "cada 24 horas",
+      "maximo": 7.5,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "40 mg/mL",
+      "dilucion": "Diluir 1:10 en SF (4 mg/mL)",
+      "via": "IV, IM"
+    },
+    "tobramicina": {
+      "grupo": "AMINOGLUCÓSIDOS",
+      "nombre": "Tobramicina",
+      "dosis": 10,
+      "unidad": "mg",
+      "intervalo": "cada 24 horas",
+      "maximo": 10,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "40 mg/mL",
+      "dilucion": "Diluir 1:10 en SF",
+      "via": "IV, IM"
+    },
+    "aciclovir": {
+      "grupo": "ANTIVIRALES",
+      "nombre": "Aciclovir",
+      "dosis": 15,
+      "unidad": "mg",
+      "intervalo": "cada 8 horas",
+      "maximo": 45,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "200 mg/5 mL",
+      "dilucion": "Suspensión oral directa",
+      "via": "VO, IV"
+    },
+    "oseltamivir": {
+      "grupo": "ANTIVIRALES",
+      "nombre": "Oseltamivir (Tamiflu)",
+      "dosis": 2,
+      "unidad": "mg",
+      "intervalo": "cada 12 horas",
+      "maximo": 4,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "6 mg/mL",
+      "dilucion": "Suspensión oral directa",
+      "via": "VO"
+    },
+    "fluconazol": {
+      "grupo": "ANTIFÚNGICOS",
+      "nombre": "Fluconazol",
+      "dosis": 6,
+      "unidad": "mg",
+      "intervalo": "cada 24 horas",
+      "maximo": 6,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "2 mg/mL (200 mg/100 mL)",
+      "dilucion": "Usar sin diluir o diluir 1:1 en SF",
+      "via": "IV, VO"
+    },
+    "nistatina": {
+      "grupo": "ANTIFÚNGICOS",
+      "nombre": "Nistatina",
+      "dosis": 100000,
+      "unidad": "U",
+      "intervalo": "cada 6 horas",
+      "maximo": 400000,
+      "maxunidad": "U/kg/día",
+      "presentacion": "100.000 U/mL",
+      "dilucion": "Usar sin diluir (suspensión oral)",
+      "via": "VO"
+    },
+    "digoxina": {
+      "grupo": "CARDIOVASCULARES",
+      "nombre": "Digoxina",
+      "dosis": 0.01,
+      "unidad": "mg",
+      "intervalo": "cada 12 horas",
+      "maximo": 0.02,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "0.25 mg/mL",
+      "dilucion": "Diluir 1:10 en SF",
+      "via": "IV, VO"
+    },
+    "dopamina": {
+      "grupo": "CARDIOVASCULARES",
+      "nombre": "Dopamina",
+      "dosis": 5,
+      "unidad": "mcg/kg/min",
+      "intervalo": "infusión continua",
+      "maximo": 20,
+      "maxunidad": "mcg/kg/min",
+      "presentacion": "40 mg/mL",
+      "dilucion": "Diluir en SF: 200 mg en 50 mL = 4 mg/mL",
+      "via": "IV"
+    },
+    "epinefrina": {
+      "grupo": "CARDIOVASCULARES",
+      "nombre": "Epinefrina",
+      "dosis": 0.01,
+      "unidad": "mg",
+      "intervalo": "cada 5-15 min según necesidad",
+      "maximo": 0.01,
+      "maxunidad": "mg/dosis",
+      "presentacion": "1:1000 (1 mg/mL)",
+      "dilucion": "Diluir 1:10 en SF para vía IV (0.1 mg/mL)",
+      "via": "IV, IM, SC"
+    },
+    "adrenalina_infusion": {
+      "grupo": "CARDIOVASCULARES",
+      "nombre": "Adrenalina (Infusión)",
+      "dosis": 0.05,
+      "unidad": "mcg/kg/min",
+      "intervalo": "infusión continua",
+      "maximo": 1,
+      "maxunidad": "mcg/kg/min",
+      "presentacion": "1 mg/mL",
+      "dilucion": "Diluir 1 mL en 50 mL SF = 20 mcg/mL",
+      "via": "IV"
+    },
+    "milrinona": {
+      "grupo": "CARDIOVASCULARES",
+      "nombre": "Milrinona",
+      "dosis": 0.25,
+      "unidad": "mcg/kg/min",
+      "intervalo": "infusión continua",
+      "maximo": 0.75,
+      "maxunidad": "mcg/kg/min",
+      "presentacion": "1 mg/mL",
+      "dilucion": "Diluir en SF o DW a concentración 50-200 mcg/mL",
+      "via": "IV"
+    },
+    "midazolam": {
+      "grupo": "SEDANTES",
+      "nombre": "Midazolam",
+      "dosis": 0.1,
+      "unidad": "mg",
+      "intervalo": "cada 2-4 horas",
+      "maximo": 0.3,
+      "maxunidad": "mg/kg/dosis",
+      "presentacion": "5 mg/mL",
+      "dilucion": "Diluir 1:4 en SF (1.25 mg/mL)",
+      "via": "IV, IM, IN"
+    },
+    "propofol": {
+      "grupo": "SEDANTES",
+      "nombre": "Propofol",
+      "dosis": 2,
+      "unidad": "mg",
+      "intervalo": "inducción IV",
+      "maximo": 4,
+      "maxunidad": "mg/kg",
+      "presentacion": "10 mg/mL",
+      "dilucion": "Usar sin diluir",
+      "via": "IV"
+    },
+    "tiopental": {
+      "grupo": "SEDANTES",
+      "nombre": "Tiopental",
+      "dosis": 5,
+      "unidad": "mg",
+      "intervalo": "inducción IV",
+      "maximo": 10,
+      "maxunidad": "mg/kg",
+      "presentacion": "500 mg vial",
+      "dilucion": "Diluir 500 mg en 10 mL SF = 50 mg/mL",
+      "via": "IV, IM"
+    },
+    "morfina": {
+      "grupo": "OPIOIDES",
+      "nombre": "Morfina",
+      "dosis": 0.1,
+      "unidad": "mg",
+      "intervalo": "cada 4-6 horas",
+      "maximo": 0.3,
+      "maxunidad": "mg/kg/dosis",
+      "presentacion": "10 mg/mL",
+      "dilucion": "Diluir 1:10 en SF",
+      "via": "IV, IM, SC"
+    },
+    "fentanilo": {
+      "grupo": "OPIOIDES",
+      "nombre": "Fentanilo",
+      "dosis": 1,
+      "unidad": "mcg",
+      "intervalo": "cada 2-4 horas",
+      "maximo": 5,
+      "maxunidad": "mcg/kg/dosis",
+      "presentacion": "50 mcg/mL",
+      "dilucion": "Diluir 1:10 en SF",
+      "via": "IV, IM"
+    },
+    "codeína": {
+      "grupo": "OPIOIDES",
+      "nombre": "Codeína",
+      "dosis": 0.5,
+      "unidad": "mg",
+      "intervalo": "cada 6 horas",
+      "maximo": 2,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "15 mg/5 mL",
+      "dilucion": "Suspensión oral directa",
+      "via": "VO"
+    },
+    "salbutamol": {
+      "grupo": "BRONCODILATADORES",
+      "nombre": "Salbutamol",
+      "dosis": 0.1,
+      "unidad": "mg",
+      "intervalo": "según necesidad",
+      "maximo": 0.5,
+      "maxunidad": "mg/dosis",
+      "presentacion": "100 mcg/dosis (inhalador)",
+      "dilucion": "Usar directo inhalador o nebulizar",
+      "via": "Inhalado"
+    },
+    "ipratropio": {
+      "grupo": "BRONCODILATADORES",
+      "nombre": "Ipratropio",
+      "dosis": 20,
+      "unidad": "mcg",
+      "intervalo": "cada 8 horas",
+      "maximo": 60,
+      "maxunidad": "mcg/día",
+      "presentacion": "20 mcg/dosis (inhalador)",
+      "dilucion": "Mezclar con salbutamol para nebulizar",
+      "via": "Inhalado"
+    },
+    "furosemida": {
+      "grupo": "DIURÉTICOS",
+      "nombre": "Furosemida (Lasix)",
+      "dosis": 1,
+      "unidad": "mg",
+      "intervalo": "cada 8-12 horas",
+      "maximo": 4,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "40 mg/mL",
+      "dilucion": "Diluir 1:4 en SF",
+      "via": "IV, IM, VO"
+    },
+    "espironolactona": {
+      "grupo": "DIURÉTICOS",
+      "nombre": "Espironolactona",
+      "dosis": 1,
+      "unidad": "mg",
+      "intervalo": "cada 12 horas",
+      "maximo": 3,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "25 mg/5 mL",
+      "dilucion": "Suspensión oral directa",
+      "via": "VO"
+    },
+    "fenitoína": {
+      "grupo": "ANTICONVULSIVANTES",
+      "nombre": "Fenitoína",
+      "dosis": 15,
+      "unidad": "mg",
+      "intervalo": "carga inicial",
+      "maximo": 15,
+      "maxunidad": "mg/kg",
+      "presentacion": "50 mg/mL",
+      "dilucion": "Diluir 1:5 en SF (debe usarse filtro)",
+      "via": "IV lenta"
+    },
+    "ácido_valproico": {
+      "grupo": "ANTICONVULSIVANTES",
+      "nombre": "Ácido Valproico",
+      "dosis": 15,
+      "unidad": "mg",
+      "intervalo": "cada 8 horas",
+      "maximo": 45,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "250 mg/5 mL",
+      "dilucion": "Solución oral directa",
+      "via": "VO"
+    },
+    "levetiracetam": {
+      "grupo": "ANTICONVULSIVANTES",
+      "nombre": "Levetiracetam (Keppra)",
+      "dosis": 10,
+      "unidad": "mg",
+      "intervalo": "cada 12 horas",
+      "maximo": 30,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "100 mg/mL",
+      "dilucion": "Solución oral directa",
+      "via": "VO, IV"
+    },
+    "dexametasona": {
+      "grupo": "GLUCOCORTICOIDES",
+      "nombre": "Dexametasona",
+      "dosis": 0.1,
+      "unidad": "mg",
+      "intervalo": "cada 6 horas",
+      "maximo": 0.3,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "4 mg/mL, 0.5 mg/5 mL",
+      "dilucion": "Diluir 1:10 en SF",
+      "via": "IV, IM, VO"
+    },
+    "metilprednisolona": {
+      "grupo": "GLUCOCORTICOIDES",
+      "nombre": "Metilprednisolona",
+      "dosis": 2,
+      "unidad": "mg",
+      "intervalo": "cada 6-8 horas",
+      "maximo": 8,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "125 mg vial (500 mg vial)",
+      "dilucion": "Diluir vial en 5-10 mL SF",
+      "via": "IV, IM"
+    },
+    "hidrocortisona": {
+      "grupo": "GLUCOCORTICOIDES",
+      "nombre": "Hidrocortisona",
+      "dosis": 5,
+      "unidad": "mg",
+      "intervalo": "cada 6 horas",
+      "maximo": 20,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "100 mg vial",
+      "dilucion": "Diluir vial en 5-10 mL SF",
+      "via": "IV, IM"
+    },
+    "benzocaína": {
+      "grupo": "ANTIBACTERIANOS TOPICOS",
+      "nombre": "Benzocaína",
+      "dosis": 3,
+      "unidad": "mg",
+      "intervalo": "según necesidad",
+      "maximo": 7,
+      "maxunidad": "mg/kg",
+      "presentacion": "Spray 20% o crema",
+      "dilucion": "Usar directamente sobre mucosa",
+      "via": "Tópico"
+    },
+    "loratadina": {
+      "grupo": "ANTIHISTAMÍNICOS",
+      "nombre": "Loratadina",
+      "dosis": 0.2,
+      "unidad": "mg",
+      "intervalo": "cada 24 horas",
+      "maximo": 0.2,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "5 mg/5 mL",
+      "dilucion": "Solución oral directa",
+      "via": "VO"
+    },
+    "desloratadina": {
+      "grupo": "ANTIHISTAMÍNICOS",
+      "nombre": "Desloratadina",
+      "dosis": 0.15,
+      "unidad": "mg",
+      "intervalo": "cada 24 horas",
+      "maximo": 0.15,
+      "maxunidad": "mg/kg/día",
+      "presentacion": "2.5 mg/5 mL",
+      "dilucion": "Solución oral directa",
+      "via": "VO"
+    }
   },
   "intubacion": {
-    "atropina": {"nombre":"Atropina","unidad":"mg","dosis_kg":0.02,"presentacion":"Ampolla 1 mg/1 mL","concentracion_mg_ml":0.1,"concentracion_presentacion":"1 mg/mL diluida 1:10 = 0.1 mg/mL","dilucion":"Diluir hasta 10 mL con SSF (1 mg + 9 mL SSF = 0.1 mg/mL)","nota":"Dilución estándar 1:10 para uso IV."},
-    "fentanilo": {"nombre":"Fentanilo","unidad":"mcg","dosis_kg":2,"presentacion":"Ampolla 150 mcg/3 mL (50 mcg/mL)","concentracion_mcg_ml":10,"concentracion_presentacion":"Diluida 1:5 = 10 mcg/mL","dilucion":"Diluir hasta 15 mL con SSF (150 mcg + 12 mL SSF = 10 mcg/mL)","nota":"Usar con precaución; valorar reducir dosis en inestabilidad hemodinámica."},
-    "ketamina": {"nombre":"Ketamina","unidad":"mg","dosis_kg":2,"presentacion":"Ampolla 500 mg/10 mL (50 mg/mL)","concentracion_mg_ml":10,"concentracion_presentacion":"Diluida 1:5 = 10 mg/mL","dilucion":"Diluir hasta 50 mL con SF (500 mg + 40 mL SF = 10 mg/mL)","nota":"Evitar en HTA; puede aumentar FC."},
-    "midazolam": {"nombre":"Midazolam","unidad":"mg","dosis_kg":0.1,"presentacion":"Vial 15 mg/3 mL (5 mg/mL)","concentracion_mg_ml":5,"concentracion_presentacion":"Concentrado 5 mg/mL, usar sin diluir","dilucion":"Usar sin diluir (5 mg/mL) o diluir 1:4 en SF si se necesita (1.25 mg/mL)","nota":"Precaución en pacientes inestables; ajustar dosis a la baja si precisa."},
-    "propofol": {"nombre":"Propofol","unidad":"mg","dosis_kg":2.5,"presentacion":"Vial 10 mg/mL (emulsión 1%)","concentracion_mg_ml":10,"concentracion_presentacion":"10 mg/mL (usar sin diluir)","dilucion":"Usar sin diluir","nota":"Precaución; ajustar a la baja en inestabilidad hemodinámica. Rango 1-5 mg/kg. Emulsión lipídica."},
-    "succinilcolina": {"nombre":"Succinilcolina","unidad":"mg","dosis_kg":1,"presentacion":"Ampolla 100 mg/2 mL (50 mg/mL)","concentracion_mg_ml":10,"concentracion_presentacion":"Diluida 1:5 = 10 mg/mL","dilucion":"Diluir hasta 10 mL con SF (100 mg + 8 mL SF = 10 mg/mL)","nota":"Evitar en HTIC, hiperpotasemia, trauma muscular extenso, grandes quemados, antecedente de hipertermia maligna. Dosis: 2 mg/kg ≤24 meses; 1 mg/kg >24 meses."},
-    "rocuronio": {"nombre":"Rocuronio","unidad":"mg","dosis_kg":1,"presentacion":"Vial 10 mg/mL (50 mg/5 mL)","concentracion_mg_ml":10,"concentracion_presentacion":"10 mg/mL (prediluido)","dilucion":"Puede administrarse puro","nota":"Uso IV directo. No necesita dilución."}
+    "atropina": {
+      "nombre": "Atropina",
+      "unidad": "mg",
+      "dosis_kg": 0.02,
+      "presentacion": "Ampolla 1 mg/1 mL",
+      "concentracion_mg_ml": 0.1,
+      "concentracion_presentacion": "1 mg/mL diluida 1:10 = 0.1 mg/mL",
+      "dilucion": "Diluir hasta 10 mL con SSF (1 mg + 9 mL SSF = 0.1 mg/mL)",
+      "nota": "Dilución estándar 1:10 para uso IV."
+    },
+    "fentanilo": {
+      "nombre": "Fentanilo",
+      "unidad": "mcg",
+      "dosis_kg": 2,
+      "presentacion": "Ampolla 150 mcg/3 mL (50 mcg/mL)",
+      "concentracion_mcg_ml": 10,
+      "concentracion_presentacion": "Diluida 1:5 = 10 mcg/mL",
+      "dilucion": "Diluir hasta 15 mL con SSF (150 mcg + 12 mL SSF = 10 mcg/mL)",
+      "nota": "Usar con precaución; valorar reducir dosis en inestabilidad hemodinámica."
+    },
+    "ketamina": {
+      "nombre": "Ketamina",
+      "unidad": "mg",
+      "dosis_kg": 2,
+      "presentacion": "Ampolla 500 mg/10 mL (50 mg/mL)",
+      "concentracion_mg_ml": 10,
+      "concentracion_presentacion": "Diluida 1:5 = 10 mg/mL",
+      "dilucion": "Diluir hasta 50 mL con SF (500 mg + 40 mL SF = 10 mg/mL)",
+      "nota": "Evitar en HTA; puede aumentar FC."
+    },
+    "midazolam": {
+      "nombre": "Midazolam",
+      "unidad": "mg",
+      "dosis_kg": 0.1,
+      "presentacion": "Varias presentaciones",
+      "concentraciones": [
+        {
+          "conc_mg_ml": 1,
+          "desc": "1 mg/1 mL o 5 mg/5 mL"
+        },
+        {
+          "conc_mg_ml": 5,
+          "desc": "15 mg/3 mL (concentrado)"
+        }
+      ],
+      "dilucion": "Usar sin diluir según presentación o diluir en SF si se necesita",
+      "nota": "Precaución en pacientes inestables; ajustar dosis a la baja si precisa."
+    },
+    "propofol": {
+      "nombre": "Propofol",
+      "unidad": "mg",
+      "dosis_kg": 2.5,
+      "presentacion": "Varias presentaciones (1% o 2%)",
+      "dilucion": "Usar según presentación: 1% o 2%",
+      "nota": "Precaución; ajustar a la baja en inestabilidad hemodinámica. Rango 1-5 mg/kg. Emulsión lipídica.",
+      "concentraciones": [
+        {
+          "conc_mg_ml": 10,
+          "desc": "1% (10 mg/mL) estándar"
+        },
+        {
+          "conc_mg_ml": 20,
+          "desc": "2% (20 mg/mL) concentrado"
+        }
+      ]
+    },
+    "succinilcolina": {
+      "nombre": "Succinilcolina",
+      "unidad": "mg",
+      "dosis_kg": 1,
+      "presentacion": "Ampolla 100 mg/2 mL (50 mg/mL)",
+      "concentracion_mg_ml": 10,
+      "concentracion_presentacion": "Diluida 1:5 = 10 mg/mL",
+      "dilucion": "Diluir hasta 10 mL con SF (100 mg + 8 mL SF = 10 mg/mL)",
+      "nota": "Evitar en HTIC, hiperpotasemia, trauma muscular extenso, grandes quemados, antecedente de hipertermia maligna. Dosis: 2 mg/kg ≤24 meses; 1 mg/kg >24 meses."
+    },
+    "rocuronio": {
+      "nombre": "Rocuronio",
+      "unidad": "mg",
+      "dosis_kg": 1,
+      "presentacion": "Vial 10 mg/mL (50 mg/5 mL)",
+      "concentracion_mg_ml": 10,
+      "concentracion_presentacion": "10 mg/mL (prediluido)",
+      "dilucion": "Puede administrarse puro",
+      "nota": "Uso IV directo. No necesita dilución."
+    }
   },
   "urgencia": {
-    "adenosina": {"nombre":"Adenosina","unidad":"mg","presentacion":"Ampolla 6 mg/2 mL","dilucion":"Diluir hasta 6 mL con SSF o SG5%","nota":"Vía proximal al corazón con llave de 3 pasos; bolo seguido de 5-10 mL SSF. Puede escalar hasta 0.3 mg/kg si no respuesta."},
-    "adrenalina": {"nombre":"Adrenalina","unidad":"mg","presentacion":"1 mg/mL","dilucion":"Diluir hasta 10 mL con SSF o SG5%","nota":"Vía IV/IO; preparar 0.1 mg/mL."},
-    "amiodarona": {"nombre":"Amiodarona","unidad":"mg","presentacion":"Ampolla 150 mg/3 mL","dilucion":"Pura en PCR; diluir en otras situaciones","nota":"Pasar en 3 minutos."},
-    "atropina_urgencia": {"nombre":"Atropina (Urgencia)","unidad":"mg","presentacion":"Ampolla 1 mg/1 mL","dilucion":"Diluir hasta 10 mL con SSF o SG5%","nota":"Mínimo 0.1 mg."},
-    "bicarbonato": {"nombre":"Bicarbonato 1M","unidad":"mL","presentacion":"1 M (84 mg/10 mL)","dilucion":"Usar sin diluir","nota":"IV lenta."},
-    "boloLiquidos": {"nombre":"Bolo de Líquidos","unidad":"mL","presentacion":"SF o Ringer","dilucion":"Usar directamente","nota":"IV rápida."},
-    "gluconato": {"nombre":"Gluconato Cálcico 10%","unidad":"mL","presentacion":"Ampolla 10 mL / 4.6 mEq","dilucion":"Diluir en igual volumen de SSF","nota":"No usar en la misma vía que bicarbonato sódico."},
-    "glucosa": {"nombre":"Glucosa 10%","unidad":"mL","presentacion":"100 mg/mL","dilucion":"Usar directamente","nota":"Hipoglucemia."},
-    "flumazenilo": {"nombre":"Flumazenilo","unidad":"mg","presentacion":"0.1 mg/mL","dilucion":"Usar puro","nota":"Antagonista benzodiacepinas."},
-    "naloxona": {"nombre":"Naloxona","unidad":"mg","presentacion":"0.4 mg/mL","dilucion":"Usar puro","nota":"Antagonista opioides."},
-    "manitol": {"nombre":"Manitol","unidad":"g","presentacion":"10% (10 g/100 mL) y 20% (20 g/100 mL)","dilucion":"Usar según presentación","nota":"Edema cerebral; verificar concentración."},
-    "salinoHiper": {"nombre":"Salino hipertónico 3%","unidad":"mL","presentacion":"NaCl 3%","dilucion":"Preparación: 10 mL NaCl 20% + 90 mL SSF (o 50 mL + 450 mL)","nota":"Para HTIC o hiponatremia sintomática (bolos 2 mL/kg, máx 3)."},
-    "sulfatoMg": {"nombre":"Sulfato de Magnesio","unidad":"mg","presentacion":"Ampolla 1.5 g/10 mL","dilucion":"Diluir hasta 20 mL con SSF","nota":"Uso IV."},
-    "tranexamico": {"nombre":"Ácido Tranexámico","unidad":"mg","presentacion":"Puro 100 mg/mL","dilucion":"Usar directo","nota":"Hemorragia."}
-  },
-  "intubacion": {
-    "atropina": {"nombre":"Atropina","unidad":"mg","dosis_kg":0.02,"presentacion":"Ampolla 1 mg/1 mL","concentracion_mg_ml":0.1,"concentracion_presentacion":"1 mg/mL diluida 1:10 = 0.1 mg/mL","dilucion":"Diluir hasta 10 mL con SSF (1 mg + 9 mL SSF = 0.1 mg/mL)","nota":"Dilución estándar 1:10 para uso IV."},
-    "fentanilo": {"nombre":"Fentanilo","unidad":"mcg","dosis_kg":2,"presentacion":"Ampolla 150 mcg/3 mL (50 mcg/mL)","concentracion_mcg_ml":10,"concentracion_presentacion":"Diluida 1:5 = 10 mcg/mL","dilucion":"Diluir hasta 15 mL con SSF (150 mcg + 12 mL SSF = 10 mcg/mL)","nota":"Usar con precaución; valorar reducir dosis en inestabilidad hemodinámica."},
-    "ketamina": {"nombre":"Ketamina","unidad":"mg","dosis_kg":2,"presentacion":"Ampolla 500 mg/10 mL (50 mg/mL)","concentracion_mg_ml":10,"concentracion_presentacion":"Diluida 1:5 = 10 mg/mL","dilucion":"Diluir hasta 50 mL con SF (500 mg + 40 mL SF = 10 mg/mL)","nota":"Evitar en HTA; puede aumentar FC."},
-    "midazolam": {"nombre":"Midazolam","unidad":"mg","dosis_kg":0.1,"presentacion":"Vial 15 mg/3 mL (5 mg/mL)","concentracion_mg_ml":5,"concentracion_presentacion":"Concentrado 5 mg/mL, usar sin diluir","dilucion":"Usar sin diluir (5 mg/mL) o diluir 1:4 en SF si se necesita (1.25 mg/mL)","nota":"Precaución en pacientes inestables; ajustar dosis a la baja si precisa."},
-    "propofol": {"nombre":"Propofol","unidad":"mg","dosis_kg":2.5,"presentacion":"Vial 10 mg/mL (emulsión 1%)","concentracion_mg_ml":10,"concentracion_presentacion":"10 mg/mL (usar sin diluir)","dilucion":"Usar sin diluir","nota":"Precaución; ajustar a la baja en inestabilidad hemodinámica. Rango 1-5 mg/kg. Emulsión lipídica."},
-    "succinilcolina": {"nombre":"Succinilcolina","unidad":"mg","dosis_kg":1,"presentacion":"Ampolla 100 mg/2 mL (50 mg/mL)","concentracion_mg_ml":10,"concentracion_presentacion":"Diluida 1:5 = 10 mg/mL","dilucion":"Diluir hasta 10 mL con SF (100 mg + 8 mL SF = 10 mg/mL)","nota":"Evitar en HTIC, hiperpotasemia, trauma muscular extenso, grandes quemados, antecedente de hipertermia maligna. Dosis: 2 mg/kg ≤24 meses; 1 mg/kg >24 meses."},
-    "rocuronio": {"nombre":"Rocuronio","unidad":"mg","dosis_kg":1,"presentacion":"Vial 10 mg/mL (50 mg/5 mL)","concentracion_mg_ml":10,"concentracion_presentacion":"10 mg/mL (prediluido)","dilucion":"Puede administrarse puro","nota":"Uso IV directo. No necesita dilución."}
+    "adenosina": {
+      "nombre": "Adenosina",
+      "unidad": "mg",
+      "presentacion": "Ampolla 6 mg/2 mL",
+      "dilucion": "Diluir hasta 6 mL con SSF o SG5%",
+      "nota": "Vía proximal al corazón con llave de 3 pasos; bolo seguido de 5-10 mL SSF. Puede escalar hasta 0.3 mg/kg si no respuesta."
+    },
+    "adrenalina": {
+      "nombre": "Adrenalina",
+      "unidad": "mg",
+      "presentacion": "1 mg/mL",
+      "dilucion": "Diluir hasta 10 mL con SSF o SG5%",
+      "nota": "Vía IV/IO; preparar 0.1 mg/mL."
+    },
+    "amiodarona": {
+      "nombre": "Amiodarona",
+      "unidad": "mg",
+      "presentacion": "Ampolla 150 mg/3 mL",
+      "dilucion": "Pura en PCR; diluir en otras situaciones",
+      "nota": "Pasar en 3 minutos."
+    },
+    "atropina_urgencia": {
+      "nombre": "Atropina (Urgencia)",
+      "unidad": "mg",
+      "presentacion": "Ampolla 1 mg/1 mL",
+      "dilucion": "Diluir hasta 10 mL con SSF o SG5%",
+      "nota": "Mínimo 0.1 mg."
+    },
+    "bicarbonato": {
+      "nombre": "Bicarbonato 1M",
+      "unidad": "mL",
+      "presentacion": "1 M (84 mg/10 mL)",
+      "dilucion": "Usar sin diluir",
+      "nota": "IV lenta."
+    },
+    "boloLiquidos": {
+      "nombre": "Bolo de Líquidos",
+      "unidad": "mL",
+      "presentacion": "SF o Ringer",
+      "dilucion": "Usar directamente",
+      "nota": "IV rápida."
+    },
+    "gluconato": {
+      "nombre": "Gluconato Cálcico 10%",
+      "unidad": "mL",
+      "presentacion": "Ampolla 10 mL / 4.6 mEq",
+      "dilucion": "Diluir en igual volumen de SSF",
+      "nota": "No usar en la misma vía que bicarbonato sódico."
+    },
+    "glucosa": {
+      "nombre": "Glucosa 10%",
+      "unidad": "mL",
+      "presentacion": "100 mg/mL",
+      "dilucion": "Usar directamente",
+      "nota": "Hipoglucemia."
+    },
+    "flumazenilo": {
+      "nombre": "Flumazenilo",
+      "unidad": "mg",
+      "presentacion": "0.1 mg/mL",
+      "dilucion": "Usar puro",
+      "nota": "Antagonista benzodiacepinas."
+    },
+    "naloxona": {
+      "nombre": "Naloxona",
+      "unidad": "mg",
+      "presentacion": "0.4 mg/mL",
+      "dilucion": "Usar puro",
+      "nota": "Antagonista opioides."
+    },
+    "manitol": {
+      "nombre": "Manitol",
+      "unidad": "g",
+      "presentacion": "10% (10 g/100 mL) y 20% (20 g/100 mL)",
+      "dilucion": "Usar según presentación",
+      "nota": "Edema cerebral; verificar concentración."
+    },
+    "salinoHiper": {
+      "nombre": "Salino hipertónico 3%",
+      "unidad": "mL",
+      "presentacion": "NaCl 3%",
+      "dilucion": "Preparación: 10 mL NaCl 20% + 90 mL SSF (o 50 mL + 450 mL)",
+      "nota": "Para HTIC o hiponatremia sintomática (bolos 2 mL/kg, máx 3)."
+    },
+    "sulfatoMg": {
+      "nombre": "Sulfato de Magnesio",
+      "unidad": "mg",
+      "presentacion": "Ampolla 1.5 g/10 mL",
+      "dilucion": "Diluir hasta 20 mL con SSF",
+      "nota": "Uso IV."
+    },
+    "tranexamico": {
+      "nombre": "Ácido Tranexámico",
+      "unidad": "mg",
+      "presentacion": "Puro 100 mg/mL",
+      "dilucion": "Usar directo",
+      "nota": "Hemorragia."
+    }
   },
   "perfusiones": {
     "inotrópicos": {
-      "adrenalina_periferico": {"nombre":"Adrenalina vía periférica","unidad":"mcg/kg/min","dosis_min":0.01,"dosis_max":1.5,"presentacion":"1 mg/mL","dilucion":"1 mg en 50 mL de SSF","ml_h_equiv":"10 mL/h = 0.19 mcg/kg/min","nota":"Usar por vía periférica únicamente hasta obtener acceso venoso central"},
-      "adrenalina_central": {"nombre":"Adrenalina vía central","unidad":"mcg/kg/min","dosis_min":0.01,"dosis_max":1.5,"presentacion":"1 mg/mL","dilucion":"6.90 mg en 50 mL de SSF o Glc 5%","ml_h_equiv":"1 mL/h = 0.1 mcg/kg/min","nota":"Vía venosa central"},
-      "amiodarona_perf": {"nombre":"Amiodarona","unidad":"mcg/kg/min","dosis_min":5,"dosis_max":15,"presentacion":"150 mg/3 mL","dilucion":"270 mg en 50 mL de Glc 5%","ml_h_equiv":"1 mL/h = 5 mcg/kg/min","nota":"Vasoactivo especial"},
-      "dopamina_periferico": {"nombre":"Dopamina vía periférica","unidad":"mcg/kg/min","dosis_min":5,"dosis_max":20,"presentacion":"40 mg/mL","dilucion":"69 mg en 50 mL de SSF o Glc 5%","ml_h_equiv":"1 mL/h = 1 mcg/kg/min","nota":"Usar por vía periférica únicamente hasta obtener acceso venoso central"},
-      "dopamina_central": {"nombre":"Dopamina vía central","unidad":"mcg/kg/min","dosis_min":5,"dosis_max":20,"presentacion":"40 mg/mL","dilucion":"690 mg en 50 mL de SSF o Glc 5%","ml_h_equiv":"1 mL/h = 10 mcg/kg/min","nota":"Vía venosa central"},
-      "labetalol": {"nombre":"Labetalol","unidad":"mg/kg/h","dosis_min":0.5,"dosis_max":3,"presentacion":"5 mg/mL","dilucion":"250 mg en 50 mL de Glc 5%","ml_h_equiv":"1 mL/h = 0.28 mg/kg/h","nota":"Antihipertensivo"},
-      "milrinona": {"nombre":"Milrinona","unidad":"mcg/kg/min","dosis_min":0.3,"dosis_max":1,"presentacion":"1 mg/mL","dilucion":"34.50 mg en 50 mL de SSF o Glc 5%","ml_h_equiv":"1 mL/h = 0.50 mcg/kg/min","nota":"Inodilatador"},
-      "noradrenalina_central": {"nombre":"Noradrenalina vía central","unidad":"mcg/kg/min","dosis_min":0.1,"dosis_max":1,"presentacion":"1 mg/mL","dilucion":"6.90 mg en 50 mL de Glc 5%","ml_h_equiv":"1 mL/h = 0.1 mcg/kg/min","nota":"Vía venosa central"},
-      "noradrenalina_periferico": {"nombre":"Noradrenalina vía periférica","unidad":"mcg/kg/min","dosis_min":0.1,"dosis_max":1,"presentacion":"1 mg/mL","dilucion":"1 mg en 50 mL de SSF","ml_h_equiv":"10 mL/h = 0.19 mcg/kg/min","nota":"Usar por vía periférica únicamente hasta obtener acceso venoso central"}
+      "adrenalina_periferico": {
+        "nombre": "Adrenalina vía periférica",
+        "unidad": "mcg/kg/min",
+        "dosis_min": 0.01,
+        "dosis_max": 1.5,
+        "presentacion": "1 mg/mL",
+        "dilucion": "1 mg en 50 mL de SSF",
+        "ml_h_equiv": "10 mL/h = 0.19 mcg/kg/min",
+        "nota": "Usar por vía periférica únicamente hasta obtener acceso venoso central"
+      },
+      "adrenalina_central": {
+        "nombre": "Adrenalina vía central",
+        "unidad": "mcg/kg/min",
+        "dosis_min": 0.01,
+        "dosis_max": 1.5,
+        "presentacion": "1 mg/mL",
+        "dilucion": "6.90 mg en 50 mL de SSF o Glc 5%",
+        "ml_h_equiv": "1 mL/h = 0.1 mcg/kg/min",
+        "nota": "Vía venosa central"
+      },
+      "amiodarona_perf": {
+        "nombre": "Amiodarona",
+        "unidad": "mcg/kg/min",
+        "dosis_min": 5,
+        "dosis_max": 15,
+        "presentacion": "150 mg/3 mL",
+        "dilucion": "270 mg en 50 mL de Glc 5%",
+        "ml_h_equiv": "1 mL/h = 5 mcg/kg/min",
+        "nota": "Vasoactivo especial"
+      },
+      "dopamina_periferico": {
+        "nombre": "Dopamina vía periférica",
+        "unidad": "mcg/kg/min",
+        "dosis_min": 5,
+        "dosis_max": 20,
+        "presentacion": "40 mg/mL",
+        "dilucion": "69 mg en 50 mL de SSF o Glc 5%",
+        "ml_h_equiv": "1 mL/h = 1 mcg/kg/min",
+        "nota": "Usar por vía periférica únicamente hasta obtener acceso venoso central"
+      },
+      "dopamina_central": {
+        "nombre": "Dopamina vía central",
+        "unidad": "mcg/kg/min",
+        "dosis_min": 5,
+        "dosis_max": 20,
+        "presentacion": "40 mg/mL",
+        "dilucion": "690 mg en 50 mL de SSF o Glc 5%",
+        "ml_h_equiv": "1 mL/h = 10 mcg/kg/min",
+        "nota": "Vía venosa central"
+      },
+      "labetalol": {
+        "nombre": "Labetalol",
+        "unidad": "mg/kg/h",
+        "dosis_min": 0.5,
+        "dosis_max": 3,
+        "presentacion": "5 mg/mL",
+        "dilucion": "250 mg en 50 mL de Glc 5%",
+        "ml_h_equiv": "1 mL/h = 0.28 mg/kg/h",
+        "nota": "Antihipertensivo"
+      },
+      "milrinona": {
+        "nombre": "Milrinona",
+        "unidad": "mcg/kg/min",
+        "dosis_min": 0.3,
+        "dosis_max": 1,
+        "presentacion": "1 mg/mL",
+        "dilucion": "34.50 mg en 50 mL de SSF o Glc 5%",
+        "ml_h_equiv": "1 mL/h = 0.50 mcg/kg/min",
+        "nota": "Inodilatador"
+      },
+      "noradrenalina_central": {
+        "nombre": "Noradrenalina vía central",
+        "unidad": "mcg/kg/min",
+        "dosis_min": 0.1,
+        "dosis_max": 1,
+        "presentacion": "1 mg/mL",
+        "dilucion": "6.90 mg en 50 mL de Glc 5%",
+        "ml_h_equiv": "1 mL/h = 0.1 mcg/kg/min",
+        "nota": "Vía venosa central"
+      },
+      "noradrenalina_periferico": {
+        "nombre": "Noradrenalina vía periférica",
+        "unidad": "mcg/kg/min",
+        "dosis_min": 0.1,
+        "dosis_max": 1,
+        "presentacion": "1 mg/mL",
+        "dilucion": "1 mg en 50 mL de SSF",
+        "ml_h_equiv": "10 mL/h = 0.19 mcg/kg/min",
+        "nota": "Usar por vía periférica únicamente hasta obtener acceso venoso central"
+      }
     },
     "sedoanalgesia": {
-      "fentanilo_perf": {"nombre":"Fentanilo","unidad":"mcg/kg/h","dosis_min":1,"dosis_max":5,"presentacion":"150 mcg/3 mL","dilucion":"900 mcg en 50 mL de SSF o Glc 5%","ml_h_equiv":"1 mL/h = 1 mcg/kg/h","nota":"Opiode analgésico"},
-      "ketamina_perf": {"nombre":"Ketamina","unidad":"mg/kg/h","dosis_min":0.5,"dosis_max":2,"presentacion":"50 mg/mL","dilucion":"900 mg en 50 mL de SSF o Glc 5%","ml_h_equiv":"1 mL/h = 1 mg/kg/h","nota":"Anestésico disociativo"},
-      "midazolam_perf": {"nombre":"Midazolam","unidad":"mg/kg/h","dosis_min":0.05,"dosis_max":0.3,"presentacion":"15 mg/3 mL","dilucion":"90 mg en 50 mL de SSF o Glc 5% (Emplear dilución 3 mL/15 mg)","ml_h_equiv":"1 mL/h = 0.10 mg/kg/h","nota":"Benzodiacepina sedante (usar dilución 3 mL/15 mg)"},
-      "rocuronio_perf": {"nombre":"Rocuronio","unidad":"mg/kg/h","dosis_min":0.3,"dosis_max":1,"presentacion":"10 mg/mL","dilucion":"500 mg en 50 mL (puro 10 mg/mL)","ml_h_equiv":"1 mL/h = 0.56 mg/kg/h","nota":"Paralizante neuromuscular"}
+      "fentanilo_perf": {
+        "nombre": "Fentanilo",
+        "unidad": "mcg/kg/h",
+        "dosis_min": 1,
+        "dosis_max": 5,
+        "presentacion": "150 mcg/3 mL",
+        "dilucion": "900 mcg en 50 mL de SSF o Glc 5%",
+        "ml_h_equiv": "1 mL/h = 1 mcg/kg/h",
+        "nota": "Opiode analgésico"
+      },
+      "ketamina_perf": {
+        "nombre": "Ketamina",
+        "unidad": "mg/kg/h",
+        "dosis_min": 0.5,
+        "dosis_max": 2,
+        "presentacion": "50 mg/mL",
+        "dilucion": "900 mg en 50 mL de SSF o Glc 5%",
+        "ml_h_equiv": "1 mL/h = 1 mg/kg/h",
+        "nota": "Anestésico disociativo"
+      },
+      "midazolam_perf": {
+        "nombre": "Midazolam",
+        "unidad": "mg/kg/h",
+        "dosis_min": 0.05,
+        "dosis_max": 0.3,
+        "presentacion": "15 mg/3 mL",
+        "dilucion": "90 mg en 50 mL de SSF o Glc 5% (Emplear dilución 3 mL/15 mg)",
+        "ml_h_equiv": "1 mL/h = 0.10 mg/kg/h",
+        "nota": "Benzodiacepina sedante (usar dilución 3 mL/15 mg)"
+      },
+      "rocuronio_perf": {
+        "nombre": "Rocuronio",
+        "unidad": "mg/kg/h",
+        "dosis_min": 0.3,
+        "dosis_max": 1,
+        "presentacion": "10 mg/mL",
+        "dilucion": "500 mg en 50 mL (puro 10 mg/mL)",
+        "ml_h_equiv": "1 mL/h = 0.56 mg/kg/h",
+        "nota": "Paralizante neuromuscular"
+      }
     },
     "insulina": {
-      "insulina_perf": {"nombre":"Insulina","unidad":"UI/kg/h","dosis_min":0.02,"dosis_max":0.1,"presentacion":"Unidades","dilucion":"Unidades = kg de peso. Diluir en 100 mL de SSF y purgar sistema","ml_h_equiv":"1 mL/h = 0.01 UI/kg/h","nota":"Cetoacidosis diabética"}
+      "insulina_perf": {
+        "nombre": "Insulina",
+        "unidad": "UI/kg/h",
+        "dosis_min": 0.02,
+        "dosis_max": 0.1,
+        "presentacion": "Unidades",
+        "dilucion": "Unidades = kg de peso. Diluir en 100 mL de SSF y purgar sistema",
+        "ml_h_equiv": "1 mL/h = 0.01 UI/kg/h",
+        "nota": "Cetoacidosis diabética"
+      }
     }
   }
-
-  }
+}
