@@ -1538,6 +1538,27 @@ select:focus {
     animation: slideUp 0.3s ease-in-out;
 }
 
+@media (max-width: 640px) {
+    .dosis-modal-content {
+        width: 100%;
+        max-height: 95vh;
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .dosis-modal-header {
+        padding: 1rem;
+    }
+
+    .dosis-modal-header h2 {
+        font-size: 1.2rem;
+    }
+
+    .dosis-modal-body {
+        padding: 0.8rem;
+    }
+}
+
 .dosis-modal-header {
     padding: 1.5rem;
     border-bottom: 2px solid var(--border-color);
@@ -1774,10 +1795,11 @@ select:focus {
 }
 
 @media (max-width: 640px) {
-    /* Tablas responsivas en móvil */
+    /* Tablas responsivas en móvil - apiladas verticalmente */
     .medicines-table {
         display: block;
         width: 100%;
+        border-radius: 0;
     }
 
     .medicines-table thead {
@@ -1790,12 +1812,11 @@ select:focus {
     }
 
     .medicines-table tr {
-        display: grid;
-        grid-template-columns: 40% 60%;
-        gap: 0.5rem;
-        padding: 0.6rem 0;
-        border-bottom: 1px solid var(--border-color);
-        align-items: center;
+        display: flex;
+        flex-direction: column;
+        padding: 0.8rem 0;
+        border-bottom: 2px solid var(--border-color);
+        border-radius: 0;
     }
 
     .medicines-table tr:last-child {
@@ -1803,23 +1824,54 @@ select:focus {
     }
 
     .medicines-table td {
-        padding: 0.3rem 0;
+        padding: 0.4rem 0;
         border: none;
-        display: contents;
+        display: block;
+        width: 100%;
     }
 
     .medicines-table td:first-child {
-        font-weight: 600;
-        color: var(--text-primary);
-        display: block;
-        grid-column: 1;
+        font-weight: 700;
+        color: var(--primary-color);
+        font-size: 1rem;
+        padding-bottom: 0.6rem;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 0.4rem;
     }
 
-    .medicines-table td:last-child {
-        display: block;
-        grid-column: 2;
-        text-align: right;
+    .medicines-table td:nth-child(2),
+    .medicines-table td:nth-child(3) {
         font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .medicines-table td:nth-child(2)::before {
+        content: "Dosis: ";
+        font-weight: 500;
+        color: var(--text-secondary);
+    }
+
+    .medicines-table td:nth-child(3)::before {
+        content: "Volumen: ";
+        font-weight: 500;
+        color: var(--text-secondary);
+    }
+
+    .medicines-table td:nth-child(4)::before {
+        content: "Presentación: ";
+        font-weight: 500;
+        color: var(--text-secondary);
+    }
+
+    .medicines-table td:nth-child(5)::before {
+        content: "Dilución: ";
+        font-weight: 500;
+        color: var(--text-secondary);
+    }
+
+    .medicines-table td:nth-child(n+2) {
+        font-size: 0.85rem;
+        line-height: 1.5;
     }
 }
 
