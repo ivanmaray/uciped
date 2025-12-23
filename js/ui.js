@@ -1241,7 +1241,10 @@ function setupPerfusiones(){
         // Mostrar solo la concentración comercial original
         const presentacion = prep.commercialPresentation || `${prep.concentration.value} ${prep.concentration.unit}`;
         const diluent = prep.diluent === 'SSF_or_G5' ? 'SSF o G5' : prep.diluent;
-        const dilucion = `${prep.total.value.toFixed(2)} ${prep.total.unit} hasta ${prep.volumeMl} mL de ${diluent}`;
+        // Si es ajustada por peso: "X mg hasta 50 mL", si es fija: "X mg c.s.p. 50 mL"
+        const dilucion = prep.isWeightAdjusted
+          ? `${prep.total.value.toFixed(2)} ${prep.total.unit} hasta ${prep.volumeMl} mL de ${diluent}`
+          : `${prep.total.value.toFixed(1)} ${prep.total.unit} c.s.p. ${prep.volumeMl} mL de ${diluent}`;
 
         // Calcular equivalencia: 1 mL/h = ? dosis/kg
         let concValEq = prep.concentration.value;
@@ -1338,7 +1341,10 @@ function setupPerfusiones(){
         // Mostrar solo la concentración comercial original
         const presentacion = prep.commercialPresentation || `${prep.concentration.value} ${prep.concentration.unit}`;
         const diluent = prep.diluent === 'SSF_or_G5' ? 'SSF o G5' : prep.diluent;
-        const dilucion = `${prep.total.value.toFixed(2)} ${prep.total.unit} hasta ${prep.volumeMl} mL de ${diluent}`;
+        // Si es ajustada por peso: "X mg hasta 50 mL", si es fija: "X mg c.s.p. 50 mL"
+        const dilucion = prep.isWeightAdjusted
+          ? `${prep.total.value.toFixed(2)} ${prep.total.unit} hasta ${prep.volumeMl} mL de ${diluent}`
+          : `${prep.total.value.toFixed(1)} ${prep.total.unit} c.s.p. ${prep.volumeMl} mL de ${diluent}`;
 
         // Calcular equivalencia: 1 mL/h = ? dosis/kg
         let concValEqSedo = prep.concentration.value;

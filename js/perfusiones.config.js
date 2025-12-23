@@ -18,6 +18,7 @@
  * @property {{value: number, unit: MassUnit}} total
  * @property {{value: number, unit: string}} concentration  // "mcg/ml", "mg/ml", etc.
  * @property {Diluent} diluent
+ * @property {boolean} isWeightAdjusted  // true si la cantidad varía con el peso
  * @property {string} [commercialPresentation]  // e.g., "1 mg/ml", "150 mg/3ml"
  * @property {string} [note]
  */
@@ -201,6 +202,7 @@ function computePreparation(mode, weightKg) {
       total,
       concentration: { value: concVal, unit: `${total.unit}/ml` },
       diluent: mode.diluent,
+      isWeightAdjusted: false,
       commercialPresentation: mode.commercialPresentation,
       note: mode.note,
     };
@@ -215,6 +217,7 @@ function computePreparation(mode, weightKg) {
       total: { value: totalVal, unit },
       concentration: conc,
       diluent: mode.diluent,
+      isWeightAdjusted: false,
       commercialPresentation: mode.commercialPresentation,
       note: mode.note,
     };
@@ -234,6 +237,7 @@ function computePreparation(mode, weightKg) {
       total: { value: totalVal, unit },
       concentration: { value: concVal, unit: `${unit}/ml` },
       diluent: mode.diluent,
+      isWeightAdjusted: true,
       commercialPresentation: mode.commercialPresentation,
       note: mode.note,
     };
@@ -255,6 +259,7 @@ function computePreparation(mode, weightKg) {
     total: { value: totalVal, unit },
     concentration: { value: finalConcVal, unit: `${unit}/ml` },
     diluent: mode.diluent,
+    isWeightAdjusted: true,
     commercialPresentation: mode.commercialPresentation,
     note: mode.note,
   };
