@@ -1867,7 +1867,7 @@ select:focus {
     }
 
     .medicines-table td:nth-child(5)::before {
-        content: "Presentación: ";
+        content: "Presentación comercial: ";
         font-weight: 600;
         color: var(--text-secondary);
         display: block;
@@ -1875,7 +1875,7 @@ select:focus {
     }
 
     .medicines-table td:nth-child(6)::before {
-        content: "Dilución: ";
+        content: "Dilución/Preparación: ";
         font-weight: 600;
         color: var(--text-secondary);
         display: block;
