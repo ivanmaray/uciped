@@ -1238,8 +1238,8 @@ function setupPerfusiones(){
         }
 
         // Presentación y Dilución con equivalencia calculada
-        // Mostrar: cantidad original (concentración original)
-        const presentacion = `${prep.total.value.toFixed(1)} ${prep.total.unit} (${prep.concentration.value} ${prep.concentration.unit})`;
+        // Mostrar solo la concentración comercial
+        const presentacion = `${prep.concentration.value} ${prep.concentration.unit}`;
         const diluent = prep.diluent === 'SSF_or_G5' ? 'SSF o G5' : prep.diluent;
         const dilucion = `c.s.p. ${prep.volumeMl} mL ${diluent}`;
 
@@ -1335,8 +1335,8 @@ function setupPerfusiones(){
         }
 
         // Presentación y Dilución con equivalencia calculada
-        // Mostrar: cantidad original (concentración original)
-        const presentacion = `${prep.total.value.toFixed(1)} ${prep.total.unit} (${prep.concentration.value} ${prep.concentration.unit})`;
+        // Mostrar solo la concentración comercial
+        const presentacion = `${prep.concentration.value} ${prep.concentration.unit}`;
         const diluent = prep.diluent === 'SSF_or_G5' ? 'SSF o G5' : prep.diluent;
         const dilucion = `c.s.p. ${prep.volumeMl} mL ${diluent}`;
 
