@@ -1814,7 +1814,7 @@ select:focus {
     .medicines-table tr {
         display: flex;
         flex-direction: column;
-        padding: 0.8rem 0;
+        padding: 1rem 0;
         border-bottom: 2px solid var(--border-color);
         border-radius: 0;
     }
@@ -1824,54 +1824,73 @@ select:focus {
     }
 
     .medicines-table td {
-        padding: 0.4rem 0;
+        padding: 0.5rem 0;
         border: none;
         display: block;
         width: 100%;
+        box-sizing: border-box;
     }
 
+    /* Primera columna (medicamento/nombre) */
     .medicines-table td:first-child {
         font-weight: 700;
         color: var(--primary-color);
-        font-size: 1rem;
-        padding-bottom: 0.6rem;
+        font-size: 1.1rem;
+        padding-bottom: 0.8rem;
         border-bottom: 1px solid var(--border-color);
-        margin-bottom: 0.4rem;
+        margin-bottom: 0.6rem;
     }
 
-    .medicines-table td:nth-child(2),
-    .medicines-table td:nth-child(3) {
-        font-weight: 600;
-        font-size: 0.95rem;
-    }
-
+    /* Resto de columnas con labels automáticos */
     .medicines-table td:nth-child(2)::before {
-        content: "Dosis: ";
-        font-weight: 500;
+        content: "Rango: ";
+        font-weight: 600;
         color: var(--text-secondary);
+        display: block;
+        font-size: 0.85rem;
     }
 
     .medicines-table td:nth-child(3)::before {
-        content: "Volumen: ";
-        font-weight: 500;
+        content: "Dosis/hora: ";
+        font-weight: 600;
         color: var(--text-secondary);
+        display: block;
+        font-size: 0.85rem;
     }
 
     .medicines-table td:nth-child(4)::before {
-        content: "Presentación: ";
-        font-weight: 500;
+        content: "Ritmo (mL/h): ";
+        font-weight: 600;
         color: var(--text-secondary);
+        display: block;
+        font-size: 0.85rem;
     }
 
     .medicines-table td:nth-child(5)::before {
-        content: "Dilución: ";
-        font-weight: 500;
+        content: "Presentación: ";
+        font-weight: 600;
         color: var(--text-secondary);
+        display: block;
+        font-size: 0.85rem;
+    }
+
+    .medicines-table td:nth-child(6)::before {
+        content: "Dilución: ";
+        font-weight: 600;
+        color: var(--text-secondary);
+        display: block;
+        font-size: 0.85rem;
     }
 
     .medicines-table td:nth-child(n+2) {
-        font-size: 0.85rem;
-        line-height: 1.5;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .medicines-table tr:hover {
+        background-color: transparent;
     }
 }
 
