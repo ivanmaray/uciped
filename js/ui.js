@@ -1206,7 +1206,7 @@ function setupPerfusiones(){
           }
         }
 
-        // Ritmo (mL/h): NO multiplicar por peso si la unidad incluye /kg/
+        // Ritmo (mL/h): MULTIPLICAR por peso si la unidad incluye /kg/
         // Convertir concentración a las mismas unidades que el doseUnit
         let ritmoText = '-';
         if (med.dosis_min && med.dosis_max) {
@@ -1226,19 +1226,20 @@ function setupPerfusiones(){
           let minMlH = 0, maxMlH = 0;
           
           if (doseUnit.includes('/min')) {
-            // e.g., mcg/kg/min -> convertir solo a /h, SIN multiplicar por peso
-            minMlH = (med.dosis_min * 60) / concVal;
-            maxMlH = (med.dosis_max * 60) / concVal;
+            // e.g., mcg/kg/min -> convertir a /h Y MULTIPLICAR por peso
+            minMlH = (med.dosis_min * peso * 60) / concVal;
+            maxMlH = (med.dosis_max * peso * 60) / concVal;
           } else {
-            // e.g., mcg/kg/h, mg/kg/h -> directo, SIN multiplicar por peso
-            minMlH = med.dosis_min / concVal;
-            maxMlH = med.dosis_max / concVal;
+            // e.g., mcg/kg/h, mg/kg/h -> MULTIPLICAR por peso
+            minMlH = (med.dosis_min * peso) / concVal;
+            maxMlH = (med.dosis_max * peso) / concVal;
           }
           ritmoText = `${minMlH.toFixed(2)}-${maxMlH.toFixed(2)} mL/h`;
         }
 
         // Presentación y Dilución con equivalencia calculada
-        const presentacion = `${prep.total.value.toFixed(1)} ${prep.total.unit} en ${prep.volumeMl} mL`;
+        // Mostrar: cantidad original (concentración original)
+        const presentacion = `${prep.total.value.toFixed(1)} ${prep.total.unit} (${prep.concentration.value} ${prep.concentration.unit})`;
         const diluent = prep.diluent === 'SSF_or_G5' ? 'SSF o G5' : prep.diluent;
         const dilucion = `c.s.p. ${prep.volumeMl} mL ${diluent}`;
 
@@ -1302,7 +1303,7 @@ function setupPerfusiones(){
           }
         }
 
-        // Ritmo (mL/h): NO multiplicar por peso si la unidad incluye /kg/
+        // Ritmo (mL/h): MULTIPLICAR por peso si la unidad incluye /kg/
         // Convertir concentración a las mismas unidades que el doseUnit
         let ritmoText = '-';
         if (med.dosis_min && med.dosis_max) {
@@ -1322,19 +1323,20 @@ function setupPerfusiones(){
           let minMlH = 0, maxMlH = 0;
           
           if (doseUnit.includes('/min')) {
-            // e.g., mcg/kg/min -> convertir solo a /h, SIN multiplicar por peso
-            minMlH = (med.dosis_min * 60) / concVal;
-            maxMlH = (med.dosis_max * 60) / concVal;
+            // e.g., mcg/kg/min -> convertir a /h Y MULTIPLICAR por peso
+            minMlH = (med.dosis_min * peso * 60) / concVal;
+            maxMlH = (med.dosis_max * peso * 60) / concVal;
           } else {
-            // e.g., mcg/kg/h, mg/kg/h -> directo, SIN multiplicar por peso
-            minMlH = med.dosis_min / concVal;
-            maxMlH = med.dosis_max / concVal;
+            // e.g., mcg/kg/h, mg/kg/h -> MULTIPLICAR por peso
+            minMlH = (med.dosis_min * peso) / concVal;
+            maxMlH = (med.dosis_max * peso) / concVal;
           }
           ritmoText = `${minMlH.toFixed(2)}-${maxMlH.toFixed(2)} mL/h`;
         }
 
         // Presentación y Dilución con equivalencia calculada
-        const presentacion = `${prep.total.value.toFixed(1)} ${prep.total.unit} en ${prep.volumeMl} mL`;
+        // Mostrar: cantidad original (concentración original)
+        const presentacion = `${prep.total.value.toFixed(1)} ${prep.total.unit} (${prep.concentration.value} ${prep.concentration.unit})`;
         const diluent = prep.diluent === 'SSF_or_G5' ? 'SSF o G5' : prep.diluent;
         const dilucion = `c.s.p. ${prep.volumeMl} mL ${diluent}`;
 
