@@ -749,6 +749,15 @@ body {
         font-size: 0.9rem;
     }
 
+    .medicines-table {
+        font-size: 0.8rem;
+    }
+
+    .medicines-table tr {
+        gap: 0.3rem;
+        padding: 0.5rem 0;
+    }
+
     .info-note ul {
         padding-left: 1.2rem;
         margin-top: 0.6rem;
@@ -1762,6 +1771,56 @@ select:focus {
 .medicines-table .dosis-col {
     font-weight: 600;
     color: var(--secondary-color);
+}
+
+@media (max-width: 640px) {
+    /* Tablas responsivas en móvil */
+    .medicines-table {
+        display: block;
+        width: 100%;
+    }
+
+    .medicines-table thead {
+        display: none;
+    }
+
+    .medicines-table tbody {
+        display: block;
+        width: 100%;
+    }
+
+    .medicines-table tr {
+        display: grid;
+        grid-template-columns: 40% 60%;
+        gap: 0.5rem;
+        padding: 0.6rem 0;
+        border-bottom: 1px solid var(--border-color);
+        align-items: center;
+    }
+
+    .medicines-table tr:last-child {
+        border-bottom: none;
+    }
+
+    .medicines-table td {
+        padding: 0.3rem 0;
+        border: none;
+        display: contents;
+    }
+
+    .medicines-table td:first-child {
+        font-weight: 600;
+        color: var(--text-primary);
+        display: block;
+        grid-column: 1;
+    }
+
+    .medicines-table td:last-child {
+        display: block;
+        grid-column: 2;
+        text-align: right;
+        font-weight: 600;
+    }
 }
 
 /* ============================================
