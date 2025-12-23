@@ -18,6 +18,7 @@
  * @property {{value: number, unit: MassUnit}} total
  * @property {{value: number, unit: string}} concentration  // "mcg/ml", "mg/ml", etc.
  * @property {Diluent} diluent
+ * @property {string} [commercialPresentation]  // e.g., "1 mg/ml", "150 mg/3ml"
  * @property {string} [note]
  */
 
@@ -200,6 +201,7 @@ function computePreparation(mode, weightKg) {
       total,
       concentration: { value: concVal, unit: `${total.unit}/ml` },
       diluent: mode.diluent,
+      commercialPresentation: mode.commercialPresentation,
       note: mode.note,
     };
   }
@@ -213,6 +215,7 @@ function computePreparation(mode, weightKg) {
       total: { value: totalVal, unit },
       concentration: conc,
       diluent: mode.diluent,
+      commercialPresentation: mode.commercialPresentation,
       note: mode.note,
     };
   }
@@ -231,6 +234,7 @@ function computePreparation(mode, weightKg) {
       total: { value: totalVal, unit },
       concentration: { value: concVal, unit: `${unit}/ml` },
       diluent: mode.diluent,
+      commercialPresentation: mode.commercialPresentation,
       note: mode.note,
     };
   }
@@ -251,6 +255,7 @@ function computePreparation(mode, weightKg) {
     total: { value: totalVal, unit },
     concentration: { value: finalConcVal, unit: `${unit}/ml` },
     diluent: mode.diluent,
+    commercialPresentation: mode.commercialPresentation,
     note: mode.note,
   };
 }
@@ -349,6 +354,7 @@ const DRUGS = [
         volumeMl: 50,
         diluent: "SSF",
         total: { value: 1, unit: "mg" },
+        commercialPresentation: "1 mg/ml",
         note: "Fija: 1 mg c.s.p. 50 ml (20 mcg/ml).",
       },
     ],
@@ -368,6 +374,7 @@ const DRUGS = [
         anchorMlH: 1,
         anchorDose: 0.1,
         doseUnit: "mcg/kg/min",
+        commercialPresentation: "1 mg/ml",
         note: "Ajustada: 1 ml/h = 0,1 mcg/kg/min. Total (mg) = 0,3 × peso.",
       },
     ],
@@ -385,6 +392,7 @@ const DRUGS = [
         volumeMl: 50,
         diluent: "SSF",
         total: { value: 1, unit: "mg" },
+        commercialPresentation: "1 mg/ml",
         note: "Fija: 1 mg c.s.p. 50 ml (20 mcg/ml).",
       },
     ],
@@ -404,6 +412,7 @@ const DRUGS = [
         anchorMlH: 1,
         anchorDose: 0.1,
         doseUnit: "mcg/kg/min",
+        commercialPresentation: "1 mg/ml",
         note: "Ajustada: 1 ml/h = 0,1 mcg/kg/min. Total (mg) = 0,3 × peso.",
       },
     ],
@@ -423,6 +432,7 @@ const DRUGS = [
         anchorMlH: 1,
         anchorDose: 1,
         doseUnit: "mcg/kg/min",
+        commercialPresentation: "40 mg/ml",
         note: "Ajustada: 1 ml/h = 1 mcg/kg/min. Total (mg) = 3 × peso.",
       },
     ],
@@ -442,6 +452,7 @@ const DRUGS = [
         anchorMlH: 1,
         anchorDose: 10,
         doseUnit: "mcg/kg/min",
+        commercialPresentation: "40 mg/ml",
         note: "Ajustada: 1 ml/h = 10 mcg/kg/min. Total (mg) = 30 × peso.",
       },
     ],
@@ -462,6 +473,7 @@ const DRUGS = [
         anchorDose: 5,
         doseUnit: "mcg/kg/min",
         capTotal: { value: 300, unit: "mg" },
+        commercialPresentation: "150 mg/3ml",
         select: { maxWeightKg: 10 },
         note: "Pedi pequeño: 1 ml/h = 5 mcg/kg/min (mg = 15 × peso), tope 300 mg.",
       },
@@ -471,6 +483,7 @@ const DRUGS = [
         volumeMl: 50,
         diluent: "G5",
         total: { value: 300, unit: "mg" },
+        commercialPresentation: "150 mg/3ml",
         note: "Fija: 300 mg c.s.p. 50 ml (6 mg/ml).",
       },
     ],
@@ -490,6 +503,7 @@ const DRUGS = [
         anchorMlH: 1,
         anchorDose: 0.5,
         doseUnit: "mcg/kg/min",
+        commercialPresentation: "1 mg/ml",
         select: { maxTotal: { value: 50, unit: "mg" } },
         note: "Ajustada: 1 ml/h ≈ 0,5 mcg/kg/min (mg = 1,5 × peso).",
       },
@@ -499,6 +513,7 @@ const DRUGS = [
         volumeMl: 50,
         diluent: "SSF_or_G5",
         total: { value: 50, unit: "mg" },
+        commercialPresentation: "1 mg/ml",
         select: { minWeightKg: 50 },
         note: "Tope: 50 mg c.s.p. 50 ml.",
       },
@@ -517,6 +532,7 @@ const DRUGS = [
         volumeMl: 50,
         diluent: "G5",
         total: { value: 200, unit: "mg" },
+        commercialPresentation: "5 mg/ml",
         select: { maxWeightKg: 10 },
         note: "Peso bajo: 200 mg c.s.p. 50 ml (4 mg/ml).",
       },
@@ -526,6 +542,7 @@ const DRUGS = [
         volumeMl: 50,
         diluent: "G5",
         total: { value: 250, unit: "mg" },
+        commercialPresentation: "5 mg/ml",
         note: "Estándar: 250 mg c.s.p. 50 ml (5 mg/ml).",
       },
     ],
@@ -547,6 +564,7 @@ const DRUGS = [
         anchorMlH: 1,
         anchorDose: 1,
         doseUnit: "mcg/kg/h",
+        commercialPresentation: "150 mcg/3ml",
         select: { maxTotal: { value: 2000, unit: "mcg" } },
         note: "Ajustada: 1 ml/h = 1 mcg/kg/h. Total (mcg) = 50 × peso.",
       },
@@ -554,6 +572,7 @@ const DRUGS = [
         id: "pure_50mcgml",
         type: "FIXED_CONCENTRATION",
         volumeMl: 50,
+        commercialPresentation: "150 mcg/3ml",
         diluent: "SSF_or_G5",
         concentration: { value: 50, unit: "mcg/ml" },
         note: "Puro: 50 mcg/ml (2500 mcg/50 ml).",
@@ -575,6 +594,7 @@ const DRUGS = [
         anchorMlH: 1,
         anchorDose: 1,
         doseUnit: "mg/kg/h",
+        commercialPresentation: "50 mg/ml",
         select: { maxTotal: { value: 2000, unit: "mg" } },
         note: "Ajustada: 1 ml/h = 1 mg/kg/h. Total (mg) = 50 × peso.",
       },
@@ -584,6 +604,7 @@ const DRUGS = [
         volumeMl: 50,
         diluent: "SSF_or_G5",
         concentration: { value: 50, unit: "mg/ml" },
+        commercialPresentation: "50 mg/ml",
         note: "Puro: 50 mg/ml.",
       },
     ],
@@ -603,6 +624,7 @@ const DRUGS = [
         anchorMlH: 1,
         anchorDose: 0.1,
         doseUnit: "mg/kg/h",
+        commercialPresentation: "15 mg/3ml",
         select: { maxTotal: { value: 200, unit: "mg" } },
         note: "Ajustada: 1 ml/h = 0,10 mg/kg/h. Total (mg) = 5 × peso.",
       },
@@ -612,6 +634,7 @@ const DRUGS = [
         volumeMl: 50,
         diluent: "SSF_or_G5",
         concentration: { value: 5, unit: "mg/ml" },
+        commercialPresentation: "15 mg/3ml",
         note: "Puro: 5 mg/ml (250 mg/50 ml).",
       },
     ],
@@ -629,6 +652,7 @@ const DRUGS = [
         volumeMl: 50,
         diluent: "SSF_or_G5",
         total: { value: 240, unit: "mg" },
+        commercialPresentation: "10 mg/ml",
         select: { maxWeightKg: 10 },
         note: "Peso bajo: 240 mg c.s.p. 50 ml.",
       },
@@ -638,6 +662,7 @@ const DRUGS = [
         volumeMl: 50,
         diluent: "SSF_or_G5",
         concentration: { value: 10, unit: "mg/ml" },
+        commercialPresentation: "10 mg/ml",
         note: "Puro: 10 mg/ml (500 mg/50 ml).",
       },
     ],
@@ -657,6 +682,7 @@ const DRUGS = [
         anchorMlH: 1,
         anchorDose: 0.01,
         doseUnit: "IU/kg/h",
+        commercialPresentation: "100 IU/ml",
         note: "Ajustada: 1 ml/h = 0,01 UI/kg/h. Total UI = peso (kg). Purgar.",
       },
     ],
