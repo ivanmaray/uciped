@@ -1241,7 +1241,7 @@ function setupPerfusiones(){
         // Mostrar solo la concentración comercial original
         const presentacion = prep.commercialPresentation || `${prep.concentration.value} ${prep.concentration.unit}`;
         const diluent = prep.diluent === 'SSF_or_G5' ? 'SSF o G5' : prep.diluent;
-        const dilucion = `c.s.p. ${prep.volumeMl} mL ${diluent}`;
+        const dilucion = `${prep.total.value.toFixed(2)} ${prep.total.unit} hasta ${prep.volumeMl} mL de ${diluent}`;
 
         // Calcular equivalencia: 1 mL/h = ? dosis/kg
         let concValEq = prep.concentration.value;
@@ -1338,7 +1338,7 @@ function setupPerfusiones(){
         // Mostrar solo la concentración comercial original
         const presentacion = prep.commercialPresentation || `${prep.concentration.value} ${prep.concentration.unit}`;
         const diluent = prep.diluent === 'SSF_or_G5' ? 'SSF o G5' : prep.diluent;
-        const dilucion = `c.s.p. ${prep.volumeMl} mL ${diluent}`;
+        const dilucion = `${prep.total.value.toFixed(2)} ${prep.total.unit} hasta ${prep.volumeMl} mL de ${diluent}`;
 
         // Calcular equivalencia: 1 mL/h = ? dosis/kg
         let concValEqSedo = prep.concentration.value;
