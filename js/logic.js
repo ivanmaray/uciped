@@ -153,6 +153,17 @@ export const intubacionFormulas = {
   rocuronio: (peso) => peso,
 };
 
+// Factores de dosis por kg para mostrar en la tabla de intubación
+export const intubacionDosisPorKg = {
+  atropina: '0.02 mg/kg',
+  fentanilo: '2 mcg/kg',
+  ketamina: '2 mg/kg',
+  midazolam: '0.1 mg/kg',
+  propofol: '2.5 mg/kg',
+  succinilcolina: '1-2 mg/kg',
+  rocuronio: '1 mg/kg',
+};
+
 export function formatDosis(d) {
   const val = parseFloat(d);
   

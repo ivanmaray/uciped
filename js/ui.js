@@ -1,5 +1,5 @@
 import { loadMeds } from './data.js';
-import { calcularPesoEstimado, obtenerParametrosDeMATRIZ1, obtenerParametrosDeMATRIZ2, urgenciaFormulas, urgenciaDosisPorKg, intubacionFormulas, formatDosis } from './logic.js';
+import { calcularPesoEstimado, obtenerParametrosDeMATRIZ1, obtenerParametrosDeMATRIZ2, urgenciaFormulas, urgenciaDosisPorKg, intubacionFormulas, intubacionDosisPorKg, formatDosis } from './logic.js';
 import { setPatientData, getPatientData, setHeaderValues } from './state.js';
 import { compute, DRUGS } from './perfusiones.config.js';
 
@@ -728,6 +728,8 @@ function setupIntubacion(){
       const dosis_valor = calc(peso, 0);
       const dosis = formatDosis(dosis_valor);
       const meta = ds ? ds[key] : { nombre: key, unidad: '', presentacion: '', dilucion: '' };
+      const dosisPorKg = intubacionDosisPorKg[key] || '';
+      const dosisDisplay = dosisPorKg ? `${dosis} ${meta.unidad || ''} <small>(${dosisPorKg})</small>` : `${dosis} ${meta.unidad || ''}`;
       if (!meta) {
         console.warn('Intubación: no hay metadata para', key);
       }
@@ -805,7 +807,7 @@ function setupIntubacion(){
               </div>
             </div>
           </td>
-          <td class="dosis-col">${dosis} ${meta.unidad || ''}</td>
+          <td class="dosis-col">${dosisDisplay}</td>
           <td class="dosis-col" style="font-weight: 600; color: #2196F3;">${volumeMLHtml}</td>
           <td>${presentacionDisplayHtml}</td>
           <td>${dilucionText}</td>
