@@ -125,6 +125,24 @@ export const urgenciaFormulas = {
   tranexamico: (peso) => peso < 100 ? peso*1.5*10 : 1500,
 };
 
+// Factores de dosis por kg para mostrar en la tabla
+export const urgenciaDosisPorKg = {
+  adenosina: '0.1 mg/kg',
+  adrenalina: '0.01 mg/kg',
+  amiodarona: '5 mg/kg',
+  atropina_urgencia: '0.02 mg/kg',
+  bicarbonato: '1 mEq/kg',
+  boloLiquidos: '20 mL/kg',
+  flumazenilo: '0.01 mg/kg',
+  gluconato: '0.5 mL/kg',
+  glucosa: '2 mL/kg',
+  manitol: '0.5 g/kg',
+  naloxona: '0.01 mg/kg',
+  salinoHiper: '5 mL/kg',
+  sulfatoMg: '50 mg/kg',
+  tranexamico: '15 mg/kg',
+};
+
 export const intubacionFormulas = {
   atropina: (peso, dias=0) => (peso < 5 ? 0.1 : (peso < 30 ? peso*0.02 : 0.6)),
   fentanilo: (peso) => peso * 2,

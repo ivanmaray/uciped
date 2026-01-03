@@ -1,5 +1,5 @@
 import { loadMeds } from './data.js';
-import { calcularPesoEstimado, obtenerParametrosDeMATRIZ1, obtenerParametrosDeMATRIZ2, urgenciaFormulas, intubacionFormulas, formatDosis } from './logic.js';
+import { calcularPesoEstimado, obtenerParametrosDeMATRIZ1, obtenerParametrosDeMATRIZ2, urgenciaFormulas, urgenciaDosisPorKg, intubacionFormulas, formatDosis } from './logic.js';
 import { setPatientData, getPatientData, setHeaderValues } from './state.js';
 import { compute, DRUGS } from './perfusiones.config.js';
 
@@ -1468,6 +1468,8 @@ function setupUrgencia(){
       const calc = urgenciaFormulas[key];
       const dosis_valor = calc(peso);
       const dosis = formatDosis(dosis_valor);
+      const dosisPorKg = urgenciaDosisPorKg[key] || '';
+      const dosisDisplay = dosisPorKg ? `${dosis} <small>(${dosisPorKg})</small>` : dosis;
       const meta = ds ? ds[key] : { nombre: key, unidad: '', presentacion: '', dilucion: '', nota: '' };
       if (!meta) {
         console.warn('Urgencia: no hay metadata para', key);
@@ -1536,7 +1538,7 @@ function setupUrgencia(){
               </div>
             </div>
           </td>
-          <td class="dosis-col">${dosis} ${meta.unidad || ''}</td>
+          <td class="dosis-col">${dosisDisplay} ${meta.unidad || ''}</td>
           <td class="dosis-col" style="font-weight: 600; color: #2196F3;">${volumeMLHtml} mL</td>
           <td>${presentacionText}</td>
           <td><strong>${dilucionText}</strong><br><small>${meta.nota || ''}</small></td>
