@@ -1482,8 +1482,11 @@ function setupUrgencia(){
       let volumeMLHtml = '-';
       if (meta.es_volumen_puro) {
         // Para medicamentos que se dan en volumen puro (bolos, etc)
-        volumeML = dosis;
-        volumeMLHtml = dosis;
+        // Aplicar factor de dilución si existe (ej: gluconato 1:1 = factor 2)
+        const factorDilucion = meta.factor_dilucion || 1;
+        const volFinal = dosis_valor * factorDilucion;
+        volumeML = formatDosis(volFinal);
+        volumeMLHtml = formatDosis(volFinal);
       } else if (meta.concentraciones && Array.isArray(meta.concentraciones)) {
         // Múltiples concentraciones (como manitol 10% y 20%)
         let volumesArray = [];

@@ -653,6 +653,7 @@
       "dilucion": "Diluir 1:1 en SSF: GlcCa 10% + SSF en igual volumen",
       "nota": "No usar en la misma vía que bicarbonato sódico.",
       "es_volumen_puro": true,
+      "factor_dilucion": 2,
       "unidad_especial": "mL"
     },
     "glucosa": {
