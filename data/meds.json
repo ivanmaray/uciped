@@ -704,7 +704,7 @@
       "unidad": "mL",
       "presentacion": "NaCl 3% (SSH 3%)",
       "dilucion": "Preparación: Diluir 10 mL NaCl 20% + 90 mL SSF (o 50 mL NaCl 20% + 450 mL SSF). Administrar 5 mL/kg en bolo IV lento",
-      "nota": "Para HTIC o hiponatremia sintomática. Máximo 3 bolos. Administrar lentamente.",
+      "nota": "Para HTIC o hiponatremia sintomática. Si hiponatremia sintomática → bolos de 2 mL/kg (máximo 3 bolos). Administrar lentamente.",
       "es_volumen_puro": true,
       "unidad_especial": "mL"
     },
