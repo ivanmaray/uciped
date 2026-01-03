@@ -154,12 +154,18 @@ export const intubacionFormulas = {
 };
 
 export function formatDosis(d) {
-  let dosisFormato = parseFloat(d).toFixed(2);
-  if (parseFloat(dosisFormato).toFixed(1).includes('.0')) {
-    return parseFloat(d).toFixed(0);
-  } else if (parseFloat(dosisFormato).toFixed(2).includes('.00')) {
-    return parseFloat(d).toFixed(0);
-  } else {
-    return parseFloat(d).toFixed(1);
+  const val = parseFloat(d);
+  
+  // Si es entero (ej: 90.00), mostrar sin decimales
+  if (val === Math.floor(val)) {
+    return val.toFixed(0);
   }
+  
+  // Si tiene 1 decimal significativo (ej: 1.8), mostrar con 1 decimal
+  if ((val * 10) === Math.floor(val * 10)) {
+    return val.toFixed(1);
+  }
+  
+  // Para valores con 2 decimales significativos (ej: 0.18, 1.25), mostrar 2 decimales
+  return val.toFixed(2);
 }
