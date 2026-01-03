@@ -650,7 +650,7 @@
       "nombre": "Gluconato Cálcico 10%",
       "unidad": "mL",
       "presentacion": "Ampolla 10 mL / 4.6 mEq (GlcCa 10%)",
-      "dilucion": "Diluir 1:1 en SSF: GlcCa 10% + SSF en igual volumen",
+      "dilucion": "Diluir 1:1 con SSF (volumen total = dosis × 2). Ej: 9 mL GlcCa + 9 mL SSF = 18 mL total",
       "nota": "No usar en la misma vía que bicarbonato sódico.",
       "es_volumen_puro": true,
       "factor_dilucion": 2,
