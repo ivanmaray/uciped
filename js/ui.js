@@ -713,7 +713,7 @@ function setupIntubacion(){
         <thead>
           <tr>
             <th>Medicamento</th>
-            <th>Dosis (mg/mcg)</th>
+            <th>Dosis</th>
             <th>Volumen (mL)</th>
             <th>Presentación</th>
             <th>Dilución</th>
