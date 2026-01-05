@@ -1290,7 +1290,7 @@ function setupPerfusiones(){
           equivalencia = `1 mL/h = ${eqPerKgH} ${doseUnit}`;
         }
         
-        let row = `<tr><td><strong>${result.displayName}</strong></td><td class="dosis-col">${range}</td><td class="dosis-col">${dosePerHour}</td><td>${ritmoText}</td><td>${presentacion}</td><td>${dilucion}<br><small><strong>Equivalencia:</strong> ${equivalencia}</small></td></tr>`;
+        let row = `<tr class="med-row" data-med-key="${medKey}"><td><strong>${result.displayName}</strong></td><td class="dosis-col">${range}</td><td class="dosis-col">${dosePerHour}</td><td>${ritmoText}</td><td>${presentacion}</td><td>${dilucion}<br><small><strong>Equivalencia:</strong> ${equivalencia}</small></td></tr>`;
         inoTableBody.insertAdjacentHTML('beforeend', row);
       } catch (e) {
         console.warn(`Error calculando ${drugKey}:`, e.message);
@@ -1407,7 +1407,7 @@ function setupPerfusiones(){
           equivalenciaSedo = `1 mL/h = ${eqPerKgH} ${doseUnit}`;
         }
         
-        let row = `<tr><td><strong>${result.displayName}</strong></td><td class="dosis-col">${range}</td><td class="dosis-col">${dosePerHour}</td><td>${ritmoText}</td><td>${presentacion}</td><td>${dilucion}<br><small><strong>Equivalencia:</strong> ${equivalenciaSedo}</small></td></tr>`;
+        let row = `<tr class="med-row" data-med-key="${medKey}"><td><strong>${result.displayName}</strong></td><td class="dosis-col">${range}</td><td class="dosis-col">${dosePerHour}</td><td>${ritmoText}</td><td>${presentacion}</td><td>${dilucion}<br><small><strong>Equivalencia:</strong> ${equivalenciaSedo}</small></td></tr>`;
         sedoTableBody.insertAdjacentHTML('beforeend', row);
       } catch (e) {
         console.warn(`Error calculando ${drugKey}:`, e.message);

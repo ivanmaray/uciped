@@ -95,12 +95,12 @@ export function searchMeds(query) {
  */
 export function getTabForType(type) {
   const tabMap = {
-    urgencia: 'tab-urgencia',
-    intubacion: 'tab-intubacion',
-    perfusiones: 'tab-perfusiones',
-    dosificacion: 'tab-dosificacion'
+    urgencia: 'urgencia',
+    intubacion: 'intubacion',
+    perfusiones: 'perfusiones',
+    dosificacion: 'urgencia' // fallback porque la pestaña de dosificación está desactivada
   };
-  return tabMap[type] || 'tab-urgencia';
+  return tabMap[type] || 'urgencia';
 }
 
 /**
