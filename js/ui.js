@@ -493,7 +493,7 @@ function setupDosificacion(){
         const presentacionText = med.presentacion || 'Revisar presentación';
         const dilucionText = med.dilucion || 'Revisar dilución';
         
-        html += `<tr class="med-row">
+        html += `<tr class="med-row" data-med-key="${med.key}">
           <td>
             <div class="med-name">
               <strong>${med.nombre}</strong>
@@ -770,7 +770,7 @@ function setupIntubacion(){
       }
       
       tableHTML += `
-        <tr class="med-row">
+        <tr class="med-row" data-med-key="${key}">
           <td>
             <div class="med-name">
               <strong>${meta.nombre || key}</strong>
@@ -1514,7 +1514,7 @@ function setupUrgencia(){
       }
       
       tableHTML += `
-        <tr class="med-row">
+        <tr class="med-row" data-med-key="${key}">
           <td>
             <div class="med-name">
               <strong>${meta.nombre || key}</strong>
