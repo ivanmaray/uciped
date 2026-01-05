@@ -1,0 +1,26 @@
+{
+  "name": "UCIPED - Calculadora UCI Pediátrica",
+  "short_name": "UCIPED",
+  "description": "Calculadora de medicamentos y perfusiones para UCI Pediátrica",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4A90E2",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["medical", "health", "utilities"],
+  "lang": "es-ES"
+}
