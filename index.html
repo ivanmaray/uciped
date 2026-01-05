@@ -707,10 +707,25 @@
         </footer>
     </div>
 
+    <!-- Modal de detalle de medicamento desde búsqueda -->
+    <div id="medDetailModal" class="med-detail-modal">
+        <div class="med-detail-content">
+            <div class="med-detail-header">
+                <h2 id="medDetailTitle">Medicamento</h2>
+                <button class="med-detail-close" id="closeMedDetailBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="med-detail-body" id="medDetailBody">
+                <!-- Se llena dinámicamente -->
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { initTabs } from './js/tabs.js';
         import { initUI } from './js/ui.js';
-        import { initSearch, searchMeds, getTabForType, scrollToMed } from './js/search.js';
+        import { initSearch, searchMeds, getTabForType, showMedDetail } from './js/search.js';
         import { initTheme, toggleTheme, getThemeIcon, getThemeLabel } from './js/theme.js';
         
         // Inicializar componentes
@@ -722,15 +737,28 @@
         // Configurar búsqueda
         const searchInput = document.getElementById('searchInput');
         const searchResults = document.getElementById('searchResults');
+        const medDetailModal = document.getElementById('medDetailModal');
+        const closeMedDetailBtn = document.getElementById('closeMedDetailBtn');
         
-        console.log('[INIT] searchInput:', searchInput);
-        console.log('[INIT] searchResults:', searchResults);
+        // Cerrar modal con botón X
+        if (closeMedDetailBtn) {
+            closeMedDetailBtn.addEventListener('click', () => {
+                medDetailModal.classList.remove('active');
+            });
+        }
+        
+        // Cerrar modal al clickear fuera
+        if (medDetailModal) {
+            medDetailModal.addEventListener('click', (e) => {
+                if (e.target === medDetailModal) {
+                    medDetailModal.classList.remove('active');
+                }
+            });
+        }
         
         if (searchInput) {
-            console.log('[INIT] Registrando event listener en searchInput');
             searchInput.addEventListener('input', (e) => {
                 const query = e.target.value;
-                console.log('[INPUT] Query:', query);
                 
                 if (query.length < 2) {
                     searchResults.classList.add('hidden');
@@ -738,7 +766,6 @@
                 }
                 
                 const results = searchMeds(query);
-                console.log('[INPUT] Resultados:', results);
                 
                 if (results.length === 0) {
                     searchResults.innerHTML = '<div class="search-no-results">No se encontraron medicamentos</div>';
@@ -760,7 +787,7 @@
                     html += `<div class="search-category">${category}</div>`;
                     items.forEach(item => {
                         html += `
-                            <div class="search-item" data-type="${item.type}" data-key="${item.key}">
+                            <div class="search-item" data-type="${item.type}" data-key="${item.key}" data-nombre="${item.nombre}">
                                 <i class="fas fa-pills"></i>
                                 <span>${item.nombre}</span>
                             </div>
@@ -776,24 +803,10 @@
                     item.addEventListener('click', () => {
                         const type = item.dataset.type;
                         const key = item.dataset.key;
+                        const nombre = item.dataset.nombre;
                         
-                        console.log('[SEARCH CLICK] Navegando a:', type, key);
-                        
-                        // Cambiar a la pestaña correspondiente
-                        const tab = getTabForType(type);
-                        const tabButton = document.querySelector(`button[data-tab="${tab}"]`);
-                        if (tabButton) {
-                            tabButton.click();
-                            console.log('[SEARCH CLICK] Tab button clicked:', tab);
-                        }
-                        
-                        // Desplazar a medicamento después de que se renderice la tabla
-                        // El auto-cálculo se ejecuta al cambiar de pestaña via evento tabChanged
-                        // Esperamos 500ms para que la tabla se renderice completamente
-                        setTimeout(() => {
-                            console.log('[SEARCH SCROLL] Intentando scroll a:', key);
-                            scrollToMed(type, key);
-                        }, 500);
+                        // Mostrar modal con detalles del medicamento
+                        showMedDetail(type, key, nombre);
                         
                         // Limpiar búsqueda
                         searchInput.value = '';

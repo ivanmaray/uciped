@@ -133,3 +133,98 @@ export function scrollToMed(type, key) {
     console.log('[scrollToMed] Filas disponibles:', Array.from(allRows).map(r => r.getAttribute('data-med-key')));
   }
 }
+
+/**
+ * Mostrar medicamento en modal de detalle
+ */
+export function showMedDetail(type, key, nombre) {
+  const med = allMeds[type]?.[key];
+  if (!med) return;
+
+  const modal = document.getElementById('medDetailModal');
+  const title = document.getElementById('medDetailTitle');
+  const body = document.getElementById('medDetailBody');
+
+  title.textContent = nombre || med.nombre || key;
+
+  let html = '';
+
+  // Dosis
+  if (med.dosis || med.dosis_min || med.dosis_max) {
+    html += `
+      <div class="med-detail-section">
+        <div class="med-detail-label">Dosis</div>
+        <div class="med-detail-value">
+          ${med.dosis ? med.dosis + ' ' + (med.unidad || '') : 
+            med.dosis_min ? med.dosis_min + '-' + med.dosis_max + ' ' + (med.unidad || '') : 
+            '-'}
+        </div>
+      </div>
+    `;
+  }
+
+  // Concentración
+  if (med.concentracion_mg_ml || med.concentracion_mcg_ml) {
+    html += `
+      <div class="med-detail-section">
+        <div class="med-detail-label">Concentración</div>
+        <div class="med-detail-value">
+          ${med.concentracion_mg_ml ? med.concentracion_mg_ml + ' mg/mL' : ''}
+          ${med.concentracion_mcg_ml ? med.concentracion_mcg_ml + ' mcg/mL' : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  // Presentación
+  if (med.presentacion) {
+    html += `
+      <div class="med-detail-section">
+        <div class="med-detail-label">Presentación</div>
+        <div class="med-detail-value">${med.presentacion}</div>
+      </div>
+    `;
+  }
+
+  // Dilución
+  if (med.dilucion) {
+    html += `
+      <div class="med-detail-section">
+        <div class="med-detail-label">Dilución</div>
+        <div class="med-detail-value">${med.dilucion}</div>
+      </div>
+    `;
+  }
+
+  // Nota
+  if (med.nota) {
+    html += `
+      <div class="med-detail-section">
+        <div class="med-detail-label">Nota</div>
+        <div class="med-detail-value">${med.nota}</div>
+      </div>
+    `;
+  }
+
+  // Botones de acción
+  html += `
+    <div class="med-detail-buttons">
+      <button class="med-detail-btn med-detail-btn-primary" onclick="
+        const tab = '${type === 'dosificacion' ? 'urgencia' : type}';
+        const tabBtn = document.querySelector(\`button[data-tab='\${tab}']\`);
+        if (tabBtn) tabBtn.click();
+        document.getElementById('medDetailModal').classList.remove('active');
+      ">
+        <i class="fas fa-arrow-right"></i> Ir a la tabla
+      </button>
+      <button class="med-detail-btn med-detail-btn-secondary" onclick="
+        document.getElementById('medDetailModal').classList.remove('active');
+      ">
+        <i class="fas fa-times"></i> Cerrar
+      </button>
+    </div>
+  `;
+
+  body.innerHTML = html;
+  modal.classList.add('active');
+}
