@@ -777,15 +777,23 @@
                         const type = item.dataset.type;
                         const key = item.dataset.key;
                         
+                        console.log('[SEARCH CLICK] Navegando a:', type, key);
+                        
                         // Cambiar a la pestaña correspondiente
                         const tab = getTabForType(type);
                         const tabButton = document.querySelector(`button[data-tab="${tab}"]`);
-                        if (tabButton) tabButton.click();
+                        if (tabButton) {
+                            tabButton.click();
+                            console.log('[SEARCH CLICK] Tab button clicked:', tab);
+                        }
                         
-                        // Desplazar a medicamento
+                        // Desplazar a medicamento después de que se renderice la tabla
+                        // El auto-cálculo se ejecuta al cambiar de pestaña via evento tabChanged
+                        // Esperamos 500ms para que la tabla se renderice completamente
                         setTimeout(() => {
+                            console.log('[SEARCH SCROLL] Intentando scroll a:', key);
                             scrollToMed(type, key);
-                        }, 100);
+                        }, 500);
                         
                         // Limpiar búsqueda
                         searchInput.value = '';

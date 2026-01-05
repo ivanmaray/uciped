@@ -109,6 +109,7 @@ export function getTabForType(type) {
 export function getMedRow(type, key) {
   // Buscar en el DOM el elemento correspondiente
   // Los elementos tienen data-med-key con el key del medicamento
+  console.log('[getMedRow] Buscando selector: [data-med-key="${key}"]');
   const row = document.querySelector(`[data-med-key="${key}"]`);
   return row;
 }
@@ -117,11 +118,18 @@ export function getMedRow(type, key) {
  * Desplazar a un medicamento
  */
 export function scrollToMed(type, key) {
+  console.log('[scrollToMed] Buscando fila con data-med-key="${key}"');
   const row = getMedRow(type, key);
   if (row) {
+    console.log('[scrollToMed] ✓ Fila encontrada, scrolling a:', row);
     row.scrollIntoView({ behavior: 'smooth', block: 'center' });
     // Agregar clase de highlight temporal
     row.classList.add('search-highlight');
     setTimeout(() => row.classList.remove('search-highlight'), 2000);
+  } else {
+    console.warn('[scrollToMed] ✗ No se encontró fila con data-med-key="${key}"');
+    // Listar todas las filas disponibles
+    const allRows = document.querySelectorAll('[data-med-key]');
+    console.log('[scrollToMed] Filas disponibles:', Array.from(allRows).map(r => r.getAttribute('data-med-key')));
   }
 }
