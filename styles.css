@@ -20,6 +20,26 @@
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Dark mode */
+html.dark-mode {
+    --bg-color: #0f172a;
+    --bg-card: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --border-color: #334155;
+}
+
+/* Respeta preferencia del sistema */
+@media (prefers-color-scheme: dark) {
+    html:not(.light-mode) {
+        --bg-color: #0f172a;
+        --bg-card: #1e293b;
+        --text-primary: #f1f5f9;
+        --text-secondary: #cbd5e1;
+        --border-color: #334155;
+    }
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -80,6 +100,41 @@ body {
     font-size: 0.65rem;
     opacity: 0.9;
     font-weight: 600;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    hover: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+}
+
+.theme-toggle:active {
+    transform: scale(0.95);
+}
+
+.theme-toggle i {
+    transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover i {
+    transform: rotate(20deg);
 }
 
 /* ============================================
@@ -274,7 +329,7 @@ body {
     align-items: baseline;
     gap: 0.4rem;
     white-space: nowrap;
-    background: white;
+    background: var(--bg-card);
     padding: 0.5rem 0.75rem;
     border-radius: 6px;
     border: 1px solid var(--secondary-color);
@@ -307,7 +362,7 @@ body {
 }
 
 .btn-estimator:hover {
-    background: #10b981;
+    background: var(--secondary-color);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
@@ -431,7 +486,7 @@ body {
     font-size: 0.9rem;
     color: var(--text-secondary);
     font-family: 'Courier New', monospace;
-    background: white;
+    background: var(--bg-card);
     padding: 0.5rem;
     border-radius: 6px;
     display: inline-block;
@@ -491,11 +546,11 @@ body {
 }
 
 .btn-calc-apply {
-    background: #f59e0b;
+    background: var(--warning-color);
 }
 
 .btn-calc-apply:hover {
-    background: #d97706;
+    background: #b45309;
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
@@ -891,7 +946,7 @@ body {
 }
 
 .modal-content {
-    background: white;
+    background: var(--bg-card);
     padding: 2rem;
     border-radius: 12px;
     box-shadow: var(--shadow-lg);
@@ -980,7 +1035,7 @@ body {
 .tab-navigation {
     display: flex;
     gap: 0.3rem;
-    background: white;
+    background: var(--bg-card);
     padding: 0.22rem 0.45rem;
     max-width: 1200px;
     margin: 0 auto;
@@ -999,7 +1054,7 @@ body {
     justify-content: center;
     gap: 0.3rem;
     padding: 0.42rem 0.78rem;
-    background: white;
+    background: var(--bg-card);
     border: none;
     border-bottom: 3px solid transparent;
     color: var(--text-secondary);
@@ -1384,7 +1439,7 @@ select:focus {
 }
 
 .formula-card {
-    background: white;
+    background: var(--bg-card);
     padding: 1rem;
     border-radius: 8px;
     border: 2px solid var(--border-color);
@@ -1528,7 +1583,7 @@ select:focus {
 }
 
 .dosis-modal-content {
-    background: white;
+    background: var(--bg-card);
     border-radius: 12px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     max-width: 900px;
@@ -1638,7 +1693,7 @@ select:focus {
 
 .formula-expression {
     font-family: 'Courier New', monospace;
-    background: white;
+    background: var(--bg-card);
     padding: 0.75rem;
     border-radius: 6px;
     font-size: 0.95rem;
@@ -1714,7 +1769,7 @@ select:focus {
 }
 
 .info-item {
-    background: white;
+    background: var(--bg-card);
     padding: 1rem;
     border-radius: 8px;
     border-left: 3px solid var(--primary-color);
@@ -1746,7 +1801,7 @@ select:focus {
 .medicines-table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
+    background: var(--bg-card);
     border-radius: 8px;
     overflow: hidden;
 }
@@ -1931,7 +1986,7 @@ select:focus {
 .med-info-popup {
     display: none;
     position: absolute;
-    background: white;
+    background: var(--bg-card);
     border: 2px solid var(--primary-color);
     border-radius: 8px;
     padding: 1rem;
@@ -2060,7 +2115,7 @@ select:focus {
 }
 
 .formula {
-    background: white;
+    background: var(--bg-card);
     padding: 1rem;
     border-radius: 6px;
     font-family: 'Courier New', monospace;
@@ -2162,7 +2217,7 @@ select:focus {
 }
 
 .disclaimer-warning {
-    background: #fef3c7;
+    background: rgba(245, 158, 11, 0.1);
     border-left: 4px solid #f59e0b;
     padding: 1rem;
     margin: 1.5rem 0;
@@ -2171,7 +2226,7 @@ select:focus {
 
 .disclaimer-warning p {
     margin-bottom: 0.5rem;
-    color: #92400e;
+    color: #b45309;
 }
 
 .disclaimer-warning i {

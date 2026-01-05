@@ -24,7 +24,12 @@
                 <h1 class="logo">
                     <i class="fas fa-heartbeat"></i> UCI PEDIATRÍA
                 </h1>
-                <div class="version">v1.0.0 | 16/12/2024</div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button id="themeToggle" class="theme-toggle" title="Cambiar tema" aria-label="Cambiar tema">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <div class="version">v1.0.0 | 16/12/2024</div>
+                </div>
             </div>
         </header>
         <div id="dataLoadWarning" class="result-box hidden" style="margin:10px 0; color:#b00020; font-weight:600;">
@@ -687,6 +692,25 @@
         import { initUI } from './js/ui.js';
         initTabs();
         await initUI();
+    </script>
+    
+    <script type="module">
+        // Inicializar tema (light/dark mode)
+        import { initTheme, toggleTheme, getThemeIcon, getThemeLabel } from './js/theme.js';
+        
+        initTheme();
+        
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                toggleTheme();
+                // Actualizar icono del botón
+                const icon = themeToggle.querySelector('i');
+                const newIcon = getThemeIcon();
+                icon.className = `fas ${newIcon}`;
+                themeToggle.title = getThemeLabel();
+            });
+        }
     </script>
     
     <script>
