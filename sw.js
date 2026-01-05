@@ -1,5 +1,5 @@
 // Service Worker para UCIPED
-const CACHE_NAME = 'uciped-v1';
+const CACHE_NAME = 'uciped-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -10,7 +10,14 @@ const STATIC_ASSETS = [
   '/js/perfusiones.config.js',
   '/js/state.js',
   '/js/tabs.js',
-  '/js/ui.js'
+  '/js/ui.js',
+  '/js/search.js',
+  '/js/theme.js',
+  '/manifest.json',
+  '/favicon.ico',
+  '/favicon-16x16.png',
+  '/favicon-32x32.png',
+  '/logo.png'
 ];
 
 // Instalación: cachear archivos estáticos
