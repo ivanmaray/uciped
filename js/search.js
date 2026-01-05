@@ -17,8 +17,9 @@ export async function initSearch() {
   try {
     const response = await fetch('/data/meds.json');
     allMeds = await response.json();
+    console.log('[SEARCH] Datos cargados:', Object.keys(allMeds));
   } catch (error) {
-    console.error('Error cargando datos para búsqueda:', error);
+    console.error('[SEARCH] Error cargando datos:', error);
   }
 }
 
@@ -27,6 +28,8 @@ export async function initSearch() {
  */
 export function searchMeds(query) {
   if (!query || query.length < 2) return [];
+  
+  console.log('[SEARCH] Buscando:', query);
 
   const q = query.toLowerCase().trim();
   const results = [];

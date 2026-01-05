@@ -723,9 +723,14 @@
         const searchInput = document.getElementById('searchInput');
         const searchResults = document.getElementById('searchResults');
         
+        console.log('[INIT] searchInput:', searchInput);
+        console.log('[INIT] searchResults:', searchResults);
+        
         if (searchInput) {
+            console.log('[INIT] Registrando event listener en searchInput');
             searchInput.addEventListener('input', (e) => {
                 const query = e.target.value;
+                console.log('[INPUT] Query:', query);
                 
                 if (query.length < 2) {
                     searchResults.classList.add('hidden');
@@ -733,6 +738,7 @@
                 }
                 
                 const results = searchMeds(query);
+                console.log('[INPUT] Resultados:', results);
                 
                 if (results.length === 0) {
                     searchResults.innerHTML = '<div class="search-no-results">No se encontraron medicamentos</div>';
