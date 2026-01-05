@@ -579,7 +579,7 @@ body {
 }
 
 .estimador-result {
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     padding: 1.5rem;
     border-radius: 12px;
     border: 2px solid var(--primary-color);
@@ -588,7 +588,7 @@ body {
 
 .result-label {
     font-size: 0.9rem;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.9);
     margin-bottom: 0.5rem;
     font-weight: 600;
 }
@@ -596,15 +596,15 @@ body {
 .result-value {
     font-size: 2.5rem;
     font-weight: 700;
-    color: var(--primary-color);
+    color: white;
     margin-bottom: 0.5rem;
 }
 
 .result-formula {
     font-size: 0.9rem;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.85);
     font-family: 'Courier New', monospace;
-    background: var(--bg-card);
+    background: rgba(0, 0, 0, 0.2);
     padding: 0.5rem;
     border-radius: 6px;
     display: inline-block;
@@ -2280,7 +2280,7 @@ select:focus {
    ============================================ */
 
 .footer {
-    background: var(--text-primary);
+    background: var(--primary-color);
     color: white;
     text-align: center;
     padding: 2rem 1rem;
@@ -2290,6 +2290,7 @@ select:focus {
 .footer p {
     margin: 0.5rem 0;
     font-size: 0.95rem;
+    color: white;
 }
 
 .disclaimer {
