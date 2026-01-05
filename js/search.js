@@ -36,11 +36,12 @@ export function searchMeds(query) {
 
   // Buscar en urgencia
   Object.entries(allMeds.urgencia || {}).forEach(([key, med]) => {
-    if (med.nombre.toLowerCase().includes(q) || key.toLowerCase().includes(q)) {
+    const nombre = med.nombre || key;
+    if (nombre.toLowerCase().includes(q) || key.toLowerCase().includes(q)) {
       results.push({
         type: 'urgencia',
         key,
-        nombre: med.nombre,
+        nombre: nombre,
         category: 'Medicamentos de Urgencia'
       });
     }
@@ -48,11 +49,12 @@ export function searchMeds(query) {
 
   // Buscar en intubación
   Object.entries(allMeds.intubacion || {}).forEach(([key, med]) => {
-    if (med.nombre.toLowerCase().includes(q) || key.toLowerCase().includes(q)) {
+    const nombre = med.nombre || key;
+    if (nombre.toLowerCase().includes(q) || key.toLowerCase().includes(q)) {
       results.push({
         type: 'intubacion',
         key,
-        nombre: med.nombre,
+        nombre: nombre,
         category: 'Medicamentos de Intubación'
       });
     }
@@ -60,11 +62,12 @@ export function searchMeds(query) {
 
   // Buscar en perfusiones
   Object.entries(allMeds.perfusiones || {}).forEach(([key, med]) => {
-    if (med.nombre.toLowerCase().includes(q) || key.toLowerCase().includes(q)) {
+    const nombre = med.nombre || key;
+    if (nombre.toLowerCase().includes(q) || key.toLowerCase().includes(q)) {
       results.push({
         type: 'perfusiones',
         key,
-        nombre: med.nombre,
+        nombre: nombre,
         category: 'Perfusiones IV'
       });
     }
@@ -72,11 +75,12 @@ export function searchMeds(query) {
 
   // Buscar en dosificación
   Object.entries(allMeds.dosificacion || {}).forEach(([key, med]) => {
-    if (med.nombre.toLowerCase().includes(q) || key.toLowerCase().includes(q)) {
+    const nombre = med.nombre || key;
+    if (nombre.toLowerCase().includes(q) || key.toLowerCase().includes(q)) {
       results.push({
         type: 'dosificacion',
         key,
-        nombre: med.nombre,
+        nombre: nombre,
         category: med.grupo || 'Otros'
       });
     }
