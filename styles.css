@@ -138,6 +138,124 @@ body {
 }
 
 /* ============================================
+   Search Bar
+   ============================================ */
+
+.search-bar-container {
+    background: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.75rem 1rem;
+    position: sticky;
+    top: 55px;
+    z-index: 98;
+}
+
+.search-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    max-width: 600px;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    transition: var(--transition);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.search-input::placeholder {
+    color: var(--text-secondary);
+}
+
+.search-results {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    max-width: 600px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: var(--shadow-lg);
+}
+
+.search-results.hidden {
+    display: none;
+}
+
+.search-category {
+    padding: 0.75rem 1rem 0.5rem;
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border-color);
+    margin: 0.5rem 0 0 0;
+    background: var(--bg-color);
+    position: sticky;
+    top: 0;
+}
+
+.search-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--text-primary);
+}
+
+.search-item:hover {
+    background: rgba(37, 99, 235, 0.08);
+    padding-left: 1.25rem;
+}
+
+.search-item i {
+    color: var(--primary-color);
+    font-size: 0.95rem;
+}
+
+.search-no-results {
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* Highlight para medicamento encontrado */
+.search-highlight {
+    animation: highlight-pulse 0.6s ease;
+}
+
+@keyframes highlight-pulse {
+    0% {
+        background-color: rgba(245, 158, 11, 0.2);
+    }
+    50% {
+        background-color: rgba(245, 158, 11, 0.5);
+    }
+    100% {
+        background-color: rgba(245, 158, 11, 0);
+    }
+}
+
+/* ============================================
    Patient Data Section
    ============================================ */
 
