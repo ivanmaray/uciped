@@ -710,93 +710,92 @@
         import { initTabs } from './js/tabs.js';
         import { initUI } from './js/ui.js';
         import { initSearch, searchMeds, getTabForType, scrollToMed } from './js/search.js';
+        import { initTheme, toggleTheme, getThemeIcon, getThemeLabel } from './js/theme.js';
         
+        // Inicializar componentes
         initTabs();
         await initUI();
         await initSearch();
+        initTheme();
         
         // Configurar búsqueda
         const searchInput = document.getElementById('searchInput');
         const searchResults = document.getElementById('searchResults');
         
-        searchInput.addEventListener('input', (e) => {
-            const query = e.target.value;
-            
-            if (query.length < 2) {
-                searchResults.classList.add('hidden');
-                return;
-            }
-            
-            const results = searchMeds(query);
-            
-            if (results.length === 0) {
-                searchResults.innerHTML = '<div class="search-no-results">No se encontraron medicamentos</div>';
-                searchResults.classList.remove('hidden');
-                return;
-            }
-            
-            // Agrupar resultados por tipo
-            const grouped = {};
-            results.forEach(result => {
-                if (!grouped[result.category]) {
-                    grouped[result.category] = [];
-                }
-                grouped[result.category].push(result);
-            });
-            
-            let html = '';
-            Object.entries(grouped).forEach(([category, items]) => {
-                html += `<div class="search-category">${category}</div>`;
-                items.forEach(item => {
-                    html += `
-                        <div class="search-item" data-type="${item.type}" data-key="${item.key}">
-                            <i class="fas fa-pills"></i>
-                            <span>${item.nombre}</span>
-                        </div>
-                    `;
-                });
-            });
-            
-            searchResults.innerHTML = html;
-            searchResults.classList.remove('hidden');
-            
-            // Agregar listeners a los items
-            document.querySelectorAll('.search-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const type = item.dataset.type;
-                    const key = item.dataset.key;
-                    
-                    // Cambiar a la pestaña correspondiente
-                    const tab = getTabForType(type);
-                    const tabButton = document.querySelector(`button[data-tab="${tab}"]`);
-                    if (tabButton) tabButton.click();
-                    
-                    // Desplazar a medicamento
-                    setTimeout(() => {
-                        scrollToMed(type, key);
-                    }, 100);
-                    
-                    // Limpiar búsqueda
-                    searchInput.value = '';
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value;
+                
+                if (query.length < 2) {
                     searchResults.classList.add('hidden');
+                    return;
+                }
+                
+                const results = searchMeds(query);
+                
+                if (results.length === 0) {
+                    searchResults.innerHTML = '<div class="search-no-results">No se encontraron medicamentos</div>';
+                    searchResults.classList.remove('hidden');
+                    return;
+                }
+                
+                // Agrupar resultados por tipo
+                const grouped = {};
+                results.forEach(result => {
+                    if (!grouped[result.category]) {
+                        grouped[result.category] = [];
+                    }
+                    grouped[result.category].push(result);
+                });
+                
+                let html = '';
+                Object.entries(grouped).forEach(([category, items]) => {
+                    html += `<div class="search-category">${category}</div>`;
+                    items.forEach(item => {
+                        html += `
+                            <div class="search-item" data-type="${item.type}" data-key="${item.key}">
+                                <i class="fas fa-pills"></i>
+                                <span>${item.nombre}</span>
+                            </div>
+                        `;
+                    });
+                });
+                
+                searchResults.innerHTML = html;
+                searchResults.classList.remove('hidden');
+                
+                // Agregar listeners a los items
+                document.querySelectorAll('.search-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const type = item.dataset.type;
+                        const key = item.dataset.key;
+                        
+                        // Cambiar a la pestaña correspondiente
+                        const tab = getTabForType(type);
+                        const tabButton = document.querySelector(`button[data-tab="${tab}"]`);
+                        if (tabButton) tabButton.click();
+                        
+                        // Desplazar a medicamento
+                        setTimeout(() => {
+                            scrollToMed(type, key);
+                        }, 100);
+                        
+                        // Limpiar búsqueda
+                        searchInput.value = '';
+                        searchResults.classList.add('hidden');
+                    });
                 });
             });
-        });
+            
+            // Cerrar resultados al hacer click fuera
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.search-wrapper')) {
+                    searchResults.classList.add('hidden');
+                }
+            });
+        }
         
-        // Cerrar resultados al hacer click fuera
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.search-wrapper')) {
-                searchResults.classList.add('hidden');
-            }
-        });
-    </script>
-    
-    <script type="module">
-        // Inicializar tema (light/dark mode)
-        import { initTheme, toggleTheme, getThemeIcon, getThemeLabel } from './js/theme.js';
-        
-        initTheme();
-        
+        // Configurar tema toggle
         const themeToggle = document.getElementById('themeToggle');
         if (themeToggle) {
             themeToggle.addEventListener('click', () => {
