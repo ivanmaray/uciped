@@ -173,13 +173,14 @@ html:not(.light-mode) .logo-img:hover {
     padding: 0.75rem 1rem;
     position: sticky;
     top: 55px;
-    z-index: 98;
+    z-index: 999;
 }
 
 .search-wrapper {
     max-width: 1200px;
     margin: 0 auto;
     position: relative;
+    z-index: 1000;
 }
 
 .search-input {
@@ -215,7 +216,7 @@ html:not(.light-mode) .logo-img:hover {
     border-radius: 8px;
     max-height: 400px;
     overflow-y: auto;
-    z-index: 1000;
+    z-index: 10000;
     box-shadow: var(--shadow-lg);
 }
 
