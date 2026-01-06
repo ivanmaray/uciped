@@ -154,8 +154,9 @@ export function showMedDetail(type, key, nombre) {
 
   let html = '';
 
-  // Advertencia si no hay peso
-  if (!hasPeso) {
+  // Advertencia si no hay peso (solo para medicamentos que necesitan cálculo)
+  const necesitaPeso = (type === 'urgencia' || type === 'intubacion' || type === 'dosificacion') && med.dosis !== undefined;
+  if (!hasPeso && necesitaPeso) {
     html += `
       <div class="med-detail-section" style="background-color: rgba(245, 158, 11, 0.1); border-left-color: var(--warning-color);">
         <div class="med-detail-label">⚠️ Advertencia</div>
@@ -166,93 +167,162 @@ export function showMedDetail(type, key, nombre) {
     `;
   }
 
-  // Dosis calculada
-  if (med.dosis !== undefined) {
-    const dosisFormula = `${med.dosis} ${med.unidad || 'mg'}/kg`;
-    const dosisCalculada = hasPeso ? (peso * med.dosis).toFixed(2) : '-';
-    
-    html += `
-      <div class="med-detail-section">
-        <div class="med-detail-label">Dosis</div>
-        <div class="med-detail-value">
-          <strong>${dosisFormula}</strong><br>
-          ${hasPeso ? `<span style="font-size: 1.2em; color: var(--primary-color);">${dosisCalculada} ${med.unidad || 'mg'}</span>` : ''}
+  // PERFUSIONES: Tienen estructura diferente (dosis_min/max en mcg/kg/min)
+  if (type === 'perfusiones') {
+    if (med.dosis_min !== undefined && med.dosis_max !== undefined) {
+      html += `
+        <div class="med-detail-section">
+          <div class="med-detail-label">Rango de Dosis</div>
+          <div class="med-detail-value" style="font-size: 1.2em; color: var(--primary-color);">
+            ${med.dosis_min}-${med.dosis_max} ${med.unidad || 'mcg/kg/min'}
+          </div>
         </div>
-      </div>
-    `;
-  } else if (med.dosis_min !== undefined && med.dosis_max !== undefined) {
-    const dosisFormula = `${med.dosis_min}-${med.dosis_max} ${med.unidad || ''}`;
-    const dosisMinCalc = hasPeso ? (peso * med.dosis_min).toFixed(2) : '-';
-    const dosisMaxCalc = hasPeso ? (peso * med.dosis_max).toFixed(2) : '-';
-    
-    html += `
-      <div class="med-detail-section">
-        <div class="med-detail-label">Rango de Dosis</div>
-        <div class="med-detail-value">
-          <strong>${dosisFormula}</strong><br>
-          ${hasPeso ? `<span style="font-size: 1.2em; color: var(--primary-color);">${dosisMinCalc}-${dosisMaxCalc} ${med.unidad || ''}</span>` : ''}
+      `;
+    }
+
+    if (med.presentacion) {
+      html += `
+        <div class="med-detail-section">
+          <div class="med-detail-label">Presentación</div>
+          <div class="med-detail-value">${med.presentacion}</div>
         </div>
-      </div>
-    `;
-  }
+      `;
+    }
 
-  // Volumen calculado (solo para urgencia/intubacion con concentración)
-  if (hasPeso && med.dosis && (med.concentracion_mg_ml || med.concentracion_mcg_ml)) {
-    const dosisValor = peso * med.dosis;
-    const concentracion = med.concentracion_mg_ml || med.concentracion_mcg_ml;
-    const volumen = (dosisValor / concentracion).toFixed(2);
-    
-    html += `
-      <div class="med-detail-section">
-        <div class="med-detail-label">Volumen a administrar</div>
-        <div class="med-detail-value" style="font-size: 1.3em; font-weight: 700; color: #2196F3;">
-          ${volumen} mL
+    if (med.dilucion) {
+      html += `
+        <div class="med-detail-section">
+          <div class="med-detail-label">Dilución</div>
+          <div class="med-detail-value">${med.dilucion}</div>
         </div>
-      </div>
-    `;
-  }
+      `;
+    }
 
-  // Concentración
-  if (med.concentracion_mg_ml || med.concentracion_mcg_ml) {
-    html += `
-      <div class="med-detail-section">
-        <div class="med-detail-label">Concentración</div>
-        <div class="med-detail-value">
-          ${med.concentracion_mg_ml ? med.concentracion_mg_ml + ' mg/mL' : ''}
-          ${med.concentracion_mcg_ml ? med.concentracion_mcg_ml + ' mcg/mL' : ''}
+    if (med.ml_h_equiv) {
+      html += `
+        <div class="med-detail-section">
+          <div class="med-detail-label">Equivalencia</div>
+          <div class="med-detail-value">${med.ml_h_equiv}</div>
         </div>
-      </div>
-    `;
-  }
+      `;
+    }
 
-  // Presentación
-  if (med.presentacion) {
-    html += `
-      <div class="med-detail-section">
-        <div class="med-detail-label">Presentación</div>
-        <div class="med-detail-value">${med.presentacion}</div>
-      </div>
-    `;
-  }
+    if (med.nota) {
+      html += `
+        <div class="med-detail-section">
+          <div class="med-detail-label">Nota Importante</div>
+          <div class="med-detail-value" style="color: var(--warning-color);">${med.nota}</div>
+        </div>
+      `;
+    }
+  } 
+  // URGENCIA / INTUBACIÓN / DOSIFICACIÓN: Cálculo con peso
+  else {
+    // Dosis calculada
+    if (med.dosis !== undefined) {
+      const dosisFormula = `${med.dosis} ${med.unidad || 'mg'}/kg`;
+      const dosisCalculada = hasPeso ? (peso * med.dosis).toFixed(2) : '-';
+      
+      html += `
+        <div class="med-detail-section">
+          <div class="med-detail-label">Dosis por kg</div>
+          <div class="med-detail-value">
+            <strong>${dosisFormula}</strong>
+            ${hasPeso ? `<br><span style="font-size: 1.3em; font-weight: 700; color: var(--primary-color);">${dosisCalculada} ${med.unidad || 'mg'}</span>` : ''}
+          </div>
+        </div>
+      `;
+    } else if (med.dosis_min !== undefined && med.dosis_max !== undefined) {
+      const dosisFormula = `${med.dosis_min}-${med.dosis_max} ${med.unidad || ''}`;
+      
+      html += `
+        <div class="med-detail-section">
+          <div class="med-detail-label">Rango de Dosis</div>
+          <div class="med-detail-value">
+            <strong>${dosisFormula}</strong>
+          </div>
+        </div>
+      `;
+    }
 
-  // Dilución
-  if (med.dilucion) {
-    html += `
-      <div class="med-detail-section">
-        <div class="med-detail-label">Dilución</div>
-        <div class="med-detail-value">${med.dilucion}</div>
-      </div>
-    `;
-  }
+    // Volumen calculado (solo para urgencia/intubacion con concentración)
+    if (hasPeso && med.dosis && (med.concentracion_mg_ml || med.concentracion_mcg_ml)) {
+      const dosisValor = peso * med.dosis;
+      const concentracion = med.concentracion_mg_ml || med.concentracion_mcg_ml;
+      const volumen = (dosisValor / concentracion).toFixed(2);
+      
+      html += `
+        <div class="med-detail-section">
+          <div class="med-detail-label">Volumen a administrar</div>
+          <div class="med-detail-value" style="font-size: 1.4em; font-weight: 700; color: #2196F3;">
+            ${volumen} mL
+          </div>
+        </div>
+      `;
+    }
 
-  // Nota
-  if (med.nota) {
-    html += `
-      <div class="med-detail-section">
-        <div class="med-detail-label">Nota</div>
-        <div class="med-detail-value">${med.nota}</div>
-      </div>
-    `;
+    // Concentración
+    if (med.concentracion_mg_ml || med.concentracion_mcg_ml) {
+      html += `
+        <div class="med-detail-section">
+          <div class="med-detail-label">Concentración</div>
+          <div class="med-detail-value">
+            ${med.concentracion_mg_ml ? med.concentracion_mg_ml + ' mg/mL' : ''}
+            ${med.concentracion_mcg_ml ? med.concentracion_mcg_ml + ' mcg/mL' : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    // Presentación
+    if (med.presentacion) {
+      html += `
+        <div class="med-detail-section">
+          <div class="med-detail-label">Presentación</div>
+          <div class="med-detail-value">${med.presentacion}</div>
+        </div>
+      `;
+    }
+
+    // Dilución
+    if (med.dilucion) {
+      html += `
+        <div class="med-detail-section">
+          <div class="med-detail-label">Dilución</div>
+          <div class="med-detail-value">${med.dilucion}</div>
+        </div>
+      `;
+    }
+
+    // Nota
+    if (med.nota) {
+      html += `
+        <div class="med-detail-section">
+          <div class="med-detail-label">Nota</div>
+          <div class="med-detail-value">${med.nota}</div>
+        </div>
+      `;
+    }
+
+    // Máximo (para dosificación)
+    if (med.maximo) {
+      html += `
+        <div class="med-detail-section">
+          <div class="med-detail-label">Dosis Máxima</div>
+          <div class="med-detail-value">${med.maximo} ${med.maxunidad || med.unidad}</div>
+        </div>
+      `;
+    }
+
+    // Intervalo
+    if (med.intervalo) {
+      html += `
+        <div class="med-detail-section">
+          <div class="med-detail-label">Intervalo</div>
+          <div class="med-detail-value">${med.intervalo}</div>
+        </div>
+      `;
+    }
   }
 
   // Botones de acción
