@@ -309,8 +309,8 @@ export function showMedDetail(type, key, nombre) {
       `;
     }
 
-    // Máximo (para dosificación)
-    if (med.maximo) {
+    // Máximo (SOLO para dosificación, no para urgencia/intubacion)
+    if (med.maximo && type === 'dosificacion') {
       html += `
         <div class="med-detail-section">
           <div class="med-detail-label">Dosis Máxima</div>
@@ -319,8 +319,8 @@ export function showMedDetail(type, key, nombre) {
       `;
     }
 
-    // Intervalo
-    if (med.intervalo) {
+    // Intervalo (SOLO para dosificación)
+    if (med.intervalo && type === 'dosificacion') {
       html += `
         <div class="med-detail-section">
           <div class="med-detail-label">Intervalo</div>
