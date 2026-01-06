@@ -596,6 +596,7 @@
   "urgencia": {
     "adenosina": {
       "nombre": "Adenosina",
+      "dosis": 0.1,
       "unidad": "mg",
       "presentacion": "Ampolla 6 mg/2 mL, dilución: 6 mg + 4 mL SSF/SG5% = 1 mg/mL",
       "dilucion": "Diluir hasta 6 mL con SSF o SG5%",
@@ -604,6 +605,7 @@
     },
     "adrenalina": {
       "nombre": "Adrenalina",
+      "dosis": 0.01,
       "unidad": "mg",
       "presentacion": "Solución 1 mg/mL, dilución: 1 mg + 9 mL SSF/SG5% = 0.1 mg/mL",
       "dilucion": "Diluir hasta 10 mL con SSF o SG5%",
@@ -612,6 +614,7 @@
     },
     "amiodarona": {
       "nombre": "Amiodarona",
+      "dosis": 5,
       "unidad": "mg",
       "presentacion": "Ampolla 150 mg/3 mL = 50 mg/mL (puro en PCR)",
       "dilucion": "Pura en PCR; diluir en otras situaciones",
@@ -620,6 +623,7 @@
     },
     "atropina_urgencia": {
       "nombre": "Atropina (Urgencia)",
+      "dosis": 0.02,
       "unidad": "mg",
       "presentacion": "Ampolla 1 mg/1 mL, dilución: 1 mg + 9 mL SSF/SG5% = 0.1 mg/mL",
       "dilucion": "Diluir hasta 10 mL con SSF o SG5%",
@@ -718,6 +722,7 @@
     },
     "tranexamico": {
       "nombre": "Ácido Tranexámico",
+      "dosis": 15,
       "unidad": "mg",
       "presentacion": "Solución 100 mg/mL",
       "dilucion": "Usar directo",
