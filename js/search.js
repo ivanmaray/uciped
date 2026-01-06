@@ -1,9 +1,11 @@
 /**
  * Módulo de búsqueda rápida de medicamentos
- * Busca en urgencia, intubación, perfusiones y dosificación
+ * Busca en urgencia, intubación y perfusiones (excluye dosificación)
  */
 
 import { getPatientData } from './state.js';
+
+const ALLOWED_TYPES = new Set(['urgencia', 'intubacion', 'perfusiones']);
 
 let allMeds = {
   urgencia: {},
@@ -17,8 +19,10 @@ let allMeds = {
  */
 export async function initSearch() {
   try {
-    const response = await fetch('/data/meds.json');
+    const response = await fetch(`/data/meds.json?v=${Date.now()}`, { cache: 'no-store' });
     allMeds = await response.json();
+    // Excluir explícitamente el set de dosificación del buscador
+    allMeds.dosificacion = {};
     console.log('[SEARCH] Datos cargados:', Object.keys(allMeds));
   } catch (error) {
     console.error('[SEARCH] Error cargando datos:', error);
@@ -75,21 +79,8 @@ export function searchMeds(query) {
     }
   });
 
-  // Buscar en dosificación
-  Object.entries(allMeds.dosificacion || {}).forEach(([key, med]) => {
-    const nombre = med.nombre || key;
-    if (nombre.toLowerCase().includes(q) || key.toLowerCase().includes(q)) {
-      results.push({
-        type: 'dosificacion',
-        key,
-        nombre: nombre,
-        category: med.grupo || 'Otros'
-      });
-    }
-  });
-
-  // Limitar a 8 resultados
-  return results.slice(0, 8);
+  // Filtrar por tipos permitidos y limitar a 8 resultados
+  return results.filter((r) => ALLOWED_TYPES.has(r.type)).slice(0, 8);
 }
 
 /**
@@ -140,6 +131,7 @@ export function scrollToMed(type, key) {
  * Mostrar medicamento en modal de detalle
  */
 export function showMedDetail(type, key, nombre) {
+  if (!ALLOWED_TYPES.has(type)) return;
   const med = allMeds[type]?.[key];
   if (!med) return;
 

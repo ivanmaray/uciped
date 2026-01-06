@@ -1,0 +1,20 @@
+name: Validate meds.json
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths: [ 'data/meds.json' ]
+  pull_request:
+    branches: [ main, develop ]
+    paths: [ 'data/meds.json' ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: npm run validate
+        name: Validate data/meds.json integrity
