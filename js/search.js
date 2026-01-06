@@ -3,6 +3,8 @@
  * Busca en urgencia, intubación, perfusiones y dosificación
  */
 
+import { getPatientData } from './state.js';
+
 let allMeds = {
   urgencia: {},
   intubacion: {},
@@ -141,6 +143,9 @@ export function showMedDetail(type, key, nombre) {
   const med = allMeds[type]?.[key];
   if (!med) return;
 
+  const { peso } = getPatientData();
+  const hasPeso = peso && peso > 0;
+
   const modal = document.getElementById('medDetailModal');
   const title = document.getElementById('medDetailTitle');
   const body = document.getElementById('medDetailBody');
@@ -149,15 +154,59 @@ export function showMedDetail(type, key, nombre) {
 
   let html = '';
 
-  // Dosis
-  if (med.dosis || med.dosis_min || med.dosis_max) {
+  // Advertencia si no hay peso
+  if (!hasPeso) {
+    html += `
+      <div class="med-detail-section" style="background-color: rgba(245, 158, 11, 0.1); border-left-color: var(--warning-color);">
+        <div class="med-detail-label">⚠️ Advertencia</div>
+        <div class="med-detail-value">
+          Ingrese el peso del paciente para ver las dosis calculadas.
+        </div>
+      </div>
+    `;
+  }
+
+  // Dosis calculada
+  if (med.dosis !== undefined) {
+    const dosisFormula = `${med.dosis} ${med.unidad || 'mg'}/kg`;
+    const dosisCalculada = hasPeso ? (peso * med.dosis).toFixed(2) : '-';
+    
     html += `
       <div class="med-detail-section">
         <div class="med-detail-label">Dosis</div>
         <div class="med-detail-value">
-          ${med.dosis ? med.dosis + ' ' + (med.unidad || '') : 
-            med.dosis_min ? med.dosis_min + '-' + med.dosis_max + ' ' + (med.unidad || '') : 
-            '-'}
+          <strong>${dosisFormula}</strong><br>
+          ${hasPeso ? `<span style="font-size: 1.2em; color: var(--primary-color);">${dosisCalculada} ${med.unidad || 'mg'}</span>` : ''}
+        </div>
+      </div>
+    `;
+  } else if (med.dosis_min !== undefined && med.dosis_max !== undefined) {
+    const dosisFormula = `${med.dosis_min}-${med.dosis_max} ${med.unidad || ''}`;
+    const dosisMinCalc = hasPeso ? (peso * med.dosis_min).toFixed(2) : '-';
+    const dosisMaxCalc = hasPeso ? (peso * med.dosis_max).toFixed(2) : '-';
+    
+    html += `
+      <div class="med-detail-section">
+        <div class="med-detail-label">Rango de Dosis</div>
+        <div class="med-detail-value">
+          <strong>${dosisFormula}</strong><br>
+          ${hasPeso ? `<span style="font-size: 1.2em; color: var(--primary-color);">${dosisMinCalc}-${dosisMaxCalc} ${med.unidad || ''}</span>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  // Volumen calculado (solo para urgencia/intubacion con concentración)
+  if (hasPeso && med.dosis && (med.concentracion_mg_ml || med.concentracion_mcg_ml)) {
+    const dosisValor = peso * med.dosis;
+    const concentracion = med.concentracion_mg_ml || med.concentracion_mcg_ml;
+    const volumen = (dosisValor / concentracion).toFixed(2);
+    
+    html += `
+      <div class="med-detail-section">
+        <div class="med-detail-label">Volumen a administrar</div>
+        <div class="med-detail-value" style="font-size: 1.3em; font-weight: 700; color: #2196F3;">
+          ${volumen} mL
         </div>
       </div>
     `;
