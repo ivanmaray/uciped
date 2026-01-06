@@ -372,18 +372,6 @@
       "dilucion": "Mezclar con salbutamol para nebulizar",
       "via": "Inhalado"
     },
-    "furosemida": {
-      "grupo": "DIURÉTICOS",
-      "nombre": "Furosemida (Lasix)",
-      "dosis": 1,
-      "unidad": "mg",
-      "intervalo": "cada 8-12 horas",
-      "maximo": 4,
-      "maxunidad": "mg/kg/día",
-      "presentacion": "40 mg/mL",
-      "dilucion": "Diluir 1:4 en SF",
-      "via": "IV, IM, VO"
-    },
     "espironolactona": {
       "grupo": "DIURÉTICOS",
       "nombre": "Espironolactona",
