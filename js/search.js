@@ -167,14 +167,15 @@ export function showMedDetail(type, key, nombre) {
     `;
   }
 
-  // PERFUSIONES: Tienen estructura diferente (dosis_min/max en mcg/kg/min)
+  // PERFUSIONES: Tienen estructura diferente (dosis_min/max en mcg/kg/min - NO multiplicar por peso)
   if (type === 'perfusiones') {
     if (med.dosis_min !== undefined && med.dosis_max !== undefined) {
+      const unidad = med.unidad || 'mcg/kg/min';
       html += `
         <div class="med-detail-section">
           <div class="med-detail-label">Rango de Dosis</div>
-          <div class="med-detail-value" style="font-size: 1.2em; color: var(--primary-color);">
-            ${med.dosis_min}-${med.dosis_max} ${med.unidad || 'mcg/kg/min'}
+          <div class="med-detail-value" style="font-size: 1.3em; font-weight: 700; color: var(--primary-color);">
+            ${med.dosis_min}-${med.dosis_max} <span style="font-size: 0.8em;">${unidad}</span>
           </div>
         </div>
       `;
@@ -201,8 +202,10 @@ export function showMedDetail(type, key, nombre) {
     if (med.ml_h_equiv) {
       html += `
         <div class="med-detail-section">
-          <div class="med-detail-label">Equivalencia</div>
-          <div class="med-detail-value">${med.ml_h_equiv}</div>
+          <div class="med-detail-label">Equivalencia (ritmo perfusión)</div>
+          <div class="med-detail-value" style="background-color: rgba(33, 150, 243, 0.1); color: #2196F3; font-weight: 600;">
+            ${med.ml_h_equiv}
+          </div>
         </div>
       `;
     }
@@ -210,8 +213,10 @@ export function showMedDetail(type, key, nombre) {
     if (med.nota) {
       html += `
         <div class="med-detail-section">
-          <div class="med-detail-label">Nota Importante</div>
-          <div class="med-detail-value" style="color: var(--warning-color);">${med.nota}</div>
+          <div class="med-detail-label">⚠️ Nota Importante</div>
+          <div class="med-detail-value" style="background-color: rgba(245, 158, 11, 0.1); color: var(--warning-color); border-left-color: var(--warning-color);">
+            ${med.nota}
+          </div>
         </div>
       `;
     }

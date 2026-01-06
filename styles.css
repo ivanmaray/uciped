@@ -2742,16 +2742,18 @@ html:not(.light-mode) .footer {
     color: var(--text-secondary);
     font-size: 0.85rem;
     text-transform: uppercase;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
 }
 
 .med-detail-value {
     color: var(--text-primary);
     font-size: 1rem;
-    padding: 10px;
+    padding: 12px;
     background-color: rgba(37, 99, 235, 0.05);
-    border-left: 3px solid var(--primary-color);
+    border-left: 4px solid var(--primary-color);
     border-radius: 4px;
+    line-height: 1.6;
 }
 
 .med-detail-buttons {
