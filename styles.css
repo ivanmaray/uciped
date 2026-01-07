@@ -60,6 +60,19 @@ body {
     flex-direction: column;
 }
 
+/* Accessibility: Screen reader only content */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
 /* ============================================
    Header
    ============================================ */
@@ -251,6 +264,12 @@ html:not(.light-mode) .logo-img:hover {
 .search-item:hover {
     background: rgba(37, 99, 235, 0.08);
     padding-left: 1.25rem;
+}
+
+.search-item.selected {
+    background: rgba(37, 99, 235, 0.12);
+    padding-left: 1.25rem;
+    border-left: 3px solid var(--primary-color);
 }
 
 .search-item i {

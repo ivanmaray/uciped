@@ -47,14 +47,21 @@
                     class="search-input" 
                     placeholder="🔍 Buscar medicamento... (adenosina, adrenalina, etc.)"
                     autocomplete="off"
+                    aria-label="Buscar medicamentos por nombre"
+                    role="combobox"
+                    aria-expanded="false"
+                    aria-controls="searchResults"
                 >
-                <div id="searchResults" class="search-results hidden"></div>
+                <div id="searchResults" class="search-results hidden" role="listbox" aria-label="Resultados de búsqueda de medicamentos"></div>
             </div>
         </div>
         
         <div id="dataLoadWarning" class="result-box hidden" style="margin:10px 0; color:#b00020; font-weight:600;">
             No se pudo cargar datos de medicamentos. Se muestran placeholders.
         </div>
+
+        <!-- Región aria-live para anuncios de accesibilidad -->
+        <div id="ariaAnnouncer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
 
         <!-- Datos del paciente -->
         <section class="patient-section">
@@ -83,16 +90,16 @@
                 </div>
 
                 <div class="patient-actions">
-                    <button id="calcularHeroBtn" class="btn-action" title="Calcular pestaña activa">
+                    <button id="calcularHeroBtn" class="btn-action" title="Calcular pestaña activa" aria-label="Calcular resultados de la pestaña activa">
                         <i class="fas fa-play"></i>
                     </button>
-                    <button id="limpiarHeroBtn" class="btn-action" title="Limpiar resultados pestaña activa">
+                    <button id="limpiarHeroBtn" class="btn-action" title="Limpiar resultados pestaña activa" aria-label="Limpiar resultados de la pestaña activa">
                         <i class="fas fa-eraser"></i>
                     </button>
-                    <button id="limpiarPacienteBtn" class="btn-action" title="Limpiar datos">
+                    <button id="limpiarPacienteBtn" class="btn-action" title="Limpiar datos" aria-label="Limpiar todos los datos del paciente">
                         <i class="fas fa-redo"></i>
                     </button>
-                    <button id="infoBtn" class="btn-action" title="Ver fórmulas">
+                    <button id="infoBtn" class="btn-action" title="Ver fórmulas" aria-label="Ver información y fórmulas médicas">
                         <i class="fas fa-question-circle"></i>
                     </button>
                 </div>
@@ -122,8 +129,8 @@
                         </div>
                         <div class="card-body">
                             <div class="button-group toolbar-hidden">
-                                <button id="calcularViaAerea" class="btn btn-primary"><i class="fas fa-calculator"></i> Calcular</button>
-                                <button id="limpiarViaAerea" class="btn btn-secondary"><i class="fas fa-redo"></i> Limpiar</button>
+                                <button id="calcularViaAerea" class="btn btn-primary" aria-label="Calcular parámetros de vía aérea"><i class="fas fa-calculator"></i> Calcular</button>
+                                <button id="limpiarViaAerea" class="btn btn-secondary" aria-label="Limpiar resultados de vía aérea"><i class="fas fa-redo"></i> Limpiar</button>
                             </div>
                             
                             <div id="resultadoViaAerea" class="result-box hidden">
@@ -211,8 +218,8 @@
                         </div>
                         <div class="card-body">
                             <div class="button-group toolbar-hidden">
-                                <button id="calcularIntubacion" class="btn btn-primary"><i class="fas fa-calculator"></i> Calcular</button>
-                                <button id="limpiarIntubacion" class="btn btn-secondary"><i class="fas fa-redo"></i> Limpiar</button>
+                                <button id="calcularIntubacion" class="btn btn-primary" aria-label="Calcular medicamentos de intubación"><i class="fas fa-calculator"></i> Calcular</button>
+                                <button id="limpiarIntubacion" class="btn btn-secondary" aria-label="Limpiar resultados de intubación"><i class="fas fa-redo"></i> Limpiar</button>
                             </div>
                             
                             <div id="resultadoIntubacion" class="result-box hidden">
@@ -239,8 +246,8 @@
                                 </select>
                             </div>
                             <div class="button-group toolbar-hidden">
-                                <button id="calcularVentilacion" class="btn btn-primary"><i class="fas fa-calculator"></i> Calcular</button>
-                                <button id="limpiarVentilacion" class="btn btn-secondary"><i class="fas fa-redo"></i> Limpiar</button>
+                                <button id="calcularVentilacion" class="btn btn-primary" aria-label="Calcular parámetros de ventilación"><i class="fas fa-calculator"></i> Calcular</button>
+                                <button id="limpiarVentilacion" class="btn btn-secondary" aria-label="Limpiar resultados de ventilación"><i class="fas fa-redo"></i> Limpiar</button>
                             </div>
 
                             <div id="resultadoVentilacion" class="result-box hidden">
@@ -334,8 +341,8 @@
                         </div>
                         <div class="card-body">
                             <div class="button-group toolbar-hidden">
-                                <button id="calcularUrgencia" class="btn btn-primary"><i class="fas fa-calculator"></i> Calcular</button>
-                                <button id="limpiarUrgencia" class="btn btn-secondary"><i class="fas fa-redo"></i> Limpiar</button>
+                                <button id="calcularUrgencia" class="btn btn-primary" aria-label="Calcular medicamentos de urgencia"><i class="fas fa-calculator"></i> Calcular</button>
+                                <button id="limpiarUrgencia" class="btn btn-secondary" aria-label="Limpiar resultados de urgencia"><i class="fas fa-redo"></i> Limpiar</button>
                             </div>
                             <div id="resultadoUrgencia" class="result-box hidden"></div>
                         </div>
@@ -351,8 +358,8 @@
                         </div>
                         <div class="card-body">
                             <div class="button-group toolbar-hidden">
-                                <button id="calcularPerfusiones" class="btn btn-primary"><i class="fas fa-eye"></i> Ver tablas</button>
-                                <button id="limpiarPerfusiones" class="btn btn-secondary"><i class="fas fa-redo"></i> Limpiar</button>
+                                <button id="calcularPerfusiones" class="btn btn-primary" aria-label="Ver tablas de perfusiones"><i class="fas fa-eye"></i> Ver tablas</button>
+                                <button id="limpiarPerfusiones" class="btn btn-secondary" aria-label="Limpiar resultados de perfusiones"><i class="fas fa-redo"></i> Limpiar</button>
                             </div>
                             <div id="resultadoPerfusiones" class="hidden">
                                 <h3>Perfusiones Inotrópicas</h3>
@@ -402,7 +409,7 @@
                                 <input type="number" id="edadSignos" min="0" max="18" step="0.1" placeholder="Ej: 4">
                             </div>
                             <div class="button-group toolbar-hidden">
-                                <button id="obtenerSignos" class="btn btn-primary"><i class="fas fa-heartbeat"></i> Obtener rangos</button>
+                                <button id="obtenerSignos" class="btn btn-primary" aria-label="Obtener rangos de signos vitales"><i class="fas fa-heartbeat"></i> Obtener rangos</button>
                             </div>
                             <div id="resultadoSignos" class="result-box hidden">
                                 <h3><i class="fas fa-heartbeat"></i> Parámetros Vitales</h3>
@@ -613,9 +620,9 @@
                         </div>
 
                         <div class="peso-button-group">
-                            <button id="calcularPesoModal" class="btn btn-primary btn-large"><i class="fas fa-calculator"></i> Calcular Peso</button>
-                            <button id="guardarPesoBtn" class="btn btn-success btn-large hidden"><i class="fas fa-check"></i> Confirmar y Guardar</button>
-                            <button id="limpiarPesoModal" class="btn btn-secondary btn-large"><i class="fas fa-redo"></i> Limpiar</button>
+                            <button id="calcularPesoModal" class="btn btn-primary btn-large" aria-label="Calcular peso estimado"><i class="fas fa-calculator"></i> Calcular Peso</button>
+                            <button id="guardarPesoBtn" class="btn btn-success btn-large hidden" aria-label="Confirmar y guardar peso en el perfil del paciente"><i class="fas fa-check"></i> Confirmar y Guardar</button>
+                            <button id="limpiarPesoModal" class="btn btn-secondary btn-large" aria-label="Limpiar cálculo de peso"><i class="fas fa-redo"></i> Limpiar</button>
                         </div>
                     </div>
                 </div>
@@ -647,7 +654,7 @@
                             <div class="estimador-formula"><strong id="estimadorFormula">Selecciona una edad para ver la fórmula</strong></div>
                         </div>
                         <div class="estimador-actions">
-                            <button id="aplicarEstimacionBtn" class="btn btn-primary"><i class="fas fa-check"></i> Aplicar a Paciente</button>
+                            <button id="aplicarEstimacionBtn" class="btn btn-primary" aria-label="Aplicar peso estimado al perfil del paciente"><i class="fas fa-check"></i> Aplicar a Paciente</button>
                         </div>
                     </div>
                 </div>
@@ -727,6 +734,7 @@
         import { initUI } from './js/ui.js';
         import { initSearch, searchMeds, getTabForType, showMedDetail } from './js/search.js';
         import { initTheme, toggleTheme, getThemeIcon, getThemeLabel } from './js/theme.js';
+        import { announceSearchResults } from './js/announcer.js';
         
         // Inicializar componentes
         initTabs();
@@ -757,19 +765,27 @@
         }
         
         if (searchInput) {
+            let selectedIndex = -1;
+            let currentResults = [];
+
             searchInput.addEventListener('input', (e) => {
                 const query = e.target.value;
+                selectedIndex = -1; // Reset selection
                 
                 if (query.length < 2) {
                     searchResults.classList.add('hidden');
+                    searchInput.setAttribute('aria-expanded', 'false');
                     return;
                 }
                 
                 const results = searchMeds(query);
+                currentResults = results;
                 
                 if (results.length === 0) {
                     searchResults.innerHTML = '<div class="search-no-results">No se encontraron medicamentos</div>';
                     searchResults.classList.remove('hidden');
+                    searchInput.setAttribute('aria-expanded', 'true');
+                    announceSearchResults(0);
                     return;
                 }
                 
@@ -783,42 +799,86 @@
                 });
                 
                 let html = '';
+                let itemIndex = 0;
                 Object.entries(grouped).forEach(([category, items]) => {
                     html += `<div class="search-category">${category}</div>`;
                     items.forEach(item => {
                         html += `
-                            <div class="search-item" data-type="${item.type}" data-key="${item.key}" data-nombre="${item.nombre}">
+                            <div class="search-item" data-type="${item.type}" data-key="${item.key}" data-nombre="${item.nombre}" data-index="${itemIndex}" role="option" tabindex="-1">
                                 <i class="fas fa-pills"></i>
                                 <span>${item.nombre}</span>
                             </div>
                         `;
+                        itemIndex++;
                     });
                 });
                 
                 searchResults.innerHTML = html;
                 searchResults.classList.remove('hidden');
+                searchInput.setAttribute('aria-expanded', 'true');
+                announceSearchResults(results.length);
                 
                 // Agregar listeners a los items
                 document.querySelectorAll('.search-item').forEach(item => {
                     item.addEventListener('click', () => {
-                        const type = item.dataset.type;
-                        const key = item.dataset.key;
-                        const nombre = item.dataset.nombre;
-                        
-                        // Mostrar modal con detalles del medicamento
-                        showMedDetail(type, key, nombre);
-                        
-                        // Limpiar búsqueda
-                        searchInput.value = '';
-                        searchResults.classList.add('hidden');
+                        selectSearchItem(item);
                     });
                 });
             });
+
+            // Keyboard navigation
+            searchInput.addEventListener('keydown', (e) => {
+                const items = document.querySelectorAll('.search-item');
+                if (items.length === 0) return;
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+                    updateSelection(items);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    selectedIndex = Math.max(selectedIndex - 1, -1);
+                    updateSelection(items);
+                } else if (e.key === 'Enter' && selectedIndex >= 0) {
+                    e.preventDefault();
+                    selectSearchItem(items[selectedIndex]);
+                } else if (e.key === 'Escape') {
+                    searchResults.classList.add('hidden');
+                    searchInput.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            function updateSelection(items) {
+                items.forEach((item, idx) => {
+                    if (idx === selectedIndex) {
+                        item.classList.add('selected');
+                        item.scrollIntoView({ block: 'nearest' });
+                    } else {
+                        item.classList.remove('selected');
+                    }
+                });
+            }
+
+            function selectSearchItem(item) {
+                const type = item.dataset.type;
+                const key = item.dataset.key;
+                const nombre = item.dataset.nombre;
+                
+                // Mostrar modal con detalles del medicamento
+                showMedDetail(type, key, nombre);
+                
+                // Limpiar búsqueda
+                searchInput.value = '';
+                searchResults.classList.add('hidden');
+                searchInput.setAttribute('aria-expanded', 'false');
+                selectedIndex = -1;
+            }
             
             // Cerrar resultados al hacer click fuera
             document.addEventListener('click', (e) => {
                 if (!e.target.closest('.search-wrapper')) {
                     searchResults.classList.add('hidden');
+                    searchInput.setAttribute('aria-expanded', 'false');
                 }
             });
         }

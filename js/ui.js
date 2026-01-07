@@ -2,6 +2,7 @@ import { loadMeds } from './data.js';
 import { calcularPesoEstimado, obtenerParametrosDeMATRIZ1, obtenerParametrosDeMATRIZ2, urgenciaFormulas, urgenciaDosisPorKg, intubacionFormulas, intubacionDosisPorKg, formatDosis } from './logic.js';
 import { setPatientData, getPatientData, setHeaderValues } from './state.js';
 import { compute, DRUGS } from './perfusiones.config.js';
+import { setupFocusTrap } from './focus-trap.js';
 
 function show(el){ el.classList.remove('hidden'); }
 function hide(el){ el.classList.add('hidden'); }
@@ -105,6 +106,7 @@ export async function initUI(){
   setupSignos();
   setupPerfusiones();
   setupDisclaimer();
+  setupAccessibilityTraps();
 }
 
 function showDisclaimerIfNeeded() {
@@ -265,6 +267,8 @@ function setupHeaderInputs(){
     }
     estimadorModal.classList.remove('hidden');
     actualizarEstimador();
+    // Foco automático para accesibilidad
+    setTimeout(() => estimadorEdadInput.focus(), 100);
   });
 
   // Cerrar modal del estimador
@@ -316,6 +320,11 @@ function setupHeaderInputs(){
   // Botón de información - Mostrar fórmulas
   infoBtn.addEventListener('click', () => {
     infoModal.classList.remove('hidden');
+    // Foco automático al input de edad para accesibilidad
+    setTimeout(() => {
+      const edadInput = document.getElementById('edadModalInput');
+      if(edadInput) edadInput.focus();
+    }, 100);
   });
 
   closeInfoModal.addEventListener('click', () => {
@@ -1580,5 +1589,23 @@ function setupUrgencia(){
   
   clearBtn.addEventListener('click', () => {
     hide(resultadoDiv);
+  });
+}
+
+function setupAccessibilityTraps() {
+  // Setup focus trap para todos los modales
+  const modals = [
+    'formulasModal',
+    'estimadorPesoModal',
+    'dosisModal',
+    'medDetailModal',
+    'disclaimerModal'
+  ];
+
+  modals.forEach(modalId => {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      setupFocusTrap(modal);
+    }
   });
 }
