@@ -296,16 +296,38 @@ export function showMedDetail(type, key, nombre) {
 
     // Concentraciones (para medicamentos con múltiples opciones)
     if (med.concentraciones && Array.isArray(med.concentraciones)) {
-      html += `
+      let concHtml = `
         <div class="med-detail-section">
           <div class="med-detail-label">Concentraciones disponibles</div>
           <div class="med-detail-value">
-            <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
-              ${med.concentraciones.map(c => `<li>${c.conc_mg_ml} mg/mL - ${c.desc}</li>`).join('')}
-            </ul>
+      `;
+      
+      // Si hay dosis y peso, calcular volumen para cada concentración
+      if (hasPeso && med.dosis) {
+        const dosisValor = peso * med.dosis;
+        concHtml += `<div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #eee;">
+          <strong style="color: var(--primary-color); font-size: 1.1em;">Dosis: ${dosisValor.toFixed(2)} ${med.unidad || 'mg'}</strong>
+        </div>`;
+        concHtml += `<ul style="margin: 0; padding-left: 20px; line-height: 1.8;">`;
+        med.concentraciones.forEach(c => {
+          const vol = (dosisValor / c.conc_mg_ml).toFixed(2);
+          concHtml += `<li><strong>${c.conc_mg_ml} mg/mL</strong> (${c.desc})<br><span style="color: #2196F3; font-weight: 600;">→ ${vol} mL</span></li>`;
+        });
+        concHtml += `</ul>`;
+      } else {
+        // Sin peso, solo mostrar concentraciones
+        concHtml += `<ul style="margin: 0; padding-left: 20px; line-height: 1.6;">`;
+        med.concentraciones.forEach(c => {
+          concHtml += `<li>${c.conc_mg_ml} mg/mL - ${c.desc}</li>`;
+        });
+        concHtml += `</ul>`;
+      }
+      
+      concHtml += `
           </div>
         </div>
       `;
+      html += concHtml;
     }
 
     // Dilución
