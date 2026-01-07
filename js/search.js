@@ -182,6 +182,19 @@ export function showMedDetail(type, key, nombre) {
       `;
     }
 
+    if (med.concentraciones && Array.isArray(med.concentraciones)) {
+      html += `
+        <div class="med-detail-section">
+          <div class="med-detail-label">Concentraciones disponibles</div>
+          <div class="med-detail-value">
+            <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+              ${med.concentraciones.map(c => `<li>${c.conc_mg_ml} mg/mL - ${c.desc}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+      `;
+    }
+
     if (med.dilucion) {
       html += `
         <div class="med-detail-section">
@@ -277,6 +290,20 @@ export function showMedDetail(type, key, nombre) {
         <div class="med-detail-section">
           <div class="med-detail-label">Presentación</div>
           <div class="med-detail-value">${med.presentacion}</div>
+        </div>
+      `;
+    }
+
+    // Concentraciones (para medicamentos con múltiples opciones)
+    if (med.concentraciones && Array.isArray(med.concentraciones)) {
+      html += `
+        <div class="med-detail-section">
+          <div class="med-detail-label">Concentraciones disponibles</div>
+          <div class="med-detail-value">
+            <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+              ${med.concentraciones.map(c => `<li>${c.conc_mg_ml} mg/mL - ${c.desc}</li>`).join('')}
+            </ul>
+          </div>
         </div>
       `;
     }

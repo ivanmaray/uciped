@@ -1,5 +1,5 @@
 // Service Worker para UCIPED
-const CACHE_NAME = 'uciped-v22';
+const CACHE_NAME = 'uciped-v23';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
