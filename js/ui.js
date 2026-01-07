@@ -1016,7 +1016,7 @@ function setupSignos(){
         fr: '30-60 rpm',
         pas: '50-70 mmHg',
         pad: '25-45 mmHg',
-        pam: '35-55 mmHg (edad + 40)',
+        pam: '50-60 mmHg',
         spo2: '≥92% (≥95% si cardiopatía)',
         temperatura: '36.5-37.5 °C',
         glucemia: '70-100 mg/dL (RN: 40-60 primeras 24h)',
@@ -1029,8 +1029,8 @@ function setupSignos(){
         fc: '90-150 lpm',
         fr: '25-50 rpm',
         pas: '80-100 mmHg',
-        pad: '55-65 mmHg',
-        pam: '65-75 mmHg',
+        pad: '45-55 mmHg',
+        pam: '60-70 mmHg',
         spo2: '≥92% (≥95% si patología respiratoria)',
         temperatura: '36.5-37.5 °C',
         glucemia: '70-110 mg/dL',
@@ -1103,6 +1103,7 @@ function setupSignos(){
     document.getElementById('relleno').textContent = signos.relleno;
     document.getElementById('glasgow').textContent = signos.glasgow;
     show(resultadoSignosDiv);
+    announce(`Signos vitales para ${edad} años: FC ${signos.fc}, FR ${signos.fr}, TA ${signos.pas}/${signos.pad}`);
   });
   
   // Auto-calculate cuando cambias de tab

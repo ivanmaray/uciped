@@ -406,12 +406,12 @@
                         <div class="card-body">
                             <div class="input-group">
                                 <label for="edadSignos">Edad del paciente (años)</label>
-                                <input type="number" id="edadSignos" min="0" max="18" step="0.1" placeholder="Ej: 4">
+                                <input type="number" id="edadSignos" aria-label="Ingrese la edad del paciente en años" min="0" max="18" step="0.1" placeholder="Ej: 4">
                             </div>
                             <div class="button-group toolbar-hidden">
                                 <button id="obtenerSignos" class="btn btn-primary" aria-label="Obtener rangos de signos vitales"><i class="fas fa-heartbeat"></i> Obtener rangos</button>
                             </div>
-                            <div id="resultadoSignos" class="result-box hidden">
+                            <div id="resultadoSignos" class="result-box hidden" aria-live="polite" aria-label="Resultados de signos vitales">
                                 <h3><i class="fas fa-heartbeat"></i> Parámetros Vitales</h3>
                                 <table class="medicines-table">
                                     <tbody>
@@ -781,8 +781,10 @@
         if (searchInput) {
             let selectedIndex = -1;
             let currentResults = [];
+            let searchTimeout;
 
             searchInput.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
                 const query = e.target.value;
                 selectedIndex = -1; // Reset selection
                 
@@ -792,52 +794,55 @@
                     return;
                 }
                 
-                const results = searchMeds(query);
-                currentResults = results;
-                
-                if (results.length === 0) {
-                    searchResults.innerHTML = '<div class="search-no-results">No se encontraron medicamentos</div>';
+                // Debounce: espera 300ms antes de hacer la búsqueda
+                searchTimeout = setTimeout(() => {
+                    const results = searchMeds(query);
+                    currentResults = results;
+                    
+                    if (results.length === 0) {
+                        searchResults.innerHTML = '<div class="search-no-results">No se encontraron medicamentos</div>';
+                        searchResults.classList.remove('hidden');
+                        searchInput.setAttribute('aria-expanded', 'true');
+                        announceSearchResults(0);
+                        return;
+                    }
+                    
+                    // Agrupar resultados por tipo
+                    const grouped = {};
+                    results.forEach(result => {
+                        if (!grouped[result.category]) {
+                            grouped[result.category] = [];
+                        }
+                        grouped[result.category].push(result);
+                    });
+                    
+                    let html = '';
+                    let itemIndex = 0;
+                    Object.entries(grouped).forEach(([category, items]) => {
+                        html += `<div class="search-category">${category}</div>`;
+                        items.forEach(item => {
+                            html += `
+                                <div class="search-item" data-type="${item.type}" data-key="${item.key}" data-nombre="${item.nombre}" data-index="${itemIndex}" role="option" tabindex="-1">
+                                    <i class="fas fa-pills"></i>
+                                    <span>${item.nombre}</span>
+                                </div>
+                            `;
+                            itemIndex++;
+                        });
+                    });
+                    
+                    searchResults.innerHTML = html;
                     searchResults.classList.remove('hidden');
                     searchInput.setAttribute('aria-expanded', 'true');
-                    announceSearchResults(0);
-                    return;
-                }
-                
-                // Agrupar resultados por tipo
-                const grouped = {};
-                results.forEach(result => {
-                    if (!grouped[result.category]) {
-                        grouped[result.category] = [];
-                    }
-                    grouped[result.category].push(result);
-                });
-                
-                let html = '';
-                let itemIndex = 0;
-                Object.entries(grouped).forEach(([category, items]) => {
-                    html += `<div class="search-category">${category}</div>`;
-                    items.forEach(item => {
-                        html += `
-                            <div class="search-item" data-type="${item.type}" data-key="${item.key}" data-nombre="${item.nombre}" data-index="${itemIndex}" role="option" tabindex="-1">
-                                <i class="fas fa-pills"></i>
-                                <span>${item.nombre}</span>
-                            </div>
-                        `;
-                        itemIndex++;
+                    announceSearchResults(results.length);
+                    
+                    // Agregar listeners a los items
+                    document.querySelectorAll('.search-item').forEach(item => {
+                        item.addEventListener('click', () => {
+                            selectSearchItem(item);
+                        });
                     });
-                });
-                
-                searchResults.innerHTML = html;
-                searchResults.classList.remove('hidden');
-                searchInput.setAttribute('aria-expanded', 'true');
-                announceSearchResults(results.length);
-                
-                // Agregar listeners a los items
-                document.querySelectorAll('.search-item').forEach(item => {
-                    item.addEventListener('click', () => {
-                        selectSearchItem(item);
-                    });
-                });
+                }, 300);
             });
 
             // Keyboard navigation
