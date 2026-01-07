@@ -1000,7 +1000,6 @@ function setupVentilacion(){
 }
 
 function setupSignos(){
-  const edadSignosInput = document.getElementById('edadSignos');
   const obtenerSignosBtn = document.getElementById('obtenerSignos');
   const resultadoSignosDiv = document.getElementById('resultadoSignos');
   const fcElement = document.getElementById('fc');
@@ -1085,7 +1084,7 @@ function setupSignos(){
   }
 
   obtenerSignosBtn.addEventListener('click', () => {
-    const edad = parseFloat(edadSignosInput.value);
+    const { edad } = getPatientData();
     if (!valid(edad) || edad > 18) {
       alert('Por favor, ingrese una edad válida (0-18 años)');
       return;
@@ -1147,8 +1146,6 @@ function setupSignos(){
       show(resultadoSignosDiv);
     }
   });
-  
-  edadSignosInput.addEventListener('keypress', (e)=>{ if(e.key==='Enter') obtenerSignosBtn.click(); });
 }
 
 function setupPerfusiones(){
