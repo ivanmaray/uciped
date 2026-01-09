@@ -1,5 +1,5 @@
 // Service Worker para UCIPED
-const CACHE_NAME = 'uciped-v24';
+const CACHE_NAME = 'uciped-v25';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -13,6 +13,8 @@ const STATIC_ASSETS = [
   '/js/ui.js',
   '/js/search.js',
   '/js/theme.js',
+  '/js/focus-trap.js',
+  '/js/announcer.js',
   '/manifest.json',
   '/favicon.ico',
   '/favicon-16x16.png',
@@ -22,12 +24,16 @@ const STATIC_ASSETS = [
 
 // Instalación: cachear archivos estáticos
 self.addEventListener('install', (event) => {
-  console.log('[SW] Instalando Service Worker...');
+  console.log('[SW] Instalando Service Worker v25 - Optimizado móvil');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('[SW] Cacheando archivos estáticos');
         return cache.addAll(STATIC_ASSETS);
+      })
+      .then(() => self.skipWaiting())
+  );
+});
       })
       .then(() => self.skipWaiting())
   );

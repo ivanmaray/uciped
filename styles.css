@@ -2828,3 +2828,126 @@ html.dark-mode .med-detail-btn-secondary:hover {
         page-break-inside: avoid;
     }
 }
+/* ============================================
+   Optimizaciones móviles táctiles
+   ============================================ */
+
+/* Mejorar área táctil de botones (mínimo 44x44px) */
+@media (max-width: 768px) {
+    button, .btn, input[type="button"], input[type="submit"] {
+        min-height: 44px;
+        min-width: 44px;
+        touch-action: manipulation;
+    }
+
+    /* Inputs más grandes para táctil */
+    input[type="text"],
+    input[type="number"],
+    select {
+        min-height: 44px;
+        font-size: 16px; /* Evita zoom en iOS */
+    }
+
+    /* Mejorar tabs para táctil */
+    .tab-btn {
+        min-height: 48px;
+        padding: 0.75rem 1rem;
+    }
+
+    /* Mejorar búsqueda */
+    #searchInput {
+        font-size: 16px;
+        min-height: 48px;
+        padding: 0.75rem 1rem;
+    }
+
+    /* Items de búsqueda más grandes */
+    .search-item {
+        min-height: 56px;
+        padding: 0.875rem 1rem;
+    }
+
+    /* Tabla responsive */
+    .medicines-table {
+        font-size: 0.9rem;
+    }
+
+    .medicines-table td,
+    .medicines-table th {
+        padding: 0.75rem 0.5rem;
+    }
+}
+
+/* Optimizaciones extra para pantallas pequeñas */
+@media (max-width: 480px) {
+    /* Reducir padding general */
+    .container {
+        padding: 0.5rem;
+    }
+
+    .card {
+        padding: 0.875rem;
+    }
+
+    /* Botones en stack vertical */
+    .button-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .button-group .btn {
+        width: 100%;
+    }
+
+    /* Tabs scrollables horizontalmente */
+    .tab-navigation {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .tab-navigation::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Mejor espaciado en tablas */
+    .medicines-table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Optimizaciones de rendimiento */
+* {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Smooth scrolling nativo en móvil */
+@media (max-width: 768px) {
+    body {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
+    }
+
+    .tab-content {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Pull-to-refresh prevention en PWA */
+body {
+    overscroll-behavior-y: contain;
+}
+
+/* Mejorar contraste en pantallas móviles */
+@media (max-width: 768px) and (prefers-contrast: high) {
+    :root {
+        --primary-color: #1e40af;
+        --text-primary: #000000;
+    }
+
+    html.dark-mode {
+        --text-primary: #ffffff;
+    }
+}
