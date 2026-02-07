@@ -483,7 +483,7 @@ function setupDosificacion(){
     let html = '';
     for(const [grupo, medicamentos] of Object.entries(grupos)){
       html += `<h3>${grupo}</h3>`;
-      html += `<table class="medicines-table">
+      html += `<table class="medicines-table medicines-table-dosificacion">
         <thead>
           <tr>
             <th>Medicamento</th>
@@ -718,7 +718,7 @@ function setupIntubacion(){
     }
     
     let tableHTML = `
-      <table class="medicines-table">
+      <table class="medicines-table medicines-table-intubacion">
         <thead>
           <tr>
             <th>Medicamento</th>
@@ -1459,7 +1459,7 @@ function setupUrgencia(){
     }
     
     let tableHTML = `
-      <table class="medicines-table">
+      <table class="medicines-table medicines-table-urgencia">
         <thead>
           <tr>
             <th>Medicamento</th>

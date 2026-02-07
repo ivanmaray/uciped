@@ -2065,16 +2065,123 @@ select:focus {
         margin-bottom: 0.6rem;
     }
 
-    /* Resto de columnas con labels automáticos */
-    .medicines-table td:nth-child(2)::before {
-        content: "Rango: ";
+    /* URGENCIA: 5 columnas - Medicamento, Dosis, Volumen, Presentación, Dilución */
+    .medicines-table-urgencia td:nth-child(2)::before {
+        content: "Dosis: ";
         font-weight: 600;
         color: var(--text-secondary);
         display: block;
         font-size: 0.85rem;
     }
 
-    .medicines-table td:nth-child(3)::before {
+    .medicines-table-urgencia td:nth-child(3)::before {
+        content: "Volumen: ";
+        font-weight: 600;
+        color: var(--text-secondary);
+        display: block;
+        font-size: 0.85rem;
+    }
+
+    .medicines-table-urgencia td:nth-child(4)::before {
+        content: "Presentación: ";
+        font-weight: 600;
+        color: var(--text-secondary);
+        display: block;
+        font-size: 0.85rem;
+    }
+
+    .medicines-table-urgencia td:nth-child(5)::before {
+        content: "Dilución: ";
+        font-weight: 600;
+        color: var(--text-secondary);
+        display: block;
+        font-size: 0.85rem;
+    }
+
+    /* INTUBACIÓN: 5 columnas - Medicamento, Dosis, Volumen, Presentación, Dilución */
+    .medicines-table-intubacion td:nth-child(2)::before {
+        content: "Dosis: ";
+        font-weight: 600;
+        color: var(--text-secondary);
+        display: block;
+        font-size: 0.85rem;
+    }
+
+    .medicines-table-intubacion td:nth-child(3)::before {
+        content: "Volumen (mL): ";
+        font-weight: 600;
+        color: var(--text-secondary);
+        display: block;
+        font-size: 0.85rem;
+    }
+
+    .medicines-table-intubacion td:nth-child(4)::before {
+        content: "Presentación: ";
+        font-weight: 600;
+        color: var(--text-secondary);
+        display: block;
+        font-size: 0.85rem;
+    }
+
+    .medicines-table-intubacion td:nth-child(5)::before {
+        content: "Dilución: ";
+        font-weight: 600;
+        color: var(--text-secondary);
+        display: block;
+        font-size: 0.85rem;
+    }
+
+    /* DOSIFICACIÓN: 6 columnas - Medicamento, Dosis, Máximo, Intervalo, Presentación, Dilución */
+    .medicines-table-dosificacion td:nth-child(2)::before {
+        content: "Dosis: ";
+        font-weight: 600;
+        color: var(--text-secondary);
+        display: block;
+        font-size: 0.85rem;
+    }
+
+    .medicines-table-dosificacion td:nth-child(3)::before {
+        content: "Máximo: ";
+        font-weight: 600;
+        color: var(--text-secondary);
+        display: block;
+        font-size: 0.85rem;
+    }
+
+    .medicines-table-dosificacion td:nth-child(4)::before {
+        content: "Intervalo: ";
+        font-weight: 600;
+        color: var(--text-secondary);
+        display: block;
+        font-size: 0.85rem;
+    }
+
+    .medicines-table-dosificacion td:nth-child(5)::before {
+        content: "Presentación: ";
+        font-weight: 600;
+        color: var(--text-secondary);
+        display: block;
+        font-size: 0.85rem;
+    }
+
+    .medicines-table-dosificacion td:nth-child(6)::before {
+        content: "Dilución: ";
+        font-weight: 600;
+        color: var(--text-secondary);
+        display: block;
+        font-size: 0.85rem;
+    }
+
+    /* PERFUSIONES: 6 columnas - Medicamento, Rango, Dosis/hora, Ritmo, Presentación, Dilución */
+    .medicines-table-perfusiones td:nth-child(2)::before {
+        content: "Rango (por kg): ";
+        font-weight: 600;
+        color: var(--text-secondary);
+        display: block;
+        font-size: 0.85rem;
+    }
+
+    .medicines-table-perfusiones td:nth-child(3)::before {
         content: "Dosis/hora: ";
         font-weight: 600;
         color: var(--text-secondary);
@@ -2082,7 +2189,7 @@ select:focus {
         font-size: 0.85rem;
     }
 
-    .medicines-table td:nth-child(4)::before {
+    .medicines-table-perfusiones td:nth-child(4)::before {
         content: "Ritmo (mL/h): ";
         font-weight: 600;
         color: var(--text-secondary);
@@ -2090,16 +2197,16 @@ select:focus {
         font-size: 0.85rem;
     }
 
-    .medicines-table td:nth-child(5)::before {
-        content: "Presentación comercial: ";
+    .medicines-table-perfusiones td:nth-child(5)::before {
+        content: "Presentación: ";
         font-weight: 600;
         color: var(--text-secondary);
         display: block;
         font-size: 0.85rem;
     }
 
-    .medicines-table td:nth-child(6)::before {
-        content: "Dilución/Preparación: ";
+    .medicines-table-perfusiones td:nth-child(6)::before {
+        content: "Dilución: ";
         font-weight: 600;
         color: var(--text-secondary);
         display: block;
