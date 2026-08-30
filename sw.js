@@ -28,7 +28,7 @@ const STATIC_ASSETS = [
 
 // Instalación: cachear archivos estáticos
 self.addEventListener('install', (event) => {
-  console.log('[SW] Instalando Service Worker v58');
+  console.log('[SW] Instalando Service Worker v59');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
