@@ -1,5 +1,5 @@
 import { loadMeds } from './data.js?v=113';
-import { calcularPesoEstimado, calcularEnergiasERC2025, calcularTuboTraquealERC2025, calcularTamanioLMA, calcularVentilacionInicialERC2025, obtenerParametrosDeMATRIZ1, obtenerParametrosDeMATRIZ2, obtenerSignosVitalesERC2025, urgenciaFormulas, urgenciaDosisPorKg, intubacionFormulas, intubacionDosisPorKg, formatDosis, calculatePureVolume } from './logic.js?v=113';
+import { calcularPesoEstimado, calcularEnergiasERC2025, calcularTuboTraquealERC2025, calcularTamanioLMA, calcularVentilacionInicialERC2025, obtenerParametrosDeMATRIZ1, obtenerParametrosDeMATRIZ2, obtenerSignosVitalesERC2025, urgenciaFormulas, urgenciaDosisPorKg, intubacionFormulas, intubacionDosisPorKg, formatDosis, calculatePureVolume } from './logic.js?v=114';
 import { setPatientData, getPatientData, getWeightSource, setHeaderValues, clearPatientData } from './state.js?v=113';
 import { compute, DRUGS, formatPerfusionForDisplay, PERFUSION_KEY_MAP } from './perfusiones.config.js?v=113';
 import { setupFocusTrap } from './focus-trap.js?v=113';
@@ -718,8 +718,8 @@ function setupViaAerea(){
   // Función para calcular parámetros de vía aérea usando MATRIZ 1 o MATRIZ 2
   function calculateAirway(edad, peso) {
     const tubo = calcularTuboTraquealERC2025(edad, peso);
-    const ettSize = `#${tubo.sizeMm} mm (con balón) · ${tubo.source}`;
-    const ettDepth = `${tubo.depthCm} cm inicial · confirmar con ETCO₂ y radiografía`;
+    const ettSize = `#${tubo.sizeMm} mm (${tubo.cuffLabel}) · ${tubo.source}`;
+    const ettDepth = `${tubo.depthCm} cm inicial · ${tubo.depthSource} · confirmar con ETCO₂ y radiografía`;
     const matrizMaterial = peso <= 3.1
       ? obtenerParametrosDeMATRIZ1(peso)
       : obtenerParametrosDeMATRIZ2(edad);
@@ -1032,6 +1032,7 @@ function setupSignos(){
   const frElement = document.getElementById('fr');
   const pasElement = document.getElementById('pas');
   const padElement = document.getElementById('pad');
+  const ageReferenceNote = document.getElementById('signosAgeReference');
 
   function obtenerReferenciasSignosVitales(edad) {
     const erc = obtenerSignosVitalesERC2025(edad);
@@ -1054,6 +1055,11 @@ function setupSignos(){
     const { edad } = getPatientData();
     if (!validAge(edad)) return false;
     const signos = obtenerReferenciasSignosVitales(edad);
+    const usesOneMonthReference = edad < (1 / 12);
+    ageReferenceNote.textContent = usesOneMonthReference
+      ? 'Menor de 1 mes: ERC 2025 no publica una fila neonatal en la tabla 2. Se muestran como referencia los valores de 1 mes; interpretar según edad gestacional, transición neonatal y protocolo local.'
+      : '';
+    ageReferenceNote.classList.toggle('hidden', !usesOneMonthReference);
     fcElement.textContent = signos.fc;
     frElement.textContent = signos.fr;
     pasElement.textContent = signos.pas;

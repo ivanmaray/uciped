@@ -163,8 +163,8 @@ Para reportar errores o sugerencias, contacta con el equipo de desarrollo.
 
 ---
 
-**Versión**: 1.0.8<br>
-**Última actualización**: 23 de agosto de 2026<br>
+**Versión**: 1.0.9<br>
+**Última actualización**: 30 de agosto de 2026<br>
 **Licencia**: MIT
 
 ⚕️ *Calculadora Clínica Pediátrica Profesional*

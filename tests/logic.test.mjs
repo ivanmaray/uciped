@@ -146,11 +146,30 @@ test('tubo con balón usa la fórmula ERC hasta 8 años y explicita la fuente', 
   const child = calcularTuboTraquealERC2025(5, 18);
   assert.equal(child.sizeMm, 5);
   assert.equal(child.depthCm, 15);
+  assert.equal(child.cuffLabel, 'con balón');
   assert.match(child.source, /ERC 2025/);
+  assert.match(child.depthSource, /estimación local/);
+  assert.match(child.note, /no especifica esta fórmula de profundidad/);
 
   const olderChild = calcularTuboTraquealERC2025(10, 30);
+  assert.equal(olderChild.cuffLabel, 'con balón');
   assert.match(olderChild.source, />8 años/);
   assert.match(olderChild.note, /validada solo hasta 8 años/);
+});
+
+test('la rama neonatal identifica correctamente el tubo local sin balón', () => {
+  const neonatal = calcularTuboTraquealERC2025(0, 3);
+  assert.equal(neonatal.sizeMm, 3);
+  assert.equal(neonatal.cuffLabel, 'sin balón');
+  assert.match(neonatal.source, /tabla neonatal local/);
+  assert.match(neonatal.depthSource, /tabla neonatal local/);
+  assert.match(neonatal.note, /tubo sin balón/);
+});
+
+test('la interfaz declara el alcance neonatal de signos y vía aérea', () => {
+  assert.match(indexHtml, /Para menores de 1 mes se muestra la referencia de 1 mes/);
+  assert.match(indexHtml, /tabla neonatal local de tubo sin balón/);
+  assert.match(indexHtml, /ERC 2025 no especifica esa fórmula/);
 });
 
 test('LMA completa los tamaños del fabricante para pesos altos', () => {

@@ -1,6 +1,6 @@
 {
   "name": "uciped",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Calculadora de medicamentos y parámetros para UCI Pediátrica",
   "scripts": {
     "validate": "node scripts/validate-meds.js",

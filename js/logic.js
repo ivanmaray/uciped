@@ -161,8 +161,10 @@ export function calcularTuboTraquealERC2025(edad, peso) {
     return {
       sizeMm: neonatal.ettSinBalon,
       depthCm: neonatal.ettLongitud,
+      cuffLabel: 'sin balón',
       source: 'tabla neonatal local por peso',
-      note: 'Usar tubo con balón si está disponible; confirmar tamaño y profundidad tras la inserción.',
+      depthSource: 'tabla neonatal local por peso',
+      note: 'Esta rama usa una referencia neonatal local de tubo sin balón; si se dispone de tubo con balón, seleccionar el tamaño según fabricante y protocolo local. Confirmar siempre tamaño y posición tras la inserción.',
     };
   }
 
@@ -171,8 +173,10 @@ export function calcularTuboTraquealERC2025(edad, peso) {
     return {
       sizeMm,
       depthCm: redondearA0_5(sizeMm * 3),
+      cuffLabel: 'con balón',
       source: 'fórmula ERC 2025 (edad/4 + 3,5)',
-      note: 'La profundidad es una estimación inicial; confirmar clínicamente, con ETCO₂ y radiografía.',
+      depthSource: 'estimación local (3 × diámetro interno)',
+      note: 'ERC 2025 respalda el diámetro hasta 8 años, pero no especifica esta fórmula de profundidad. Confirmar clínicamente, con ETCO₂ y radiografía.',
     };
   }
 
@@ -180,7 +184,9 @@ export function calcularTuboTraquealERC2025(edad, peso) {
   return {
     sizeMm: local.ettConBalon,
     depthCm: local.ettOral,
+    cuffLabel: 'con balón',
     source: 'tabla pediátrica local (>8 años)',
+    depthSource: 'tabla pediátrica local (>8 años)',
     note: 'La fórmula ERC está validada solo hasta 8 años; confirmar tamaño y posición por protocolo local.',
   };
 }

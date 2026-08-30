@@ -1,16 +1,16 @@
 // Service Worker para UCIPED
-const CACHE_NAME = 'uciped-v58';
+const CACHE_NAME = 'uciped-v59';
 const STATIC_ASSETS = [
   './',
   './index.html',
-  './styles.css?v=113',
+  './styles.css?v=114',
   './js/data.js?v=113',
-  './js/logic.js?v=113',
+  './js/logic.js?v=114',
   './js/perfusiones.config.js?v=113',
   './js/state.js?v=113',
   './js/tabs.js?v=113',
-  './js/ui.js?v=113',
-  './js/search.js?v=113',
+  './js/ui.js?v=114',
+  './js/search.js?v=114',
   './js/theme.js?v=113',
   './js/focus-trap.js?v=113',
   './js/hyperkalemia.js?v=113',

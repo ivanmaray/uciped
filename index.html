@@ -18,7 +18,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     
-    <link rel="stylesheet" href="styles.css?v=113">
+    <link rel="stylesheet" href="styles.css?v=114">
 </head>
 <body>
     <div class="container">
@@ -33,7 +33,7 @@
                     <button id="themeToggle" class="theme-toggle" title="Cambiar tema" aria-label="Cambiar tema">
                         <i class="fas fa-moon"></i>
                     </button>
-                    <div class="version">v1.0.8 | 30/08/2026</div>
+                    <div class="version">v1.0.9 | 30/08/2026</div>
                 </div>
             </div>
         </header>
@@ -201,8 +201,9 @@
                                     <div>
                                         <strong>Método:</strong>
                                         <ul style="margin: 8px 0 0 0; padding-left: 20px; font-size: 0.9em;">
-                                            <li>ERC 2025: tubo con balón en todos los niños; hasta 8 años, diámetro interno = edad/4 + 3,5 mm.</li>
-                                            <li>La profundidad mostrada es inicial: confirmar posición clínicamente, con ETCO₂ y radiografía cuanto antes.</li>
+                                            <li>ERC 2025: tubo con balón en todos los niños; para pesos &gt;3,1 kg y hasta 8 años, la app aplica diámetro interno = edad/4 + 3,5 mm.</li>
+                                            <li>En pacientes ≤3,1 kg se muestra la tabla neonatal local de tubo sin balón; si se utiliza tubo con balón, confirmar el tamaño en la tabla del fabricante y el protocolo local.</li>
+                                            <li>La profundidad es orientativa: procede de la tabla local o, entre &gt;3,1 kg y 8 años, de la estimación local 3 × diámetro interno. ERC 2025 no especifica esa fórmula; confirmar posición clínicamente, con ETCO₂ y radiografía cuanto antes.</li>
                                             <li>LMA™: tamaño por peso según la tabla del fabricante Teleflex; otros dispositivos (p. ej., i-gel) pueden diferir.</li>
                                             <li>Desfibrilación ERC 2025: 4 J/kg; en FV/TV sin pulso refractaria puede aumentarse hasta 8 J/kg sin superar el máximo adulto.</li>
                                             <li>Cardioversión sincronizada ERC 2025: 1 J/kg, duplicar progresivamente hasta 4 J/kg.</li>
@@ -453,6 +454,7 @@
                             </div>
                             <div id="resultadoSignos" class="result-box hidden" aria-live="polite" aria-label="Resultados de signos vitales">
                                 <h3><i class="fas fa-heartbeat"></i> Referencias hemodinámicas ERC 2025</h3>
+                                <p id="signosAgeReference" class="clinical-warning hidden"></p>
                                 <table class="medicines-table">
                                     <tbody>
                                         <tr>
@@ -511,7 +513,7 @@
                                 <div class="info-note" style="margin-top: 24px; font-size: 0.9em;">
                                     <i class="fas fa-book-medical"></i>
                                     <div>
-                                        <strong>Procedencia:</strong> FC, FR, PAS y PAM proceden de la tabla 2 de ERC 2025 Paediatric Life Support; la app interpola entre 1 mes, 1, 2, 5, 10 y 18 años. ERC no aporta PAD en esa tabla. SpO2 y glucemia se muestran con criterios ERC 2025; temperatura, diuresis, relleno capilar y Glasgow son orientaciones clínicas y deben contrastarse con el protocolo local y el contexto del paciente.
+                                        <strong>Procedencia:</strong> FC, FR, PAS y PAM proceden de la tabla 2 de ERC 2025 Paediatric Life Support; la app interpola entre 1 mes, 1, 2, 5, 10 y 18 años, tal como la guía permite usar valores intermedios. Para menores de 1 mes se muestra la referencia de 1 mes con un aviso específico. ERC no aporta PAD en esa tabla. SpO2 y glucemia se muestran con criterios ERC 2025; temperatura, diuresis, relleno capilar y Glasgow son orientaciones clínicas y deben contrastarse con el protocolo local y el contexto del paciente.
                                     </div>
                                 </div>
                             </div>
@@ -555,8 +557,8 @@
 
                                 <div class="formula-item">
                                     <h3>Tubo traqueal con balón ERC 2025</h3>
-                                    <p class="formula">De 3,1 kg hasta 8 años: diámetro interno = (edad/4) + 3,5 mm</p>
-                                    <p><small>Redondear al 0,5 mm más próximo. En neonatos y mayores de 8 años la app utiliza sus tablas locales; confirmar tamaño, presión del balón y posición.</small></p>
+                                    <p class="formula">Para pesos &gt;3,1 kg y hasta 8 años: diámetro interno = (edad/4) + 3,5 mm</p>
+                                    <p><small>Redondear al 0,5 mm más próximo. En ≤3,1 kg la app muestra la tabla neonatal local de tubo sin balón; en mayores de 8 años utiliza su tabla pediátrica local. Confirmar tamaño, presión del balón cuando corresponda y posición.</small></p>
                                 </div>
                             </div>
                         </div>
@@ -789,7 +791,7 @@
 
         <!-- Pie de página -->
         <footer class="footer">
-            <p>&copy; 2026 UCI Pediatría. Calculadora Clínica v1.0.8</p>
+            <p>&copy; 2026 UCI Pediatría. Calculadora Clínica v1.0.9</p>
             <p class="disclaimer">⚠️ Herramienta de referencia. Siempre consulte con profesionales médicos.</p>
             <p class="footer-credits">
                 <small>
@@ -816,8 +818,8 @@
 
     <script type="module">
         import { initTabs } from './js/tabs.js?v=113';
-        import { initUI } from './js/ui.js?v=113';
-        import { initSearch, searchMeds, getTabForType, showMedDetail } from './js/search.js?v=113';
+        import { initUI } from './js/ui.js?v=114';
+        import { initSearch, searchMeds, getTabForType, showMedDetail } from './js/search.js?v=114';
         import { initTheme, toggleTheme, getThemeIcon, getThemeLabel } from './js/theme.js?v=113';
         import { announceSearchResults } from './js/announcer.js?v=113';
         import { initHyperkalemia } from './js/hyperkalemia.js?v=113';

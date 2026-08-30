@@ -4,7 +4,7 @@
  */
 
 import { getPatientData } from './state.js?v=113';
-import { calculatePureVolume, intubacionDosisPorKg, intubacionFormulas, urgenciaDosisPorKg, urgenciaFormulas } from './logic.js?v=113';
+import { calculatePureVolume, intubacionDosisPorKg, intubacionFormulas, urgenciaDosisPorKg, urgenciaFormulas } from './logic.js?v=114';
 import { compute, DRUGS, formatPerfusionForDisplay, PERFUSION_KEY_MAP } from './perfusiones.config.js?v=113';
 import { loadMeds } from './data.js?v=113';
 
