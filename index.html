@@ -18,8 +18,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=113">
 </head>
 <body>
     <div class="container">
@@ -34,7 +33,7 @@
                     <button id="themeToggle" class="theme-toggle" title="Cambiar tema" aria-label="Cambiar tema">
                         <i class="fas fa-moon"></i>
                     </button>
-                    <div class="version">v1.0.1 | 07/01/2026</div>
+                    <div class="version">v1.0.8 | 30/08/2026</div>
                 </div>
             </div>
         </header>
@@ -57,8 +56,13 @@
             </div>
         </div>
         
-        <div id="dataLoadWarning" class="result-box hidden" style="margin:10px 0; color:#b00020; font-weight:600;">
-            No se pudo cargar datos de medicamentos. Se muestran placeholders.
+        <div id="dataLoadWarning" class="result-box hidden" role="alert" style="margin:10px 0; color:#b00020; font-weight:600;">
+            No se pudieron cargar los datos de medicamentos. No use las tablas farmacológicas hasta recuperar la conexión y recargar.
+        </div>
+        <div id="appConnectionStatus" class="app-status hidden" role="status"></div>
+        <div id="appUpdateNotice" class="app-update-notice hidden" role="status">
+            <span>Hay una nueva versión disponible. Recargue cuando sea seguro para no interrumpir un cálculo en curso.</span>
+            <button id="reloadForUpdateBtn" class="btn btn-primary" type="button">Recargar ahora</button>
         </div>
 
         <!-- Región aria-live para anuncios de accesibilidad -->
@@ -70,17 +74,19 @@
                 <div class="patient-input-group">
                     <label for="headerEdadInput">Edad</label>
                     <div class="input-row">
-                        <input type="number" id="headerEdadInput" placeholder="años" min="0" max="18" step="0.5" value="">
+                        <input type="number" id="headerEdadInput" placeholder="años" min="0" max="18" step="0.01" value="" aria-describedby="headerEdadHint">
                         <span class="input-unit">años</span>
                     </div>
+                    <span id="headerEdadHint" class="sr-only">Puede introducir decimales; un mes equivale aproximadamente a 0,08 años.</span>
                 </div>
 
                 <div class="patient-input-group">
                     <label for="headerPesoInput">Peso</label>
                     <div class="input-row">
-                        <input type="number" id="headerPesoInput" placeholder="kg" min="0" step="0.1" value="">
+                        <input type="number" id="headerPesoInput" placeholder="kg" min="0.1" max="300" step="0.1" inputmode="decimal" value="">
                         <span class="input-unit">kg</span>
                     </div>
+                    <div id="pesoOrigenBadge" class="weight-source-badge hidden" role="status" aria-live="polite"></div>
                 </div>
 
                 <div class="weight-estimator">
@@ -104,11 +110,12 @@
                         <i class="fas fa-question-circle"></i>
                     </button>
                 </div>
+                <div id="patientValidationMessage" class="patient-validation hidden" role="alert"></div>
             </div>
         </section>
 
         <!-- Navegación de pestañas -->
-        <nav class="tab-navigation">
+        <nav class="tab-navigation" aria-label="Secciones de la calculadora">
             <button class="tab-btn active" data-tab="urgencia"><i class="fas fa-bolt"></i> Urgencia</button>
             <button class="tab-btn" data-tab="intubacion"><i class="fas fa-lungs"></i> Intubación</button>
             <button class="tab-btn" data-tab="perfusiones"><i class="fas fa-syringe"></i> Perfusiones</button>
@@ -143,7 +150,7 @@
                                             <td id="ettSize">-</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>Profundidad ETT</strong></td>
+                                            <td><strong>Profundidad ETT inicial</strong></td>
                                             <td id="ettDepth">-</td>
                                         </tr>
                                         <tr>
@@ -151,7 +158,7 @@
                                             <td id="laryngoBlade">-</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>Máscara Laríngea (LMA)</strong></td>
+                                            <td><strong>Dispositivo supraglótico (LMA™)</strong></td>
                                             <td id="lmaSize">-</td>
                                         </tr>
                                     </tbody>
@@ -161,7 +168,7 @@
                                 <table class="medicines-table">
                                     <tbody>
                                         <tr>
-                                            <td><strong>Desfibrilación (2-4 J/kg)</strong></td>
+                                            <td><strong>Desfibrilación (ERC 2025)</strong></td>
                                             <td id="defibDose">-</td>
                                         </tr>
                                         <tr>
@@ -194,14 +201,12 @@
                                     <div>
                                         <strong>Método:</strong>
                                         <ul style="margin: 8px 0 0 0; padding-left: 20px; font-size: 0.9em;">
-                                            <li>Tubo endotraqueal: Tabla de referencia pediátrica (MATRIZ 2)</li>
-                                            <li>Profundidad ETT: Tabla de referencia pediátrica (MATRIZ 2)</li>
-                                            <li>LMA: Selección por peso - Brain LMA® sizing chart, PALS guidelines</li>
-                                            <li>Desfibrilación: Dosis según peso (2-4 J/kg)</li>
-                                            <li>Cardioversión sincronizada: Dosis progresiva 0.5-1-2 J/kg</li>
-                                            <li>Sonda de aspiración: Tabla de referencia pediátrica (MATRIZ 2)</li>
-                                            <li>Sonda vesical: Tabla de referencia pediátrica (MATRIZ 2)</li>
-                                            <li>Tubo de tórax: Tabla de referencia pediátrica (MATRIZ 2)</li>
+                                            <li>ERC 2025: tubo con balón en todos los niños; hasta 8 años, diámetro interno = edad/4 + 3,5 mm.</li>
+                                            <li>La profundidad mostrada es inicial: confirmar posición clínicamente, con ETCO₂ y radiografía cuanto antes.</li>
+                                            <li>LMA™: tamaño por peso según la tabla del fabricante Teleflex; otros dispositivos (p. ej., i-gel) pueden diferir.</li>
+                                            <li>Desfibrilación ERC 2025: 4 J/kg; en FV/TV sin pulso refractaria puede aumentarse hasta 8 J/kg sin superar el máximo adulto.</li>
+                                            <li>Cardioversión sincronizada ERC 2025: 1 J/kg, duplicar progresivamente hasta 4 J/kg.</li>
+                                            <li>Hoja, sondas y drenaje torácico: orientaciones de la tabla pediátrica local; confirmar por paciente, dispositivo y protocolo.</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -235,7 +240,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h2>Ventilación Mecánica Inicial</h2>
-                            <p>Parámetros de arranque ajustados por edad y peso.</p>
+                            <p>Orientación inicial ERC 2025; los límites de presión para PARDS se muestran aparte según PALICC-2.</p>
                         </div>
                         <div class="card-body">
                             <div class="input-group" style="max-width:320px; margin-bottom:12px;">
@@ -251,6 +256,10 @@
                                 <button id="limpiarVentilacion" class="btn btn-secondary" aria-label="Limpiar resultados de ventilación"><i class="fas fa-redo"></i> Limpiar</button>
                             </div>
 
+                            <div id="ventilacionWarning" class="clinical-warning ventilation-warning hidden" role="alert">
+                                Introduce una edad válida (0-18 años) para calcular parámetros de ventilación ajustados por edad.
+                            </div>
+
                             <div id="resultadoVentilacion" class="result-box hidden">
                                 <h3><i class="fas fa-wind"></i> Parámetros Sugeridos</h3>
                                 <table class="medicines-table">
@@ -260,7 +269,7 @@
                                             <td id="ventModeParams">-</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>Volumen tidal</strong></td>
+                                            <td><strong>Volumen tidal orientativo</strong></td>
                                             <td id="ventVt">-</td>
                                         </tr>
                                         <tr>
@@ -280,7 +289,7 @@
                                             <td id="ventIe">-</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>PIP objetivo</strong></td>
+                                            <td><strong>PIP</strong></td>
                                             <td id="ventPip">-</td>
                                         </tr>
                                         <tr>
@@ -304,7 +313,7 @@
                                             <td id="ventTrigger">-</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>Alarmas VM</strong></td>
+                                            <td><strong>Alarmas de ventilación</strong></td>
                                             <td id="ventAlarmVm">-</td>
                                         </tr>
                                         <tr>
@@ -319,12 +328,11 @@
                                     <div>
                                         <strong>Referencias:</strong>
                                         <ul style="margin: 8px 0 0 0; padding-left: 20px; font-size: 0.9em;">
-                                            <li>Ventilación protectora: Vt 6-8 mL/kg peso ideal (ARDSnet, PALICC 2015)</li>
-                                            <li>PEEP inicial 5-8 cmH2O, titular según SpO2/FiO2 (Pediatric Acute Lung Injury Consensus Conference)</li>
-                                            <li>Pplat <28 cmH2O, Driving Pressure <15 cmH2O (recomendaciones SDRA pediátrico)</li>
-                                            <li>Frecuencia respiratoria según edad: Harriet Lane Handbook 22nd ed., PALS 2020</li>
-                                            <li>Alarmas de volumen minuto: 80-120% del objetivo calculado (práctica clínica estándar UCI pediátrica)</li>
-                                            <li>Tiempo de apnea: RN 10-15s, lactantes 15-20s, niños mayores 20-25s (PALS/NRP guidelines)</li>
+                                            <li>ERC 2025: Vt 6-8 mL/kg de peso ideal, FR en el límite bajo-normal para la edad y PEEP inicial 5 cmH₂O.</li>
+                                            <li>El volumen numérico usa el peso introducido: si no aproxima el peso ideal/predicho, debe recalcularse antes de aplicarlo.</li>
+                                            <li>ERC 2025: FiO₂ 1,0 inicialmente ante fallo respiratorio, circulatorio o neurológico; titular pronto al mínimo necesario para SpO₂ 94-98% en previamente sanos.</li>
+                                            <li>PALICC-2 (solo PARDS): Vt 6-8 mL/kg, pudiendo bajarlo para mantener Pplat ≤28 cmH₂O y driving pressure ≤15 cmH₂O.</li>
+                                            <li>PEEP, I:E, flujo, trigger, soporte y alarmas se individualizan según mecánica, curvas, fugas, gasometría y respuesta; no hay rangos universales por edad.</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -341,6 +349,14 @@
                             <p>Dosis inmediatas basadas en el peso.</p>
                         </div>
                         <div class="card-body">
+                            <button id="openHyperkalemiaBtn" class="clinical-pathway-card" aria-haspopup="dialog">
+                                <span class="clinical-pathway-icon" aria-hidden="true">K+</span>
+                                <span>
+                                    <strong>Algoritmo de hiperpotasemia</strong>
+                                    <small>ERC 2025 · tratamiento y dosis calculadas</small>
+                                </span>
+                                <span aria-hidden="true">›</span>
+                            </button>
                             <div class="button-group toolbar-hidden">
                                 <button id="calcularUrgencia" class="btn btn-primary" aria-label="Calcular medicamentos de urgencia"><i class="fas fa-calculator"></i> Calcular</button>
                                 <button id="limpiarUrgencia" class="btn btn-secondary" aria-label="Limpiar resultados de urgencia"><i class="fas fa-redo"></i> Limpiar</button>
@@ -355,7 +371,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h2>Perfusiones</h2>
-                            <p>Referencias de perfusiones inotrópicas y sedoanalgesia.</p>
+                            <p>Preparaciones y ritmos calculados según el peso. Confirmar siempre con el protocolo y la concentración disponibles.</p>
                         </div>
                         <div class="card-body">
                             <div class="button-group toolbar-hidden">
@@ -369,7 +385,7 @@
                                         <tr>
                                             <th>Medicamento</th>
                                             <th>Rango (por kg)</th>
-                                            <th>Dosis calculada (por hora)</th>
+                                            <th>Dosis absoluta (según peso)</th>
                                             <th>Ritmo (mL/h)</th>
                                             <th>Presentación comercial</th>
                                             <th>Dilución/Preparación</th>
@@ -384,7 +400,7 @@
                                         <tr>
                                             <th>Medicamento</th>
                                             <th>Rango (por kg)</th>
-                                            <th>Dosis calculada (por hora)</th>
+                                            <th>Dosis absoluta (según peso)</th>
                                             <th>Ritmo (mL/h)</th>
                                             <th>Presentación comercial</th>
                                             <th>Dilución/Preparación</th>
@@ -392,6 +408,33 @@
                                     </thead>
                                     <tbody id="perfusionesSedoTableBody"></tbody>
                                 </table>
+
+                                <h3>Perfusiones Metabólicas</h3>
+                                <table class="medicines-table medicines-table-perfusiones">
+                                    <thead>
+                                        <tr>
+                                            <th>Medicamento</th>
+                                            <th>Rango (por kg)</th>
+                                            <th>Dosis absoluta (según peso)</th>
+                                            <th>Ritmo (mL/h)</th>
+                                            <th>Presentación comercial</th>
+                                            <th>Dilución/Preparación</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="perfusionesMetabolicasTableBody"></tbody>
+                                </table>
+                                <div class="info-note" style="margin-top: 16px;">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <div>
+                                        <strong>Seguridad de perfusiones:</strong>
+                                        <ul style="margin: 8px 0 0 0; padding-left: 20px; font-size: 0.9em;">
+                                            <li>Los rangos vasoactivos y de sedoanalgesia proceden del protocolo local y deben titularse a respuesta, monitorización y función orgánica.</li>
+                                            <li>La columna de dosis absoluta ya incorpora el peso; la columna de ritmo corresponde exclusivamente a la preparación mostrada.</li>
+                                            <li>Insulina en cetoacidosis: ISPAD 2022, 0,05-0,1 UI/kg/h, sin bolo inicial y tras comenzar la fluidoterapia.</li>
+                                            <li>Usar biblioteca de bombas, doble comprobación independiente y etiquetado completo según política del centro.</li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -402,14 +445,14 @@
                     <div class="card">
                         <div class="card-header">
                             <h2>Signos Vitales de Referencia</h2>
-                            <p>Rangos esperados según edad.</p>
+                            <p>FC, FR, PAS y PAM: referencias ERC 2025 interpoladas por edad. Los demás objetivos se identifican por separado.</p>
                         </div>
                         <div class="card-body">
                             <div class="button-group toolbar-hidden">
                                 <button id="obtenerSignos" class="btn btn-primary" aria-label="Obtener rangos de signos vitales"><i class="fas fa-heartbeat"></i> Obtener rangos</button>
                             </div>
                             <div id="resultadoSignos" class="result-box hidden" aria-live="polite" aria-label="Resultados de signos vitales">
-                                <h3><i class="fas fa-heartbeat"></i> Parámetros Vitales</h3>
+                                <h3><i class="fas fa-heartbeat"></i> Referencias hemodinámicas ERC 2025</h3>
                                 <table class="medicines-table">
                                     <tbody>
                                         <tr>
@@ -421,7 +464,7 @@
                                             <td id="fr">-</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>PAS (sistólica)</strong></td>
+                                            <td><strong>PAS (p5 / p10 / p50)</strong></td>
                                             <td id="pas">-</td>
                                         </tr>
                                         <tr>
@@ -429,9 +472,15 @@
                                             <td id="pad">-</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>PAM (media)</strong></td>
+                                            <td><strong>PAM (p5 / p10 / p50)</strong></td>
                                             <td id="pam">-</td>
                                         </tr>
+                                    </tbody>
+                                </table>
+
+                                <h3 class="signos-secondary-title"><i class="fas fa-stethoscope"></i> Otros objetivos clínicos</h3>
+                                <table class="medicines-table">
+                                    <tbody>
                                         <tr>
                                             <td><strong>SpO2 objetivo</strong></td>
                                             <td id="spo2">-</td>
@@ -462,14 +511,7 @@
                                 <div class="info-note" style="margin-top: 24px; font-size: 0.9em;">
                                     <i class="fas fa-book-medical"></i>
                                     <div>
-                                        <strong>Referencias bibliográficas:</strong>
-                                        <ol style="margin: 8px 0 0 20px; padding-left: 0; line-height: 1.6;">
-                                            <li>Topjian AA, et al. Part 4: Pediatric Basic and Advanced Life Support: 2020 AHA Guidelines for CPR and ECC. <em>Pediatrics.</em> 2021;147(Suppl 1):S152-S201.</li>
-                                            <li>Engorn B, Flerlage J, eds. <em>The Harriet Lane Handbook.</em> 22nd ed. Elsevier; 2021.</li>
-                                            <li>American Diabetes Association. Children and Adolescents: Standards of Medical Care in Diabetes. <em>Diabetes Care.</em> 2023;46(S1):S230-S253.</li>
-                                            <li>Goldstein SL, et al. Outcome in children receiving continuous venovenous hemofiltration. <em>Pediatr Crit Care Med.</em> 2001;2(4):371-375.</li>
-                                            <li>Reilly PL, et al. A paediatric version of the Glasgow Coma Scale. <em>Childs Nerv Syst.</em> 1988;4(1):30-33.</li>
-                                        </ol>
+                                        <strong>Procedencia:</strong> FC, FR, PAS y PAM proceden de la tabla 2 de ERC 2025 Paediatric Life Support; la app interpola entre 1 mes, 1, 2, 5, 10 y 18 años. ERC no aporta PAD en esa tabla. SpO2 y glucemia se muestran con criterios ERC 2025; temperatura, diuresis, relleno capilar y Glasgow son orientaciones clínicas y deben contrastarse con el protocolo local y el contexto del paciente.
                                     </div>
                                 </div>
                             </div>
@@ -487,32 +529,34 @@
                         <div class="card-body">
                             <div class="formulas-grid">
                                 <div class="formula-item">
-                                    <h3>Volumen de Reposición - Depleción 10%</h3>
-                                    <p class="formula">Volumen = Peso (kg) × 100 mL</p>
+                                    <h3>Déficit teórico por deshidratación del 10%</h3>
+                                    <p class="formula">Déficit = Peso (kg) × 100 mL</p>
+                                    <p><small>No es un bolo de reanimación. Corregir de forma individualizada según situación clínica, sodio, diuresis y protocolo.</small></p>
                                 </div>
 
                                 <div class="formula-item">
-                                    <h3>Mantenimiento de Líquidos (Regla de Holliday)</h3>
+                                    <h3>Mantenimiento basal (Holliday-Segar)</h3>
                                     <p class="formula">
                                         Primeros 10 kg: 100 mL/kg/día<br>
                                         Siguientes 10 kg: 50 mL/kg/día<br>
                                         Resto: 20 mL/kg/día
                                     </p>
+                                    <p><small>No sustituye la reanimación ni el plan hídrico del paciente crítico; ajustar a balance, pérdidas y función renal.</small></p>
                                 </div>
 
                                 <div class="formula-item">
-                                    <h3>Cálculo de Calorías Diarias</h3>
+                                    <h3>Energías eléctricas ERC 2025</h3>
                                     <p class="formula">
-                                        RN: 60 kcal/kg/día<br>
-                                        Lactantes: 100-150 kcal/kg/día<br>
-                                        Preescolares: 75-100 kcal/kg/día<br>
-                                        Escolares: 50-75 kcal/kg/día
+                                        Desfibrilación inicial: 4 J/kg<br>
+                                        FV/TV refractaria: 8 J/kg (máx. 360 J)<br>
+                                        Cardioversión sincronizada: 1 → 2 → 4 J/kg
                                     </p>
                                 </div>
 
                                 <div class="formula-item">
-                                    <h3>Endotraqueal Pediátrico</h3>
-                                    <p class="formula">Diámetro = (edad/4) + 4</p>
+                                    <h3>Tubo traqueal con balón ERC 2025</h3>
+                                    <p class="formula">De 3,1 kg hasta 8 años: diámetro interno = (edad/4) + 3,5 mm</p>
+                                    <p><small>Redondear al 0,5 mm más próximo. En neonatos y mayores de 8 años la app utiliza sus tablas locales; confirmar tamaño, presión del balón y posición.</small></p>
                                 </div>
                             </div>
                         </div>
@@ -522,11 +566,11 @@
         </main>
 
         <!-- Modal de Información con Fórmulas -->
-        <div id="infoModal" class="modal hidden">
+        <div id="infoModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle">
             <div class="modal-content modal-info">
                 <div class="modal-header">
-                    <h2>Fórmulas de Estimación de Peso</h2>
-                    <button class="modal-close" id="closeInfoModal">
+                    <h2 id="infoModalTitle">Fórmulas de Estimación de Peso</h2>
+                    <button class="modal-close" id="closeInfoModal" aria-label="Cerrar información">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -540,8 +584,8 @@
 
                         <div class="formula-item">
                             <div class="formula-age-range">1 a 3 años</div>
-                            <div class="formula-expression">Peso (kg) = <strong>(edad en años + 9) × 2</strong></div>
-                            <div class="formula-example">Ejemplo: 2 años = (2 + 9) × 2 = 22 kg</div>
+                            <div class="formula-expression">Peso (kg) = <strong>(edad en años × 2) + 9</strong></div>
+                            <div class="formula-example">Ejemplo: 2 años = (2 × 2) + 9 = 13 kg</div>
                         </div>
 
                         <div class="formula-item">
@@ -565,18 +609,58 @@
 
                     <div class="info-note">
                         <i class="fas fa-info-circle"></i>
-                        <span>Estas fórmulas son referencias aproximadas. Para cálculos precisos, utiliza el peso real del paciente.</span>
+                        <span>Son estimaciones de último recurso. ERC 2025 prioriza preguntar a los cuidadores o usar un método basado en longitud y constitución corporal; sustituir por el peso medido cuanto antes.</span>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Algoritmo de hiperpotasemia -->
+        <div id="hyperkalemiaModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="hyperkalemiaTitle">
+            <div class="modal-content hyperkalemia-modal-content">
+                <div class="modal-header">
+                    <h2 id="hyperkalemiaTitle">Hiperpotasemia pediátrica</h2>
+                    <button class="modal-close" id="closeHyperkalemiaBtn" aria-label="Cerrar algoritmo de hiperpotasemia">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="hyperkalemia-source-note">
+                        Algoritmo basado en ERC 2025. Herramienta de apoyo: confirmar resultados y protocolo institucional.
+                    </div>
+                    <div class="hyperkalemia-input-grid">
+                        <label>
+                            Potasio actual (mmol/L)
+                            <input id="hyperkalemiaPotassium" type="number" min="0" max="15" step="0.1" inputmode="decimal" placeholder="Ej. 6,8">
+                        </label>
+                        <div class="hyperkalemia-weight-box">
+                            Peso utilizado
+                            <strong><span id="hyperkalemiaWeight">—</span> kg</strong>
+                        </div>
+                    </div>
+                    <fieldset class="hyperkalemia-options">
+                        <legend>Situación clínica</legend>
+                        <label><input id="hyperkalemiaEcg" type="checkbox"> Alteraciones de conducción en ECG</label>
+                        <label><input id="hyperkalemiaNeonate" type="checkbox"> Neonato menor de 96 horas</label>
+                        <label><input id="hyperkalemiaAcidosis" type="checkbox"> Acidosis significativa</label>
+                        <label><input id="hyperkalemiaRenal" type="checkbox"> Bien hidratado, con diuresis y función renal conservada</label>
+                        <label class="hyperkalemia-arrest-option"><input id="hyperkalemiaCardiacArrest" type="checkbox"> Parada cardiaca atribuible a hiperpotasemia</label>
+                        <small class="hyperkalemia-arrest-note">En parada cardiaca, ERC 2025 prioriza insulina/glucosa y beta-2 agonista IV; no usar calcio ni bicarbonato.</small>
+                    </fieldset>
+                    <button id="calculateHyperkalemiaBtn" class="btn btn-primary btn-large">
+                        <i class="fas fa-calculator"></i> Calcular algoritmo
+                    </button>
+                    <div id="hyperkalemiaResults" class="hyperkalemia-results hidden" aria-live="polite"></div>
+                </div>
+            </div>
+        </div>
+
         <!-- Modal para Fórmulas de Peso (completa) -->
-        <div id="formulasModal" class="modal hidden">
+        <div id="formulasModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="formulasModalTitle">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2>Estimación de Peso por Edad</h2>
-                    <button class="modal-close" id="closeFormulasModal">
+                    <h2 id="formulasModalTitle">Estimación de Peso por Edad</h2>
+                    <button class="modal-close" id="closeFormulasModal" aria-label="Cerrar calculadora de peso">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -585,7 +669,7 @@
                         <div class="peso-input-section">
                             <label for="edadModalInput">Edad del paciente</label>
                             <div class="edad-input-wrapper">
-                                <input type="number" id="edadModalInput" placeholder="0" min="0" max="18" class="edad-input">
+                                <input type="number" id="edadModalInput" placeholder="0" min="0" max="18" step="0.01" inputmode="decimal" class="edad-input">
                                 <span class="edad-unit">años</span>
                             </div>
                             <div class="slider-wrapper">
@@ -627,19 +711,19 @@
         </div>
 
         <!-- Modal Estimador de Peso Simple -->
-        <div id="estimadorModal" class="modal hidden">
+        <div id="estimadorModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="estimadorModalTitle">
             <div class="modal-content modal-small">
                 <div class="modal-header">
-                    <h2>Estimar Peso por Edad</h2>
-                    <button class="modal-close" id="closeEstimadorModal">
+                    <h2 id="estimadorModalTitle">Estimar Peso por Edad</h2>
+                    <button class="modal-close" id="closeEstimadorModal" aria-label="Cerrar estimador de peso">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="estimador-content">
                         <div class="estimador-input-group">
-                            <label>Edad del paciente</label>
-                            <input type="number" id="estimadorEdadInput" placeholder="Ej: 5" min="0" max="18" step="0.5" value="1">
+                            <label for="estimadorEdadInput">Edad del paciente</label>
+                            <input type="number" id="estimadorEdadInput" placeholder="Ej: 5" min="0" max="18" step="0.01" value="1">
                             <span class="input-unit-inline">años</span>
                         </div>
                         <div class="estimador-slider-group">
@@ -650,6 +734,10 @@
                             <div class="estimador-weight"><span id="estimadorPesoResultado">-</span> kg</div>
                             <div class="estimador-formula"><strong id="estimadorFormula">Selecciona una edad para ver la fórmula</strong></div>
                         </div>
+                        <div class="info-note estimator-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div><strong>Estimación orientativa.</strong> ERC 2025 prioriza preguntar a los cuidadores o usar un método basado en longitud, idealmente corregido por constitución corporal. Sustituya este valor por el peso medido en cuanto sea posible.</div>
+                        </div>
                         <div class="estimador-actions">
                             <button id="aplicarEstimacionBtn" class="btn btn-primary" aria-label="Aplicar peso estimado al perfil del paciente"><i class="fas fa-check"></i> Aplicar a Paciente</button>
                         </div>
@@ -659,21 +747,21 @@
         </div>
 
         <!-- Modal de dosis -->
-        <div id="dosisModal" class="dosis-modal">
+        <div id="dosisModal" class="dosis-modal" role="dialog" aria-modal="true" aria-labelledby="dosisModalTitle">
             <div class="dosis-modal-content">
                 <div class="dosis-modal-header">
                     <h2 id="dosisModalTitle">Medicamentos</h2>
-                    <button class="dosis-modal-close"><i class="fas fa-times"></i></button>
+                    <button class="dosis-modal-close" aria-label="Cerrar detalle de dosis"><i class="fas fa-times"></i></button>
                 </div>
                 <div class="dosis-modal-body" id="dosisModalBody"></div>
             </div>
         </div>
 
         <!-- Modal de Disclaimer Legal -->
-        <div id="disclaimerModal" class="modal" style="display: none;">
+        <div id="disclaimerModal" class="modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="disclaimerModalTitle">
             <div class="modal-content modal-disclaimer">
                 <div class="modal-header">
-                    <h2><i class="fas fa-exclamation-triangle"></i> Aviso Legal y Responsabilidad</h2>
+                    <h2 id="disclaimerModalTitle"><i class="fas fa-exclamation-triangle"></i> Aviso Legal y Responsabilidad</h2>
                 </div>
                 <div class="modal-body">
                     <div class="disclaimer-content">
@@ -701,7 +789,7 @@
 
         <!-- Pie de página -->
         <footer class="footer">
-            <p>&copy; 2025 UCI Pediatría. Calculadora Clínica v1.0.1</p>
+            <p>&copy; 2026 UCI Pediatría. Calculadora Clínica v1.0.8</p>
             <p class="disclaimer">⚠️ Herramienta de referencia. Siempre consulte con profesionales médicos.</p>
             <p class="footer-credits">
                 <small>
@@ -712,11 +800,11 @@
     </div>
 
     <!-- Modal de detalle de medicamento desde búsqueda -->
-    <div id="medDetailModal" class="med-detail-modal">
+    <div id="medDetailModal" class="med-detail-modal" role="dialog" aria-modal="true" aria-labelledby="medDetailTitle">
         <div class="med-detail-content">
             <div class="med-detail-header">
                 <h2 id="medDetailTitle">Medicamento</h2>
-                <button class="med-detail-close" id="closeMedDetailBtn">
+                <button class="med-detail-close" id="closeMedDetailBtn" aria-label="Cerrar detalle del medicamento">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -727,17 +815,28 @@
     </div>
 
     <script type="module">
-        import { initTabs } from './js/tabs.js';
-        import { initUI } from './js/ui.js';
-        import { initSearch, searchMeds, getTabForType, showMedDetail } from './js/search.js';
-        import { initTheme, toggleTheme, getThemeIcon, getThemeLabel } from './js/theme.js';
-        import { announceSearchResults } from './js/announcer.js';
+        import { initTabs } from './js/tabs.js?v=113';
+        import { initUI } from './js/ui.js?v=113';
+        import { initSearch, searchMeds, getTabForType, showMedDetail } from './js/search.js?v=113';
+        import { initTheme, toggleTheme, getThemeIcon, getThemeLabel } from './js/theme.js?v=113';
+        import { announceSearchResults } from './js/announcer.js?v=113';
+        import { initHyperkalemia } from './js/hyperkalemia.js?v=113';
         
-        // Inicializar componentes
+        // Inicializar componentes; los controles no farmacológicos siguen disponibles
+        // aunque la carga remota de datos falle.
         initTabs();
-        await initUI();
-        await initSearch();
         initTheme();
+        initHyperkalemia();
+        try {
+            await Promise.all([initUI(), initSearch()]);
+        } catch (error) {
+            console.error('Error durante el arranque de la aplicación:', error);
+            const warning = document.getElementById('dataLoadWarning');
+            if (warning) {
+                warning.textContent = 'La aplicación no pudo iniciarse por completo. Recargue antes de utilizar cálculos farmacológicos.';
+                warning.classList.remove('hidden');
+            }
+        }
         
         // Configurar búsqueda
         const searchInput = document.getElementById('searchInput');
@@ -774,6 +873,7 @@
                 if (query.length < 2) {
                     searchResults.classList.add('hidden');
                     searchInput.setAttribute('aria-expanded', 'false');
+                    searchInput.removeAttribute('aria-activedescendant');
                     return;
                 }
                 
@@ -783,9 +883,14 @@
                     currentResults = results;
                     
                     if (results.length === 0) {
-                        searchResults.innerHTML = '<div class="search-no-results">No se encontraron medicamentos</div>';
+                        const empty = document.createElement('div');
+                        empty.className = 'search-no-results';
+                        empty.setAttribute('role', 'status');
+                        empty.textContent = 'No se encontraron medicamentos';
+                        searchResults.replaceChildren(empty);
                         searchResults.classList.remove('hidden');
                         searchInput.setAttribute('aria-expanded', 'true');
+                        searchInput.removeAttribute('aria-activedescendant');
                         announceSearchResults(0);
                         return;
                     }
@@ -799,32 +904,38 @@
                         grouped[result.category].push(result);
                     });
                     
-                    let html = '';
+                    searchResults.replaceChildren();
                     let itemIndex = 0;
                     Object.entries(grouped).forEach(([category, items]) => {
-                        html += `<div class="search-category">${category}</div>`;
+                        const categoryElement = document.createElement('div');
+                        categoryElement.className = 'search-category';
+                        categoryElement.textContent = category;
+                        searchResults.appendChild(categoryElement);
                         items.forEach(item => {
-                            html += `
-                                <div class="search-item" data-type="${item.type}" data-key="${item.key}" data-nombre="${item.nombre}" data-index="${itemIndex}" role="option" tabindex="-1">
-                                    <i class="fas fa-pills"></i>
-                                    <span>${item.nombre}</span>
-                                </div>
-                            `;
+                            const resultElement = document.createElement('div');
+                            resultElement.id = `search-option-${itemIndex}`;
+                            resultElement.className = 'search-item';
+                            resultElement.dataset.type = item.type;
+                            resultElement.dataset.key = item.key;
+                            resultElement.dataset.nombre = item.nombre;
+                            resultElement.dataset.index = String(itemIndex);
+                            resultElement.setAttribute('role', 'option');
+                            resultElement.setAttribute('aria-selected', 'false');
+                            resultElement.setAttribute('tabindex', '-1');
+                            const icon = document.createElement('i');
+                            icon.className = 'fas fa-pills';
+                            const label = document.createElement('span');
+                            label.textContent = item.nombre;
+                            resultElement.append(icon, label);
+                            resultElement.addEventListener('click', () => selectSearchItem(resultElement));
+                            searchResults.appendChild(resultElement);
                             itemIndex++;
                         });
                     });
                     
-                    searchResults.innerHTML = html;
                     searchResults.classList.remove('hidden');
                     searchInput.setAttribute('aria-expanded', 'true');
                     announceSearchResults(results.length);
-                    
-                    // Agregar listeners a los items
-                    document.querySelectorAll('.search-item').forEach(item => {
-                        item.addEventListener('click', () => {
-                            selectSearchItem(item);
-                        });
-                    });
                 }, 300);
             });
 
@@ -847,6 +958,7 @@
                 } else if (e.key === 'Escape') {
                     searchResults.classList.add('hidden');
                     searchInput.setAttribute('aria-expanded', 'false');
+                    searchInput.removeAttribute('aria-activedescendant');
                 }
             });
 
@@ -854,11 +966,15 @@
                 items.forEach((item, idx) => {
                     if (idx === selectedIndex) {
                         item.classList.add('selected');
+                        item.setAttribute('aria-selected', 'true');
+                        searchInput.setAttribute('aria-activedescendant', item.id);
                         item.scrollIntoView({ block: 'nearest' });
                     } else {
                         item.classList.remove('selected');
+                        item.setAttribute('aria-selected', 'false');
                     }
                 });
+                if (selectedIndex < 0) searchInput.removeAttribute('aria-activedescendant');
             }
 
             function selectSearchItem(item) {
@@ -873,6 +989,7 @@
                 searchInput.value = '';
                 searchResults.classList.add('hidden');
                 searchInput.setAttribute('aria-expanded', 'false');
+                searchInput.removeAttribute('aria-activedescendant');
                 selectedIndex = -1;
             }
             
@@ -881,6 +998,7 @@
                 if (!e.target.closest('.search-wrapper')) {
                     searchResults.classList.add('hidden');
                     searchInput.setAttribute('aria-expanded', 'false');
+                    searchInput.removeAttribute('aria-activedescendant');
                 }
             });
         }
@@ -895,6 +1013,7 @@
                 const newIcon = getThemeIcon();
                 icon.className = `fas ${newIcon}`;
                 themeToggle.title = getThemeLabel();
+                themeToggle.setAttribute('aria-label', getThemeLabel());
             });
         }
     </script>
@@ -903,9 +1022,37 @@
         // Registrar Service Worker para PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
+                const hadController = Boolean(navigator.serviceWorker.controller);
+                const updateNotice = document.getElementById('appUpdateNotice');
+                const reloadButton = document.getElementById('reloadForUpdateBtn');
+                const connectionStatus = document.getElementById('appConnectionStatus');
+
+                const renderConnectionStatus = () => {
+                    if (!connectionStatus) return;
+                    if (navigator.onLine) {
+                        connectionStatus.textContent = '';
+                        connectionStatus.classList.add('hidden');
+                    } else {
+                        connectionStatus.textContent = 'Sin conexión · utilizando la versión y los datos almacenados en este dispositivo.';
+                        connectionStatus.classList.remove('hidden');
+                    }
+                };
+
+                window.addEventListener('online', renderConnectionStatus);
+                window.addEventListener('offline', renderConnectionStatus);
+                renderConnectionStatus();
+
+                reloadButton?.addEventListener('click', () => window.location.reload());
+                if (hadController) {
+                    navigator.serviceWorker.addEventListener('controllerchange', () => {
+                        updateNotice?.classList.remove('hidden');
+                    });
+                }
+
+                navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
                     .then(registration => {
                         console.log('Service Worker registrado correctamente:', registration.scope);
+                        return registration.update();
                     })
                     .catch(error => {
                         console.log('Error al registrar Service Worker:', error);
@@ -915,4 +1062,3 @@
     </script>
 </body>
 </html>
-

@@ -312,6 +312,12 @@ function compute(cfg, input) {
 
   const weightKg = input.weightKg;
   const rateMlH = input.rateMlH;
+  if (!Number.isFinite(weightKg) || weightKg <= 0 || weightKg > 300) {
+    throw new RangeError('El peso debe ser mayor que 0 y no superar 300 kg');
+  }
+  if (rateMlH !== undefined && (!Number.isFinite(rateMlH) || rateMlH < 0)) {
+    throw new RangeError('El ritmo de perfusión debe ser un número no negativo');
+  }
 
   const modes = drug.modes;
   const chosen = input.modeId
@@ -340,6 +346,92 @@ function compute(cfg, input) {
 
   return out;
 }
+
+function formatPerfusionNumber(value) {
+  if (!Number.isFinite(value)) return '-';
+  if (Math.abs(value) >= 100) return value.toFixed(0);
+  if (Math.abs(value) >= 10) return value.toFixed(1).replace(/\.0$/, '');
+  return value.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
+}
+
+function humanizeInfusionUnit(unit) {
+  return unit.replaceAll('IU', 'UI').replaceAll('/ml', '/mL');
+}
+
+function concentrationInDoseMass(preparation, doseUnit) {
+  const concentrationMass = preparation.concentration.unit.split('/')[0];
+  const targetMass = doseUnitMass(doseUnit);
+  let value = preparation.concentration.value;
+  if (concentrationMass === 'mg' && targetMass === 'mcg') value = toMcg(value, 'mg');
+  if (concentrationMass === 'mcg' && targetMass === 'mg') value = toMg(value, 'mcg');
+  if (concentrationMass !== targetMass && !(
+    (concentrationMass === 'mg' && targetMass === 'mcg') ||
+    (concentrationMass === 'mcg' && targetMass === 'mg')
+  )) {
+    throw new Error(`Unidades incompatibles: ${preparation.concentration.unit} y ${doseUnit}`);
+  }
+  return value;
+}
+
+export function formatPerfusionForDisplay(drug, result, weightKg) {
+  if (!drug?.usualRange || result?.drugKey !== drug.key) {
+    throw new Error('Configuración de perfusión incompleta o no coincidente');
+  }
+  if (!Number.isFinite(weightKg) || weightKg <= 0 || weightKg > 300) {
+    throw new RangeError('El peso debe ser mayor que 0 y no superar 300 kg');
+  }
+
+  const { min, max, unit } = drug.usualRange;
+  const timeFactor = doseUnitTime(unit) === 'min' ? 60 : 1;
+  const massUnit = doseUnitMass(unit);
+  const absoluteMinH = min * weightKg * timeFactor;
+  const absoluteMaxH = max * weightKg * timeFactor;
+  const concentration = concentrationInDoseMass(result.preparation, unit);
+  const rateMin = absoluteMinH / concentration;
+  const rateMax = absoluteMaxH / concentration;
+  const atOneMlH = doseAtRate(result.preparation, unit, weightKg, 1).dose;
+  const rateWarningText = rateMin < 0.0995 || rateMax > 50.001
+    ? 'El rango incluye un ritmo extremo para muchas bombas. Verifique el límite del dispositivo y adapte la concentración según el protocolo local antes de administrar.'
+    : '';
+
+  let totalValue = result.preparation.total.value;
+  let totalUnit = result.preparation.total.unit;
+  if (totalUnit === 'mcg' && totalValue >= 1000) {
+    totalValue = toMg(totalValue, 'mcg');
+    totalUnit = 'mg';
+  }
+  const diluent = result.preparation.diluent === 'SSF_or_G5'
+    ? 'SSF o G5%'
+    : result.preparation.diluent === 'G5' ? 'G5%' : result.preparation.diluent;
+  const preparationVerb = result.preparation.isWeightAdjusted ? 'hasta' : 'c.s.p.';
+
+  return {
+    rangeText: `${formatPerfusionNumber(min)}-${formatPerfusionNumber(max)} ${humanizeInfusionUnit(unit)}`,
+    absoluteHourlyText: `${formatPerfusionNumber(absoluteMinH)}-${formatPerfusionNumber(absoluteMaxH)} ${humanizeInfusionUnit(massUnit)}/h`,
+    rateText: `${formatPerfusionNumber(rateMin)}-${formatPerfusionNumber(rateMax)} mL/h`,
+    presentationText: humanizeInfusionUnit(result.preparation.commercialPresentation || result.preparation.concentration.unit),
+    preparationText: `${formatPerfusionNumber(totalValue)} ${humanizeInfusionUnit(totalUnit)} ${preparationVerb} ${result.preparation.volumeMl} mL con ${diluent}`,
+    equivalenceText: `1 mL/h = ${formatPerfusionNumber(atOneMlH)} ${humanizeInfusionUnit(unit)}`,
+    rateWarningText,
+  };
+}
+
+export const PERFUSION_KEY_MAP = {
+  adrenalina_periferico: 'adrenaline_peripheral',
+  adrenalina_central: 'adrenaline_central',
+  noradrenalina_periferico: 'noradrenaline_peripheral',
+  noradrenalina_central: 'noradrenaline_central',
+  dopamina_periferico: 'dopamine_peripheral',
+  dopamina_central: 'dopamine_central',
+  amiodarona_perf: 'amiodarone',
+  milrinona: 'milrinone',
+  labetalol: 'labetalol',
+  fentanilo_perf: 'fentanyl',
+  ketamina_perf: 'ketamine',
+  midazolam_perf: 'midazolam',
+  rocuronio_perf: 'rocuronium',
+  insulina_perf: 'insulin',
+};
 
 // ============ CONFIGURACIÓN DE FÁRMACOS ============
 
@@ -519,8 +611,7 @@ const DRUGS = [
         diluent: "SSF_or_G5",
         total: { value: 50, unit: "mg" },
         commercialPresentation: "1 mg/ml",
-        select: { minWeightKg: 50 },
-        note: "Tope: 50 mg c.s.p. 50 ml.",
+        note: "Preparación fija al superar el tope de la ajustada: 50 mg c.s.p. 50 ml.",
       },
     ],
   },
@@ -649,7 +740,7 @@ const DRUGS = [
     key: "rocuronium",
     displayName: "Rocuronio",
     doseUnit: "mg/kg/h",
-    usualRange: { min: 0.3, max: 1, unit: "mg/kg/h" },
+    usualRange: { min: 0.3, max: 0.6, unit: "mg/kg/h" },
     modes: [
       {
         id: "fixed_240mg_50ml_small",
@@ -677,7 +768,7 @@ const DRUGS = [
     key: "insulin",
     displayName: "Insulina",
     doseUnit: "IU/kg/h",
-    usualRange: { min: 0.02, max: 0.1, unit: "IU/kg/h" },
+    usualRange: { min: 0.05, max: 0.1, unit: "IU/kg/h" },
     modes: [
       {
         id: "adjusted_0p01IUkgH_at_1mlh",

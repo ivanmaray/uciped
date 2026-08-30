@@ -1,29 +1,29 @@
 {
   "name": "UCIPED - Calculadora UCI Pediátrica",
   "short_name": "UCIPED",
+  "id": "./",
   "description": "Calculadora de medicamentos y perfusiones para UCI Pediátrica",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#4A90E2",
-  "orientation": "portrait",
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "/android-chrome-192x192.png",
+      "src": "android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/android-chrome-512x512.png",
+      "src": "android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/logo.png",
+      "src": "logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
@@ -39,22 +39,22 @@
       "name": "Medicamentos de Urgencia",
       "short_name": "Urgencia",
       "description": "Acceso rápido a medicamentos de urgencia",
-      "url": "/?tab=urgencia",
-      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+      "url": "./?tab=urgencia",
+      "icons": [{ "src": "logo.png", "sizes": "192x192" }]
     },
     {
       "name": "Intubación",
       "short_name": "Intubación",
       "description": "Acceso rápido a medicamentos de intubación",
-      "url": "/?tab=intubacion",
-      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+      "url": "./?tab=intubacion",
+      "icons": [{ "src": "logo.png", "sizes": "192x192" }]
     },
     {
       "name": "Perfusiones",
       "short_name": "Perfusiones",
       "description": "Acceso rápido a calculadora de perfusiones",
-      "url": "/?tab=perfusiones",
-      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+      "url": "./?tab=perfusiones",
+      "icons": [{ "src": "logo.png", "sizes": "192x192" }]
     }
   ]
 }

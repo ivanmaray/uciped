@@ -1,10 +1,13 @@
 {
   "name": "uciped",
-  "version": "1.0.0",
+  "version": "1.0.8",
   "description": "Calculadora de medicamentos y parámetros para UCI Pediátrica",
   "scripts": {
     "validate": "node scripts/validate-meds.js",
-    "test": "npm run validate"
+    "check:syntax": "node --check sw.js && node --check js/logic.js && node --check js/search.js && node --check js/tabs.js && node --check js/ui.js && node --check js/hyperkalemia.js",
+    "test:logic": "node --no-warnings --test tests/*.test.mjs",
+    "test": "npm run validate && npm run check:syntax && npm run test:logic",
+    "dev": "live-server ."
   },
   "keywords": ["uci", "pediatria", "medicamentos", "calculadora"],
   "author": "",

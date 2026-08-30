@@ -2,14 +2,14 @@
   "dosificacion": {},
   "intubacion": {
     "atropina": {
-      "nombre": "Atropina",
+      "nombre": "Atropina (solo indicación específica)",
       "unidad": "mg",
       "dosis_kg": 0.02,
       "presentacion": "Ampolla 1 mg/1 mL",
       "concentracion_mg_ml": 0.1,
       "concentracion_presentacion": "1 mg/mL diluida 1:10 = 0.1 mg/mL",
       "dilucion": "Diluir hasta 10 mL con SSF (1 mg + 9 mL SSF = 0.1 mg/mL)",
-      "nota": "Dilución estándar 1:10 para uso IV."
+      "nota": "ERC 2025 no recomienda atropina como premedicación rutinaria para la intubación. Mantener solo para indicaciones específicas conforme al protocolo local. Dosis 0.02 mg/kg, mínimo local 0.1 mg y máximo 0.5 mg. Dilución estándar 1:10 para uso IV."
     },
     "fentanilo": {
       "nombre": "Fentanilo",
@@ -19,7 +19,7 @@
       "concentracion_mcg_ml": 10,
       "concentracion_presentacion": "Diluida 1:5 = 10 mcg/mL",
       "dilucion": "Diluir hasta 15 mL con SSF (150 mcg + 12 mL SSF = 10 mcg/mL)",
-      "nota": "Usar con precaución; valorar reducir dosis en inestabilidad hemodinámica."
+      "nota": "Administrar lentamente y titular. Puede causar depresión respiratoria, hipotensión y rigidez torácica si se administra con rapidez; disponer de ventilación y monitorización continua."
     },
     "ketamina": {
       "nombre": "Ketamina",
@@ -29,7 +29,7 @@
       "concentracion_mg_ml": 10,
       "concentracion_presentacion": "Diluida 1:5 = 10 mg/mL",
       "dilucion": "Diluir hasta 50 mL con SF (500 mg + 40 mL SF = 10 mg/mL)",
-      "nota": "Evitar en HTA; puede aumentar FC."
+      "nota": "Administrar IV lentamente y titular. Vigilar vía aérea, ventilación, frecuencia cardiaca y presión arterial; individualizar si existe hipertensión o inestabilidad cardiovascular."
     },
     "midazolam": {
       "nombre": "Midazolam",
@@ -47,7 +47,7 @@
         }
       ],
       "dilucion": "Usar sin diluir según presentación o diluir en SF si se necesita",
-      "nota": "Precaución en pacientes inestables; ajustar dosis a la baja si precisa."
+      "nota": "Máximo calculado 10 mg. Administrar lentamente y titular; puede producir depresión respiratoria e hipotensión, especialmente junto con opioides o en inestabilidad hemodinámica."
     },
     "propofol": {
       "nombre": "Propofol",
@@ -55,7 +55,7 @@
       "dosis_kg": 2.5,
       "presentacion": "Varias presentaciones (1% o 2%)",
       "dilucion": "Usar según presentación: 1% o 2%",
-      "nota": "Precaución; ajustar a la baja en inestabilidad hemodinámica. Rango 1-5 mg/kg. Emulsión lipídica.",
+      "nota": "Inducción anestésica: ajustar lentamente a respuesta. La ficha técnica indica aproximadamente 2.5 mg/kg en mayores de 8 años y 2.5-4 mg/kg en niños más pequeños; reducir en hipovolemia, disfunción cardiaca o inestabilidad. La presentación 20 mg/mL no se recomienda para inducción en menores de 3 años por dificultad de titulación. No usar como sedación continua en UCI pediátrica ≤16 años.",
       "concentraciones": [
         {
           "conc_mg_ml": 10,
@@ -75,7 +75,7 @@
       "concentracion_mg_ml": 10,
       "concentracion_presentacion": "Diluida 1:5 = 10 mg/mL",
       "dilucion": "Diluir hasta 10 mL con SF (100 mg + 8 mL SF = 10 mg/mL)",
-      "nota": "Evitar en HTIC, hiperpotasemia, trauma muscular extenso, grandes quemados, antecedente de hipertermia maligna. Dosis: 2 mg/kg ≤24 meses; 1 mg/kg >24 meses."
+      "nota": "Ficha técnica de Anectine 50 mg/mL: 2 mg/kg IV en menores de 1 año y 1 mg/kg en niños mayores. Contraindicada en hiperpotasemia, susceptibilidad a hipertermia maligna y durante el periodo de riesgo tras quemaduras, traumatismo grave, denervación o pérdida muscular aguda. Administrar únicamente con anestesia/sedación adecuada y capacidad inmediata de ventilación."
     },
     "rocuronio": {
       "nombre": "Rocuronio",
@@ -85,7 +85,7 @@
       "concentracion_mg_ml": 10,
       "concentracion_presentacion": "10 mg/mL (prediluido)",
       "dilucion": "Puede administrarse puro",
-      "nota": "Uso IV directo. No necesita dilución."
+      "nota": "Inducción de secuencia rápida: 1 mg/kg IV. Duración clínica aproximada de una hora; no aporta sedación ni analgesia. Asegurar ventilación, sedoanalgesia y monitorización neuromuscular."
     }
   },
   "urgencia": {
@@ -95,7 +95,7 @@
       "unidad": "mg",
       "presentacion": "Ampolla 6 mg/2 mL, dilución: 6 mg + 4 mL SSF/SG5% = 1 mg/mL",
       "dilucion": "Diluir hasta 6 mL con SSF o SG5%",
-      "nota": "Vía proximal al corazón con llave de 3 pasos; bolo seguido de 5-10 mL SSF. Puede escalar hasta 0.3 mg/kg si no respuesta.",
+      "nota": "Primera dosis ERC 2025: 0.1 mg/kg (máximo 6 mg). Vía proximal al corazón con llave de 3 pasos; bolo seguido de 5-10 mL SSF. Si persiste tras al menos 1 minuto: segunda dosis 0.3 mg/kg (máximo 12-18 mg).",
       "concentracion_mg_ml": 1.0
     },
     "adrenalina": {
@@ -104,7 +104,7 @@
       "unidad": "mg",
       "presentacion": "Solución 1 mg/mL, dilución: 1 mg + 9 mL SSF/SG5% = 0.1 mg/mL",
       "dilucion": "Diluir hasta 10 mL con SSF o SG5%",
-      "nota": "Vía IV/IO; preparar 0.1 mg/mL.",
+      "nota": "PCR: 0.01 mg/kg IV/IO (máximo 1 mg); preparar 0.1 mg/mL. Repetir cada 4 minutos según ERC 2025.",
       "concentracion_mg_ml": 0.1
     },
     "amiodarona": {
@@ -113,7 +113,7 @@
       "unidad": "mg",
       "presentacion": "Ampolla 150 mg/3 mL = 50 mg/mL (puro en PCR)",
       "dilucion": "Pura en PCR; diluir en otras situaciones",
-      "nota": "Pasar en 3 minutos.",
+      "nota": "PCR con FV/TV sin pulso: ERC 2025, 5 mg/kg IV/IO (máx. 300 mg) después del tercer choque; segunda dosis de 5 mg/kg (máx. 150 mg) después del quinto. Administrar y lavar la vía sin retrasar la RCP.",
       "concentracion_mg_ml": 50
     },
     "atropina_urgencia": {
@@ -122,26 +122,28 @@
       "unidad": "mg",
       "presentacion": "Ampolla 1 mg/1 mL, dilución: 1 mg + 9 mL SSF/SG5% = 0.1 mg/mL",
       "dilucion": "Diluir hasta 10 mL con SSF o SG5%",
-      "nota": "Mínimo 0.1 mg.",
+      "nota": "Solo en bradicardia por aumento del tono vagal o enfermedad de conducción: 0.02 mg/kg IV, mínimo local 0.1 mg y máximo 0.5 mg (ERC 2025).",
       "concentracion_mg_ml": 0.1
     },
     "bicarbonato": {
       "nombre": "Bicarbonato 1M",
-      "unidad": "mL",
+      "unidad": "mEq",
       "presentacion": "Bicarbonato 1M (1 mEq/mL)",
-      "dilucion": "Diluir 1:1 en SSF: 18 mL HCO3 1M + 18 mL SSF = 36 mL de solución 0.5M",
-      "nota": "IV lenta.",
+      "dilucion": "Diluir 1:1 con el mismo volumen de SSF; concentración final 0.5 mEq/mL",
+      "nota": "1 mEq/kg (máximo 50 mEq). No usar de rutina en PCR ni en hiperpotasemia sin una indicación específica por acidosis. La tabla diferencia el volumen de bicarbonato del volumen final preparado; administrar IV lentamente y nunca por la misma vía que el calcio.",
       "concentracion_mg_ml": null,
       "unidad_especial": "mEq",
       "es_volumen_puro": true,
-      "concentracion_mEq_ml": 0.5
+      "concentracion_mEq_ml": 1,
+      "factor_dilucion": 2
     },
     "boloLiquidos": {
       "nombre": "Bolo de Líquidos",
+      "dosis": 10,
       "unidad": "mL",
       "presentacion": "SF o Ringer",
       "dilucion": "Usar directamente",
-      "nota": "IV rápida.",
+      "nota": "ERC 2025: cristaloide isotónico balanceado 10 mL/kg por bolo; reevaluar tras cada bolo. En shock cardiogénico individualizar y considerar 5 mL/kg.",
       "es_volumen_puro": true,
       "unidad_especial": "mL"
     },
@@ -150,7 +152,7 @@
       "unidad": "mL",
       "presentacion": "Ampolla 10 mL / 4.6 mEq (GlcCa 10%)",
       "dilucion": "Diluir 1:1 con SSF (volumen total = dosis × 2). Ej: 9 mL GlcCa + 9 mL SSF = 18 mL total",
-      "nota": "No usar en la misma vía que bicarbonato sódico.",
+      "nota": "En hiperpotasemia, considerar solo si hay alteraciones de conducción en el ECG. ERC 2025 indica no usar calcio en parada cardiaca por hiperpotasemia. No administrar por la misma vía que bicarbonato sódico.",
       "es_volumen_puro": true,
       "factor_dilucion": 2,
       "unidad_especial": "mL"
@@ -161,7 +163,7 @@
       "unidad": "mL",
       "presentacion": "Solución 10% = 100 mg/mL",
       "dilucion": "Usar directamente",
-      "nota": "Hipoglucemia.",
+      "nota": "ERC 2025: hipoglucemia, 0.2 g/kg IV (2 mL/kg de glucosa 10%). Repetir glucemia a los 5-10 min y repetir si es necesario.",
       "concentracion_mg_ml": 100,
       "es_volumen_puro": true
     },
@@ -170,8 +172,8 @@
       "dosis": 0.01,
       "unidad": "mg",
       "presentacion": "Solución 0.1 mg/mL",
-      "dilucion": "Usar puro",
-      "nota": "Antagonista benzodiacepinas.",
+      "dilucion": "Usar puro. Administrar IV durante 15 segundos.",
+      "nota": "Reversión de sedación consciente por benzodiacepinas en mayores de 1 año: 0.01 mg/kg (máx. 0.2 mg) IV en 15 s. Si es necesario, esperar 45 s y repetir cada 60 s hasta 4 veces; máximo total 0.05 mg/kg o 1 mg, el menor. Evitar en intoxicación mixta con fármacos proconvulsivantes o dependencia de benzodiacepinas; vigilar convulsiones, resedación y depresión respiratoria.",
       "concentracion_mg_ml": 0.1
     },
     "naloxona": {
@@ -180,7 +182,7 @@
       "unidad": "mg",
       "presentacion": "Solución 0.4 mg/mL",
       "dilucion": "Usar puro",
-      "nota": "Antagonista opioides.",
+      "nota": "Sospecha de sobredosis opioide: dosis inicial pediátrica 0.01 mg/kg IV. Si la respuesta es insuficiente, la ficha técnica permite aumentar la siguiente dosis a 0.1 mg/kg; repetir según respuesta y vigilar resedación. Priorizar ventilación y soporte respiratorio.",
       "concentracion_mg_ml": 0.4
     },
     "manitol": {
@@ -189,7 +191,7 @@
       "unidad": "g",
       "presentacion": "Varias presentaciones (10% o 20%)",
       "dilucion": "Usar según presentación disponible",
-      "nota": "Edema cerebral; verificar concentración.",
+      "nota": "Pauta local para hipertensión intracraneal: 0.5 g/kg. Verificar concentración y protocolo; administrar con filtro si la presentación lo exige y monitorizar volemia, función renal, sodio y osmolalidad.",
       "es_volumen_puro": false,
       "unidad_especial": "g",
       "concentraciones": [
@@ -204,21 +206,21 @@
       ]
     },
     "salinoHiper": {
-      "nombre": "Salino hipertónico 3%",
+      "nombre": "Salino hipertónico 3% (HTIC)",
       "unidad": "mL",
       "presentacion": "NaCl 3% (SSH 3%)",
-      "dilucion": "Preparación: Diluir 10 mL NaCl 20% + 90 mL SSF (o 50 mL NaCl 20% + 450 mL SSF). Administrar 5 mL/kg en bolo IV lento",
-      "nota": "Para HTIC o hiponatremia sintomática. Si hiponatremia sintomática → bolos de 2 mL/kg (máximo 3 bolos). Administrar lentamente.",
+      "dilucion": "Para preparar 100 mL al 3%: 15 mL de NaCl 20% + 85 mL de SSF. Para 500 mL: 75 mL de NaCl 20% + 425 mL de SSF. Verificar concentración final según protocolo y presentación disponible.",
+      "nota": "Esta fila calcula la pauta local para hipertensión intracraneal: 5 mL/kg (máx. 250 mL). No usar este volumen para hiponatremia sintomática, cuya pauta es distinta.",
       "es_volumen_puro": true,
       "unidad_especial": "mL"
     },
     "sulfatoMg": {
-      "nombre": "Sulfato de Magnesio",
+      "nombre": "Sulfato de Magnesio (torsade)",
       "dosis": 50,
       "unidad": "mg",
       "presentacion": "Ampolla 1.5 g/10 mL",
       "dilucion": "Diluir hasta 20 mL con SSF (1.5 g + 10 mL SSF = 75 mg/mL)",
-      "nota": "Uso IV.",
+      "nota": "ERC 2025: torsade de pointes, 50 mg/kg IV (máx. 2 g). En asma grave la pauta es distinta: 40 mg/kg (máx. 2 g) durante 20 min.",
       "concentracion_mg_ml": 75
     },
     "tranexamico": {
@@ -227,7 +229,7 @@
       "unidad": "mg",
       "presentacion": "Solución 100 mg/mL",
       "dilucion": "Usar directo",
-      "nota": "Hemorragia.",
+      "nota": "ERC 2025: hemorragia traumática grave, carga 15-20 mg/kg (máx. 1 g) IV durante 10 min; después 2 mg/kg/h al menos 8 h o hasta controlar el sangrado.",
       "concentracion_mg_ml": 100
     }
   },
@@ -239,9 +241,7 @@
         "dosis_min": 0.01,
         "dosis_max": 1.5,
         "presentacion": "1 mg/mL",
-        "dilucion": "1 mg en 50 mL de SSF",
-        "ml_h_equiv": "10 mL/h = 0.19 mcg/kg/min",
-        "nota": "Usar por vía periférica únicamente hasta obtener acceso venoso central"
+        "nota": "Uso periférico transitorio: vía proximal y visible, vigilancia frecuente del punto de inserción y protocolo de extravasación; cambiar a acceso central cuanto antes. Monitorización hemodinámica continua."
       },
       "adrenalina_central": {
         "nombre": "Adrenalina vía central",
@@ -249,9 +249,7 @@
         "dosis_min": 0.01,
         "dosis_max": 1.5,
         "presentacion": "1 mg/mL",
-        "dilucion": "6.90 mg en 50 mL de SSF o Glc 5%",
-        "ml_h_equiv": "1 mL/h = 0.1 mcg/kg/min",
-        "nota": "Vía venosa central"
+        "nota": "Vía venosa central. Titular a objetivo con monitorización hemodinámica continua."
       },
       "amiodarona_perf": {
         "nombre": "Amiodarona",
@@ -259,9 +257,7 @@
         "dosis_min": 5,
         "dosis_max": 15,
         "presentacion": "150 mg/3 mL",
-        "dilucion": "270 mg en 50 mL de Glc 5%",
-        "ml_h_equiv": "1 mL/h = 5 mcg/kg/min",
-        "nota": "Vasoactivo especial"
+        "nota": "Preparar exclusivamente en glucosa 5%. Monitorizar ECG, QT, frecuencia cardiaca y presión arterial; comprobar compatibilidades."
       },
       "dopamina_periferico": {
         "nombre": "Dopamina vía periférica",
@@ -269,9 +265,7 @@
         "dosis_min": 5,
         "dosis_max": 20,
         "presentacion": "40 mg/mL",
-        "dilucion": "69 mg en 50 mL de SSF o Glc 5%",
-        "ml_h_equiv": "1 mL/h = 1 mcg/kg/min",
-        "nota": "Usar por vía periférica únicamente hasta obtener acceso venoso central"
+        "nota": "Uso periférico transitorio: vía proximal y visible, vigilancia frecuente del punto de inserción y protocolo de extravasación; cambiar a acceso central cuanto antes."
       },
       "dopamina_central": {
         "nombre": "Dopamina vía central",
@@ -279,9 +273,7 @@
         "dosis_min": 5,
         "dosis_max": 20,
         "presentacion": "40 mg/mL",
-        "dilucion": "690 mg en 50 mL de SSF o Glc 5%",
-        "ml_h_equiv": "1 mL/h = 10 mcg/kg/min",
-        "nota": "Vía venosa central"
+        "nota": "Vía venosa central. Titular a respuesta y monitorizar ritmo, presión arterial y perfusión."
       },
       "labetalol": {
         "nombre": "Labetalol",
@@ -289,9 +281,7 @@
         "dosis_min": 0.5,
         "dosis_max": 3,
         "presentacion": "5 mg/mL",
-        "dilucion": "250 mg en 50 mL de Glc 5%",
-        "ml_h_equiv": "1 mL/h = 0.28 mg/kg/h",
-        "nota": "Antihipertensivo"
+        "nota": "Monitorización continua de presión arterial y frecuencia cardiaca. Precaución en bradicardia, bloqueo cardiaco, insuficiencia cardiaca y broncoespasmo."
       },
       "milrinona": {
         "nombre": "Milrinona",
@@ -299,9 +289,7 @@
         "dosis_min": 0.3,
         "dosis_max": 1,
         "presentacion": "1 mg/mL",
-        "dilucion": "34.50 mg en 50 mL de SSF o Glc 5%",
-        "ml_h_equiv": "1 mL/h = 0.50 mcg/kg/min",
-        "nota": "Inodilatador"
+        "nota": "Monitorizar presión arterial y arritmias; ajustar en disfunción renal. Puede causar hipotensión."
       },
       "noradrenalina_central": {
         "nombre": "Noradrenalina vía central",
@@ -309,9 +297,7 @@
         "dosis_min": 0.1,
         "dosis_max": 1,
         "presentacion": "1 mg/mL",
-        "dilucion": "6.90 mg en 50 mL de Glc 5%",
-        "ml_h_equiv": "1 mL/h = 0.1 mcg/kg/min",
-        "nota": "Vía venosa central"
+        "nota": "Vía venosa central. Titular a objetivo con monitorización hemodinámica continua."
       },
       "noradrenalina_periferico": {
         "nombre": "Noradrenalina vía periférica",
@@ -319,9 +305,7 @@
         "dosis_min": 0.1,
         "dosis_max": 1,
         "presentacion": "1 mg/mL",
-        "dilucion": "1 mg en 50 mL de SSF",
-        "ml_h_equiv": "10 mL/h = 0.19 mcg/kg/min",
-        "nota": "Usar por vía periférica únicamente hasta obtener acceso venoso central"
+        "nota": "Uso periférico transitorio: vía proximal y visible, vigilancia frecuente del punto de inserción y protocolo de extravasación; cambiar a acceso central cuanto antes."
       }
     },
     "sedoanalgesia": {
@@ -331,9 +315,7 @@
         "dosis_min": 1,
         "dosis_max": 5,
         "presentacion": "150 mcg/3 mL",
-        "dilucion": "900 mcg en 50 mL de SSF o Glc 5%",
-        "ml_h_equiv": "1 mL/h = 1 mcg/kg/h",
-        "nota": "Opiode analgésico"
+        "nota": "Monitorizar ventilación y hemodinámica; riesgo de depresión respiratoria, hipotensión y acumulación."
       },
       "ketamina_perf": {
         "nombre": "Ketamina",
@@ -341,9 +323,7 @@
         "dosis_min": 0.5,
         "dosis_max": 2,
         "presentacion": "50 mg/mL",
-        "dilucion": "900 mg en 50 mL de SSF o Glc 5%",
-        "ml_h_equiv": "1 mL/h = 1 mg/kg/h",
-        "nota": "Anestésico disociativo"
+        "nota": "Monitorizar vía aérea, ventilación, frecuencia cardiaca y presión arterial; titular a objetivo clínico."
       },
       "midazolam_perf": {
         "nombre": "Midazolam",
@@ -351,31 +331,25 @@
         "dosis_min": 0.05,
         "dosis_max": 0.3,
         "presentacion": "15 mg/3 mL",
-        "dilucion": "90 mg en 50 mL de SSF o Glc 5% (Emplear dilución 3 mL/15 mg)",
-        "ml_h_equiv": "1 mL/h = 0.10 mg/kg/h",
-        "nota": "Benzodiacepina sedante (usar dilución 3 mL/15 mg)"
+        "nota": "Monitorizar ventilación y presión arterial; riesgo de acumulación y depresión respiratoria, especialmente con opioides."
       },
       "rocuronio_perf": {
         "nombre": "Rocuronio",
         "unidad": "mg/kg/h",
         "dosis_min": 0.3,
-        "dosis_max": 1,
+        "dosis_max": 0.6,
         "presentacion": "10 mg/mL",
-        "dilucion": "500 mg en 50 mL (puro 10 mg/mL)",
-        "ml_h_equiv": "1 mL/h = 0.56 mg/kg/h",
-        "nota": "Paralizante neuromuscular"
+        "nota": "No aporta sedación ni analgesia. Asegurar ventilación y sedoanalgesia; titular con monitorización neuromuscular continua (TOF)."
       }
     },
     "insulina": {
       "insulina_perf": {
         "nombre": "Insulina",
         "unidad": "UI/kg/h",
-        "dosis_min": 0.02,
+        "dosis_min": 0.05,
         "dosis_max": 0.1,
         "presentacion": "Unidades",
-        "dilucion": "Unidades = kg de peso. Diluir en 100 mL de SSF y purgar sistema",
-        "ml_h_equiv": "1 mL/h = 0.01 UI/kg/h",
-        "nota": "Cetoacidosis diabética"
+        "nota": "Cetoacidosis diabética: ISPAD 2022 recomienda 0.05-0.1 UI/kg/h, iniciar 1 hora después de comenzar fluidoterapia, sin bolo IV y purgar el sistema. Controlar glucosa al menos cada hora y potasio/electrolitos según protocolo."
       }
     }
   }

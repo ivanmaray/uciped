@@ -28,6 +28,12 @@ Una aplicación web moderna y responsiva para cálculos pediátricos diseñada p
    - Cálculo de líquidos y calorías
    - Referencia de sondas endotraqueales
 
+5. **Algoritmo de Hiperpotasemia**
+   - Clasificación por potasio, ECG y umbral neonatal
+   - Dosis calculadas de calcio, insulina/glucosa y salbutamol IV
+   - Salbutamol nebulizado según ERC 2025
+   - Estrategias de eliminación y bicarbonato condicionado a acidosis
+
 ## 🛠️ Mejoras Implementadas
 
 ### vs Versión Original
@@ -47,10 +53,10 @@ Una aplicación web moderna y responsiva para cálculos pediátricos diseñada p
 
 ### Requisitos
 - Navegador web moderno (Chrome, Firefox, Safari, Edge)
-- No requiere instalación de dependencias
+- Node.js para ejecutar las validaciones automatizadas
 
 ### Uso
-1. Abre `index.html` en tu navegador
+1. Sirve la carpeta desde un servidor HTTP (`npm run dev` o equivalente)
 2. Selecciona la pestaña deseada
 3. Ingresa los datos requeridos
 4. Presiona "Calcular" o Enter
@@ -81,11 +87,12 @@ Texto: #1e293b (Gris oscuro)
 - **>12 años**: Peso = (edad × 3.5) + 10
 
 ### Medicamentos Incluidos
-- Ibuprofeno: 10 mg/kg
-- Paracetamol: 15 mg/kg
-- Amoxicilina: 25-45 mg/kg/día
-- Ceftriaxona: 50-80 mg/kg/día
-- Penicilina: 25-50 mil U/kg/día
+- Medicación de urgencia
+- Medicación para intubación
+- Perfusiones de inotrópicos, sedoanalgesia e insulina
+
+Los valores se mantienen en `data/meds.json` y deben validarse frente al
+protocolo institucional antes de utilizarse en asistencia clínica.
 
 ## ⚠️ Descargo de Responsabilidad
 
@@ -100,10 +107,14 @@ Texto: #1e293b (Gris oscuro)
 
 ```
 uciped/
-├── index.html      # Estructura HTML
-├── styles.css      # Estilos y diseño responsivo
-├── script.js       # Lógica y funcionalidades
-└── README.md       # Este archivo
+├── data/meds.json              # Datos de medicamentos
+├── js/                         # Estado, interfaz y motores de cálculo
+├── scripts/validate-meds.js    # Validador de datos
+├── tests/logic.test.mjs        # Pruebas de cálculos y regresión
+├── index.html                  # Estructura HTML
+├── styles.css                  # Estilos responsivos e iconos locales
+├── sw.js                       # Caché y funcionamiento offline
+└── README.md                   # Documentación
 ```
 
 ## 💻 Tecnologías Utilizadas
@@ -111,7 +122,7 @@ uciped/
 - **HTML5**: Estructura semántica
 - **CSS3**: Grid, Flexbox, gradientes, animaciones
 - **JavaScript (Vanilla)**: Sin dependencias externas
-- **Font Awesome**: Iconos (CDN)
+- **Iconos CSS locales**: sin dependencia de CDN
 
 ## 🎯 Funcionalidades Planeadas
 
@@ -120,7 +131,7 @@ uciped/
 - [ ] Base de datos expandida de medicamentos
 - [ ] Cálculo de reposición de fluidos
 - [ ] Gráficos de crecimiento
-- [ ] Modo offline
+- [x] Modo offline mediante Service Worker
 - [ ] Idioma inglés
 - [ ] Sincronización con registros médicos
 
@@ -152,8 +163,8 @@ Para reportar errores o sugerencias, contacta con el equipo de desarrollo.
 
 ---
 
-**Versión**: 1.0.0  
-**Última actualización**: 16 de diciembre de 2024  
+**Versión**: 1.0.8<br>
+**Última actualización**: 23 de agosto de 2026<br>
 **Licencia**: MIT
 
 ⚕️ *Calculadora Clínica Pediátrica Profesional*

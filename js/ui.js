@@ -1,12 +1,33 @@
-import { loadMeds } from './data.js';
-import { calcularPesoEstimado, obtenerParametrosDeMATRIZ1, obtenerParametrosDeMATRIZ2, urgenciaFormulas, urgenciaDosisPorKg, intubacionFormulas, intubacionDosisPorKg, formatDosis } from './logic.js';
-import { setPatientData, getPatientData, setHeaderValues } from './state.js';
-import { compute, DRUGS } from './perfusiones.config.js';
-import { setupFocusTrap } from './focus-trap.js';
+import { loadMeds } from './data.js?v=113';
+import { calcularPesoEstimado, calcularEnergiasERC2025, calcularTuboTraquealERC2025, calcularTamanioLMA, calcularVentilacionInicialERC2025, obtenerParametrosDeMATRIZ1, obtenerParametrosDeMATRIZ2, obtenerSignosVitalesERC2025, urgenciaFormulas, urgenciaDosisPorKg, intubacionFormulas, intubacionDosisPorKg, formatDosis, calculatePureVolume } from './logic.js?v=113';
+import { setPatientData, getPatientData, getWeightSource, setHeaderValues, clearPatientData } from './state.js?v=113';
+import { compute, DRUGS, formatPerfusionForDisplay, PERFUSION_KEY_MAP } from './perfusiones.config.js?v=113';
+import { setupFocusTrap } from './focus-trap.js?v=113';
+import { announce } from './announcer.js?v=113';
 
 function show(el){ el.classList.remove('hidden'); }
 function hide(el){ el.classList.add('hidden'); }
-function valid(v){ return v !== '' && !isNaN(v) && v >= 0; }
+function valid(v){ return Number.isFinite(v) && v >= 0; }
+function validAge(v){ return valid(v) && v <= 18; }
+function validWeight(v){ return Number.isFinite(v) && v > 0 && v <= 300; }
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+function sanitizeForHtml(value) {
+  if (typeof value === 'string') return escapeHtml(value);
+  if (Array.isArray(value)) return value.map(sanitizeForHtml);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, sanitizeForHtml(item)]));
+  }
+  return value;
+}
 
 let meds = null;
 let medInfoDocListenerBound = false;
@@ -44,17 +65,45 @@ function showDosisModal(title, htmlContent) {
 // Helper para manejar popups de información de medicamentos
 function setupMedicineInfoButtons() {
   const buttons = document.querySelectorAll('.med-info-btn');
-  buttons.forEach(btn => {
+  const closePopup = (popup, { restoreFocus = false } = {}) => {
+    if (!popup) return;
+    popup.classList.remove('active');
+    popup.setAttribute('aria-hidden', 'true');
+    const triggerId = popup.dataset.triggerId;
+    const trigger = triggerId ? document.getElementById(triggerId) : null;
+    trigger?.setAttribute('aria-expanded', 'false');
+    if (restoreFocus) trigger?.focus();
+  };
+
+  buttons.forEach((btn, index) => {
+    const popup = btn.closest('td')?.querySelector('.med-info-popup');
+    if (!popup) return;
+    const label = btn.closest('td')?.querySelector('strong')?.textContent?.trim() || 'medicamento';
+    const buttonId = btn.id || `med-info-trigger-${index}`;
+    const popupId = popup.id || `med-info-popup-${index}`;
+    btn.id = buttonId;
+    popup.id = popupId;
+    btn.setAttribute('aria-label', `Ver detalles de ${label}`);
+    btn.setAttribute('aria-expanded', String(popup.classList.contains('active')));
+    btn.setAttribute('aria-controls', popupId);
+    popup.setAttribute('role', 'region');
+    popup.setAttribute('aria-label', `Detalles de ${label}`);
+    popup.setAttribute('aria-hidden', String(!popup.classList.contains('active')));
+    popup.dataset.triggerId = buttonId;
+    popup.querySelector('.med-info-popup-close')?.setAttribute('aria-label', `Cerrar detalles de ${label}`);
+
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
-      const popup = btn.closest('td').querySelector('.med-info-popup');
+      const willOpen = !popup.classList.contains('active');
       
       // Cerrar otros popups abiertos
       document.querySelectorAll('.med-info-popup.active').forEach(p => {
-        if(p !== popup) p.classList.remove('active');
+        if(p !== popup) closePopup(p);
       });
       
-      popup.classList.toggle('active');
+      popup.classList.toggle('active', willOpen);
+      popup.setAttribute('aria-hidden', String(!willOpen));
+      btn.setAttribute('aria-expanded', String(willOpen));
     });
   });
   
@@ -63,7 +112,7 @@ function setupMedicineInfoButtons() {
   closeButtons.forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
-      btn.closest('.med-info-popup').classList.remove('active');
+      closePopup(btn.closest('.med-info-popup'), { restoreFocus: true });
     });
   });
   
@@ -72,9 +121,14 @@ function setupMedicineInfoButtons() {
     document.addEventListener('click', (e) => {
       if(!e.target.closest('.med-info-btn') && !e.target.closest('.med-info-popup')) {
         document.querySelectorAll('.med-info-popup.active').forEach(p => {
-          p.classList.remove('active');
+          closePopup(p);
         });
       }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      const popup = document.querySelector('.med-info-popup.active');
+      if (popup) closePopup(popup, { restoreFocus: true });
     });
     medInfoDocListenerBound = true;
   }
@@ -83,21 +137,24 @@ function setupMedicineInfoButtons() {
 export async function initUI(){
   // Mostrar disclaimer si no se ha aceptado antes
   showDisclaimerIfNeeded();
+  // Los controles básicos deben estar operativos aunque la carga de datos tarde.
+  setupDisclaimer();
+  setupAccessibilityTraps();
+  setupHeaderInputs();
   
-  meds = await loadMeds();
+  const loadedMeds = await loadMeds();
+  meds = loadedMeds ? sanitizeForHtml(loadedMeds) : null;
   if (!meds) {
     console.warn('meds.json no se cargó. Mostrando placeholders.');
     const warn = document.getElementById('dataLoadWarning');
     if (warn) {
-      warn.textContent = 'No se pudo cargar datos de medicamentos. Se muestran placeholders.';
+      warn.textContent = 'No se pudieron cargar los datos de medicamentos. No use las tablas farmacológicas hasta recuperar la conexión y recargar.';
       warn.classList.remove('hidden');
     }
   } else {
-    console.log('meds.json cargado correctamente:', meds);
     const warn = document.getElementById('dataLoadWarning');
     if (warn) warn.classList.add('hidden');
   }
-  setupHeaderInputs();
   // setupDosificacion(); // Desactivado temporalmente - requiere revisión de vías y presentaciones
   setupViaAerea();
   setupIntubacion();
@@ -105,8 +162,6 @@ export async function initUI(){
   setupUrgencia();
   setupSignos();
   setupPerfusiones();
-  setupDisclaimer();
-  setupAccessibilityTraps();
 }
 
 function showDisclaimerIfNeeded() {
@@ -140,8 +195,6 @@ function setupDisclaimer() {
 }
 
 function setupHeaderInputs(){
-  console.log('setupHeaderInputs iniciando...');
-  
   const headerEdadInput = document.getElementById('headerEdadInput');
   const headerPesoInput = document.getElementById('headerPesoInput');
   const limpiarPacienteBtn = document.getElementById('limpiarPacienteBtn');
@@ -150,6 +203,7 @@ function setupHeaderInputs(){
   const infoBtn = document.getElementById('infoBtn');
   const infoModal = document.getElementById('infoModal');
   const closeInfoModal = document.getElementById('closeInfoModal');
+  const validationMessage = document.getElementById('patientValidationMessage');
   
   // Nuevo estimador
   const estimarPesoBtn = document.getElementById('estimarPesoBtn');
@@ -161,8 +215,7 @@ function setupHeaderInputs(){
   const estimadorPesoResultado = document.getElementById('estimadorPesoResultado');
   const estimadorFormula = document.getElementById('estimadorFormula');
   const aplicarEstimacionBtn = document.getElementById('aplicarEstimacionBtn');
-  
-  console.log('Elementos encontrados:', { estimarPesoBtn, estimadorModal });
+  const pesoOrigenBadge = document.getElementById('pesoOrigenBadge');
   
   if (!estimarPesoBtn) {
     console.error('ERROR: estimarPesoBtn no encontrado');
@@ -206,9 +259,55 @@ function setupHeaderInputs(){
     if(btn) btn.click();
   }
 
+  function clearValidationMessage() {
+    if (!validationMessage) return;
+    validationMessage.textContent = '';
+    validationMessage.classList.add('hidden');
+  }
+
+  function validateActiveCalculation(tab) {
+    const edad = parseFloat(headerEdadInput.value);
+    const peso = parseFloat(headerPesoInput.value);
+    const requiresAge = ['viaaerea', 'intubacion', 'ventilacion', 'signos'].includes(tab);
+    const requiresWeight = ['viaaerea', 'intubacion', 'ventilacion', 'urgencia', 'perfusiones'].includes(tab);
+    const problems = [];
+
+    if (requiresAge && !validAge(edad)) problems.push('una edad válida entre 0 y 18 años');
+    if (requiresWeight && !validWeight(peso)) problems.push('un peso válido entre 0,1 y 300 kg');
+    headerEdadInput.setAttribute('aria-invalid', String(requiresAge && !validAge(edad)));
+    headerPesoInput.setAttribute('aria-invalid', String(requiresWeight && !validWeight(peso)));
+
+    if (!problems.length) {
+      clearValidationMessage();
+      return true;
+    }
+
+    const message = `Para calcular ${tab === 'signos' ? 'signos vitales' : 'esta sección'}, introduzca ${problems.join(' y ')}.`;
+    if (validationMessage) {
+      validationMessage.textContent = message;
+      validationMessage.classList.remove('hidden');
+    }
+    announce(message, 0);
+    if (requiresAge && !validAge(edad)) headerEdadInput.focus();
+    else if (requiresWeight && !validWeight(peso)) headerPesoInput.focus();
+    return false;
+  }
+
+  function syncHeroActionState(tab = getActiveTab()) {
+    if (calcularHeroBtn) {
+      calcularHeroBtn.disabled = !calcMap[tab];
+      calcularHeroBtn.title = calcMap[tab] ? 'Calcular pestaña activa' : 'Esta sección no necesita cálculo';
+    }
+    if (limpiarHeroBtn) {
+      limpiarHeroBtn.disabled = !clearMap[tab];
+      limpiarHeroBtn.title = clearMap[tab] ? 'Limpiar resultados de la pestaña activa' : 'No hay resultados que limpiar en esta sección';
+    }
+  }
+
   if (calcularHeroBtn) {
     calcularHeroBtn.addEventListener('click', () => {
       const tab = getActiveTab();
+      if (!validateActiveCalculation(tab)) return;
       triggerById(calcMap[tab]);
     });
   }
@@ -220,19 +319,61 @@ function setupHeaderInputs(){
     });
   }
 
+  if (limpiarPacienteBtn) {
+    limpiarPacienteBtn.addEventListener('click', () => {
+      clearPatientData();
+      headerEdadInput.focus();
+    });
+  }
+
+  document.addEventListener('tabChanged', (event) => syncHeroActionState(event.detail.tabName));
+  syncHeroActionState();
+
 
   // Inputs de edad y peso
-  headerEdadInput.addEventListener('change', () => {
+  function syncPatientAgeFromHeader() {
     const edad = parseFloat(headerEdadInput.value);
     const peso = parseFloat(headerPesoInput.value);
-    if(valid(edad)) setPatientData(edad, peso || null);
-  });
+    headerEdadInput.setAttribute('aria-invalid', String(headerEdadInput.value !== '' && !validAge(edad)));
+    clearValidationMessage();
+    setPatientData(
+      validAge(edad) ? edad : null,
+      validWeight(peso) ? peso : null,
+      { updateHeader: false }
+    );
+  }
 
-  headerPesoInput.addEventListener('change', () => {
+  function syncPatientWeightFromHeader() {
     const edad = parseFloat(headerEdadInput.value);
     const peso = parseFloat(headerPesoInput.value);
-    if(valid(peso)) setPatientData(edad || null, peso);
-  });
+    headerPesoInput.setAttribute('aria-invalid', String(headerPesoInput.value !== '' && !validWeight(peso)));
+    clearValidationMessage();
+    setPatientData(
+      validAge(edad) ? edad : null,
+      validWeight(peso) ? peso : null,
+      { updateHeader: false, pesoOrigen: validWeight(peso) ? 'medido' : null }
+    );
+  }
+
+  function renderWeightSource() {
+    if (!pesoOrigenBadge) return;
+    const source = getWeightSource();
+    if (!source) {
+      pesoOrigenBadge.textContent = '';
+      pesoOrigenBadge.classList.add('hidden');
+      return;
+    }
+    pesoOrigenBadge.textContent = source === 'estimado'
+      ? 'Peso estimado: confirmar con peso medido o método por longitud'
+      : 'Peso introducido manualmente';
+    pesoOrigenBadge.classList.toggle('is-estimated', source === 'estimado');
+    pesoOrigenBadge.classList.remove('hidden');
+  }
+
+  headerEdadInput.addEventListener('input', syncPatientAgeFromHeader);
+  headerPesoInput.addEventListener('input', syncPatientWeightFromHeader);
+  document.addEventListener('patientDataChanged', renderWeightSource);
+  renderWeightSource();
 
   // Función para actualizar el estimador
   function actualizarEstimador() {
@@ -259,7 +400,7 @@ function setupHeaderInputs(){
   estimarPesoBtn.addEventListener('click', () => {
     // Si ya hay edad, actualizar estimador con esa edad
     const edadActual = parseFloat(headerEdadInput.value);
-    if(valid(edadActual)) {
+    if(validAge(edadActual)) {
       estimadorSlider.value = edadActual;
     } else {
       // Sugerir edad 5 años como default
@@ -288,7 +429,7 @@ function setupHeaderInputs(){
   // Input manual del estimador
   estimadorEdadInput.addEventListener('change', () => {
     const edad = parseFloat(estimadorEdadInput.value);
-    if(valid(edad) && edad <= 18) {
+    if(validAge(edad)) {
       estimadorSlider.value = edad;
       actualizarEstimador();
     }
@@ -299,15 +440,12 @@ function setupHeaderInputs(){
     const edad = parseFloat(estimadorSlider.value);
     const peso = parseFloat(estimadorPesoResultado.textContent);
     
-    if(valid(edad) && valid(peso)) {
+    if(validAge(edad) && validWeight(peso)) {
       headerEdadInput.value = edad;
       headerPesoInput.value = peso;
-      setPatientData(edad, peso);
+      setPatientData(edad, peso, { pesoOrigen: 'estimado' });
       
       estimadorModal.classList.add('hidden');
-      
-      // Disparar recálculo en todos los tabs
-      document.dispatchEvent(new CustomEvent('pesoApplied', { detail: { edad, peso } }));
       
       // Feedback visual
       aplicarEstimacionBtn.innerHTML = '<i class="fas fa-check"></i> ¡Aplicado!';
@@ -355,7 +493,7 @@ function setupPesoModal(){
   // Funciones para obtener fórmulas
   const formulas = {
     '0-1': { range: '0 a 12 meses', text: 'Peso = 3.5 + (edad en meses × 0.5)' },
-    '1-3': { range: '1 a 3 años', text: 'Peso = (edad en años + 9) × 2' },
+    '1-3': { range: '1 a 3 años', text: 'Peso = (edad en años × 2) + 9' },
     '3-6': { range: '3 a 6 años', text: 'Peso = (edad en años × 2) + 8' },
     '6-12': { range: '6 a 12 años', text: 'Peso = (edad en años × 3) + 7' },
     '12+': { range: 'Mayor de 12 años', text: 'Peso = (edad en años × 3.5) + 10' }
@@ -370,7 +508,7 @@ function setupPesoModal(){
   }
 
   function updateFormulaDisplay(edad) {
-    if(!valid(edad)) {
+    if(!validAge(edad)) {
       formulaText.textContent = '';
       formulaCard.querySelector('.formula-range').textContent = 'Selecciona una edad';
       return;
@@ -383,7 +521,7 @@ function setupPesoModal(){
   // Sincronizar input y slider
   edadInput.addEventListener('input', () => {
     const edad = parseFloat(edadInput.value);
-    if(valid(edad) && edad <= 18) {
+    if(validAge(edad)) {
       edadSlider.value = edad;
       updateFormulaDisplay(edad);
       // Auto-calcular mientras escribe
@@ -415,7 +553,7 @@ function setupPesoModal(){
   // Calcular peso (botón, ya no es necesario pero lo dejamos para compatibilidad)
   calcBtn.addEventListener('click', () => {
     const edad = parseFloat(edadInput.value);
-    if(!valid(edad) || edad > 18){ 
+    if(!validAge(edad)){
       alert('Por favor, ingrese una edad válida (0-18 años)'); 
       return; 
     }
@@ -430,8 +568,8 @@ function setupPesoModal(){
   guardarBtn.addEventListener('click', () => {
     const edad = parseFloat(edadInput.value);
     const pesoText = pesoRes.textContent;
-    if(valid(edad) && pesoText !== '-') {
-      setHeaderValues(edad, parseFloat(pesoText));
+    if(validAge(edad) && pesoText !== '-') {
+      setHeaderValues(edad, parseFloat(pesoText), { pesoOrigen: 'estimado' });
       // No cerramos el modal, permitimos calcular más valores
       calcBtn.textContent = '✓ Guardado en el perfil';
       setTimeout(() => {
@@ -465,7 +603,7 @@ function setupDosificacion(){
   function doCalculate() {
     const { peso } = getPatientData();
     
-    if(!valid(peso) || !ds){ 
+    if(!validWeight(peso) || !ds){
       hide(box);
       return; 
     }
@@ -564,11 +702,6 @@ function setupDosificacion(){
     }
   });
   
-  // Auto-calculate cuando aplicas peso desde header
-  document.addEventListener('pesoApplied', () => {
-    doCalculate();
-  });
-
   // Auto-calculate al cambiar peso del paciente
   document.addEventListener('patientDataChanged', () => {
     doCalculate();
@@ -584,24 +717,13 @@ function setupViaAerea(){
   
   // Función para calcular parámetros de vía aérea usando MATRIZ 1 o MATRIZ 2
   function calculateAirway(edad, peso) {
-    // Decidir qué matriz usar: MATRIZ 1 para neonatos/lactantes pequeños, MATRIZ 2 para el resto
-    let ettSize, ettDepth, sondaAspiracion;
-    
-    // MATRIZ 1 se usa para neonatos y lactantes muy pequeños (peso <= 3.1 kg)
-    if (peso <= 3.1) {
-      const matriz1 = obtenerParametrosDeMATRIZ1(peso);
-      const ettSinBalon = matriz1.ettSinBalon;
-      ettSize = `#${ettSinBalon} mm`;
-      ettDepth = matriz1.ettLongitud;
-      sondaAspiracion = `${matriz1.sondaAspiracion} Fr`;
-    } else {
-      // MATRIZ 2 para el resto de población pediátrica
-      const matriz2 = obtenerParametrosDeMATRIZ2(edad);
-      const ettCuffed = matriz2.ettConBalon;
-      ettSize = `#${ettCuffed} mm (con balón)`;
-      ettDepth = matriz2.ettOral;
-      sondaAspiracion = `${matriz2.sondaAspiracion} Fr`;
-    }
+    const tubo = calcularTuboTraquealERC2025(edad, peso);
+    const ettSize = `#${tubo.sizeMm} mm (con balón) · ${tubo.source}`;
+    const ettDepth = `${tubo.depthCm} cm inicial · confirmar con ETCO₂ y radiografía`;
+    const matrizMaterial = peso <= 3.1
+      ? obtenerParametrosDeMATRIZ1(peso)
+      : obtenerParametrosDeMATRIZ2(edad);
+    const sondaAspiracion = `${matrizMaterial.sondaAspiracion} Fr`;
     
     // Laryngoscope blade (basado en edad)
     let laryngoBlade = '2 recta o curva';
@@ -611,24 +733,16 @@ function setupViaAerea(){
     else if (edad < 12) laryngoBlade = '2-3 curva';
     else laryngoBlade = '3-4 curva';
     
-    // LMA size (basado en peso)
-    let lmaSize = '2';
-    if (peso < 5) lmaSize = '1';
-    else if (peso < 10) lmaSize = '1.5';
-    else if (peso < 20) lmaSize = '2';
-    else if (peso < 30) lmaSize = '2.5';
-    else if (peso < 50) lmaSize = '3';
-    else lmaSize = '4';
+    const lmaSize = calcularTamanioLMA(peso);
     
-    // Defibrillation (2-4 J/kg)
-    const defibMin = (peso * 2).toFixed(0);
-    const defibMax = (peso * 4).toFixed(0);
-    const defibDose = `${defibMin} - ${defibMax} J`;
+    // Desfibrilación ERC 2025: 4 J/kg; considerar hasta 8 J/kg tras >5 choques.
+    const energies = calcularEnergiasERC2025(peso);
+    const defibInitial = energies.defibInitialJ.toFixed(0);
+    const defibRefractory = energies.defibRefractoryJ.toFixed(0);
+    const defibDose = `${defibInitial} J inicial (4 J/kg; límite adulto 120-200 J) · refractaria: hasta ${defibRefractory} J`;
     
-    // Cardioversion (0.5 → 1 → 2 J/kg)
-    const cardio1 = (peso * 0.5).toFixed(0);
-    const cardio2 = (peso * 1).toFixed(0);
-    const cardio3 = (peso * 2).toFixed(0);
+    // Cardioversión sincronizada ERC 2025: 1 J/kg, duplicar hasta 4 J/kg.
+    const [cardio1, cardio2, cardio3] = energies.cardioversionJ.map((value) => value.toFixed(0));
     const cardioversionDose = `${cardio1} J → ${cardio2} J → ${cardio3} J`;
     
     // Sonda vesical y tubo de tórax (de MATRIZ 2, no aplica para MATRIZ 1)
@@ -645,9 +759,9 @@ function setupViaAerea(){
     
     return {
       ettSize,
-      ettDepth: `${ettDepth} cm`,
+      ettDepth,
       laryngoBlade,
-      lmaSize: `Tamaño ${lmaSize}`,
+      lmaSize: `Tamaño ${lmaSize} (LMA™; confirmar tabla del dispositivo)`,
       defibDose,
       cardioversionDose,
       sondaVesical,
@@ -659,13 +773,13 @@ function setupViaAerea(){
   // Función para ejecutar el cálculo
   function doCalculate() {
     const { peso, edad } = getPatientData();
-    if(peso === null || !valid(peso)){ 
+    if(!validWeight(peso)){
       hide(resultadoDiv);
       return; 
     }
     
     // Calcular parámetros de vía aérea
-    if (valid(edad)) {
+    if (validAge(edad)) {
       const airway = calculateAirway(edad, peso);
       document.getElementById('ettSize').textContent = airway.ettSize;
       document.getElementById('ettDepth').textContent = airway.ettDepth;
@@ -689,11 +803,6 @@ function setupViaAerea(){
     }
   });
   
-  // Auto-calculate cuando aplicas peso desde header
-  document.addEventListener('pesoApplied', () => {
-    doCalculate();
-  });
-  
   // Auto-calculate al cambiar peso
   document.addEventListener('patientDataChanged', () => {
     doCalculate();
@@ -712,7 +821,7 @@ function setupIntubacion(){
   // Función para ejecutar el cálculo
   function doCalculate() {
     const { peso, edad } = getPatientData();
-    if(peso === null || !valid(peso)){ 
+    if(!validWeight(peso) || !validAge(edad) || !meds?.intubacion){
       hide(resultadoDiv);
       return; 
     }
@@ -731,10 +840,9 @@ function setupIntubacion(){
         <tbody>`;
     
     const ds = meds?.intubacion ?? null;
-    console.log('Intubación: meds cargados?', !!meds, 'ds keys:', ds ? Object.keys(ds) : 'null');
     for(const key of Object.keys(intubacionFormulas)){
       const calc = intubacionFormulas[key];
-      const dosis_valor = calc(peso, 0);
+      const dosis_valor = calc(peso, edad);
       const dosis = formatDosis(dosis_valor);
       const meta = ds ? ds[key] : { nombre: key, unidad: '', presentacion: '', dilucion: '' };
       const dosisPorKg = intubacionDosisPorKg[key] || '';
@@ -841,18 +949,8 @@ function setupIntubacion(){
     }
   });
   
-  // Auto-calculate cuando aplicas peso desde header
-  document.addEventListener('pesoApplied', () => {
-    doCalculate();
-  });
-  
   // Auto-calculate al cambiar peso
   document.addEventListener('patientDataChanged', () => {
-    doCalculate();
-  });
-  
-  // Auto-calculate cuando aplicas peso desde header
-  document.addEventListener('pesoApplied', () => {
     doCalculate();
   });
   
@@ -865,95 +963,26 @@ function setupVentilacion(){
   const calcBtn = document.getElementById('calcularVentilacion');
   const clearBtn = document.getElementById('limpiarVentilacion');
   const resultadoDiv = document.getElementById('resultadoVentilacion');
+  const warningDiv = document.getElementById('ventilacionWarning');
   const modeSelect = document.getElementById('ventModeSelect');
-
-  function calcularVentilacion(edad, peso, modo) {
-    const vtMin = (peso * 6).toFixed(0);
-    const vtMax = (peso * 8).toFixed(0);
-    const ventVt = `${vtMin}-${vtMax} mL (6-8 mL/kg)`;
-
-    let ventFr = '12-20 rpm';
-    if (edad < 1) ventFr = '30-40 rpm';
-    else if (edad < 5) ventFr = '25-35 rpm';
-    else if (edad < 12) ventFr = '20-30 rpm';
-    else ventFr = '12-20 rpm';
-
-    const ventPeep = '5-8 cmH2O (subir si hipoxemia/atelectasia)';
-    const ventFiO2 = '0.60-1.0, bajar progresivo a SpO2 92-97%';
-    const ventIe = '1:2 (1:1.5 si obstrucción; 1:3 si auto-PEEP)';
-
-    let ventPip = '20-26 cmH2O (ajustar para Vt objetivo)';
-    if (edad < 1) ventPip = '16-22 cmH2O (RN/lactante)';
-    else if (edad < 5) ventPip = '18-24 cmH2O';
-    else if (edad < 12) ventPip = '20-26 cmH2O';
-    else ventPip = '22-28 cmH2O (evitar >30)';
-
-    let ventPs = '8-12 cmH2O (modo soporte)';
-    if (edad < 1) ventPs = '10-12 cmH2O';
-    else if (edad < 5) ventPs = '8-12 cmH2O';
-    else if (edad < 12) ventPs = '8-10 cmH2O';
-    else ventPs = '6-8 cmH2O';
-
-    const ventPplat = '<28 cmH2O (ideal <26)';
-    const ventDriving = '<15 cmH2O (ideal <12)';
-    const ventFlow = '6-8 L/min (hasta 10-12 si alta demanda/fugas)';
-    const ventTrigger = '-1 a -2 cmH2O o 1-2 L/min (evitar auto-disparo)';
-
-    // VM objetivo y alarmas
-    const vtMid = peso * 7; // mL
-    let frMid = 16;
-    if (edad < 1) frMid = 35;
-    else if (edad < 5) frMid = 30;
-    else if (edad < 12) frMid = 25;
-    const vmTarget = (vtMid / 1000 * frMid);
-    const vmLow = (vmTarget * 0.8).toFixed(1);
-    const vmHigh = (vmTarget * 1.2).toFixed(1);
-    const ventAlarmVm = `${vmLow}-${vmHigh} L/min (80-120% de ${vmTarget.toFixed(1)} L/min)`;
-
-    // Apnea/backup
-    let apneaTime = '20-25 s';
-    if (edad < 1) apneaTime = '10-15 s';
-    else if (edad < 5) apneaTime = '15-20 s';
-    const backupFr = frMid;
-    const ventApnea = `Apnea ${apneaTime}; backup ${backupFr} rpm (Vt 6-7 mL/kg)`;
-
-    let ventModeParams = '';
-    if (modo === 'PC') {
-      ventModeParams = `PC: Pinsp 14-18 cmH2O sobre PEEP (ajustar a Vt 6-7 mL/kg), FR ${ventFr}, I:E ${ventIe}`;
-    } else if (modo === 'PSV') {
-      ventModeParams = `PSV: PS ${ventPs}, PEEP ${ventPeep}, trigger ${ventTrigger}, flujo ${ventFlow}, backup FR ${backupFr} rpm`;
-    } else {
-      ventModeParams = `VC: Vt 6-7 mL/kg, FR ${ventFr}, flujo ${ventFlow}, I:E ${ventIe}`;
-    }
-
-    return {
-      ventVt,
-      ventFr,
-      ventPeep,
-      ventFiO2,
-      ventIe,
-      ventPip,
-      ventPs,
-      ventPplat,
-      ventDriving,
-      ventFlow,
-      ventTrigger,
-      ventModeParams,
-      ventAlarmVm,
-      ventApnea,
-    };
-  }
 
   function doCalculate() {
     const { peso, edad } = getPatientData();
-    if(!valid(peso)) {
+    if(!validWeight(peso)) {
       hide(resultadoDiv);
+      hide(warningDiv);
       return;
     }
 
-    const edadValida = valid(edad) ? edad : 0;
+    if(!validAge(edad)) {
+      hide(resultadoDiv);
+      show(warningDiv);
+      return;
+    }
+
+    hide(warningDiv);
     const modo = modeSelect ? modeSelect.value : 'VC';
-    const vent = calcularVentilacion(edadValida, peso, modo);
+    const vent = calcularVentilacionInicialERC2025(edad, peso, modo);
 
     document.getElementById('ventModeParams').textContent = vent.ventModeParams;
     document.getElementById('ventVt').textContent = vent.ventVt;
@@ -980,10 +1009,6 @@ function setupVentilacion(){
     }
   });
 
-  document.addEventListener('pesoApplied', () => {
-    doCalculate();
-  });
-
   document.addEventListener('patientDataChanged', () => {
     doCalculate();
   });
@@ -996,6 +1021,7 @@ function setupVentilacion(){
 
   clearBtn.addEventListener('click', () => {
     hide(resultadoDiv);
+    hide(warningDiv);
   });
 }
 
@@ -1008,87 +1034,25 @@ function setupSignos(){
   const padElement = document.getElementById('pad');
 
   function obtenerReferenciasSignosVitales(edad) {
-    let referencias = {};
-    if (edad < 1) {
-      referencias = {
-        fc: '100-160 lpm',
-        fr: '30-60 rpm',
-        pas: '50-70 mmHg',
-        pad: '25-45 mmHg',
-        pam: '50-60 mmHg',
-        spo2: '≥92% (≥95% si cardiopatía)',
-        temperatura: '36.5-37.5 °C',
-        glucemia: '70-100 mg/dL (RN: 40-60 primeras 24h)',
-        diuresis: '>2 mL/kg/h (mínimo 1.5)',
-        relleno: '<2 segundos',
-        glasgow: '15 (escala modificada <2 años)'
-      };
-    } else if (edad >= 1 && edad < 2) {
-      referencias = {
-        fc: '90-150 lpm',
-        fr: '25-50 rpm',
-        pas: '80-100 mmHg',
-        pad: '45-55 mmHg',
-        pam: '60-70 mmHg',
-        spo2: '≥92% (≥95% si patología respiratoria)',
-        temperatura: '36.5-37.5 °C',
-        glucemia: '70-110 mg/dL',
-        diuresis: '>2 mL/kg/h',
-        relleno: '<2 segundos',
-        glasgow: '15 (escala modificada)'
-      };
-    } else if (edad >= 2 && edad < 5) {
-      referencias = {
-        fc: '80-130 lpm',
-        fr: '20-40 rpm',
-        pas: '95-105 mmHg',
-        pad: '60-70 mmHg',
-        pam: '70-80 mmHg',
-        spo2: '≥92% (≥95% óptimo)',
-        temperatura: '36.5-37.5 °C',
-        glucemia: '70-110 mg/dL',
-        diuresis: '>1 mL/kg/h',
-        relleno: '<2 segundos',
-        glasgow: '15 (escala adulta)'
-      };
-    } else if (edad >= 5 && edad < 12) {
-      referencias = {
-        fc: '70-110 lpm',
-        fr: '18-30 rpm',
-        pas: '100-120 mmHg',
-        pad: '65-75 mmHg',
-        pam: '75-90 mmHg',
-        spo2: '≥92% (≥95% óptimo)',
-        temperatura: '36.5-37.5 °C',
-        glucemia: '70-110 mg/dL',
-        diuresis: '>1 mL/kg/h',
-        relleno: '<2 segundos',
-        glasgow: '15'
-      };
-    } else if (edad >= 12) {
-      referencias = {
-        fc: '60-100 lpm',
-        fr: '16-20 rpm',
-        pas: '110-135 mmHg',
-        pad: '65-85 mmHg',
-        pam: '80-95 mmHg',
-        spo2: '≥92% (≥95% óptimo)',
-        temperatura: '36.5-37.5 °C',
-        glucemia: '70-110 mg/dL (adulto: 70-100)',
-        diuresis: '>0.5 mL/kg/h (adulto)',
-        relleno: '<2 segundos',
-        glasgow: '15'
-      };
-    }
-    return referencias;
+    const erc = obtenerSignosVitalesERC2025(edad);
+    return {
+      fc: `${erc.hrLow}-${erc.hrHigh} lpm`,
+      fr: `${erc.rrLow}-${erc.rrHigh} rpm`,
+      pas: `${erc.sbpP5} / ${erc.sbpP10} / ${erc.sbpP50} mmHg`,
+      pad: 'No especificada en la tabla ERC 2025',
+      pam: `${erc.mapP5} / ${erc.mapP10} / ${erc.mapP50} mmHg`,
+      spo2: 'ERC 2025: 94-98% si previamente sano; individualizar según patología',
+      temperatura: 'Objetivo local orientativo: 36.5-37.5 °C',
+      glucemia: 'ERC 2025: tratar <70 mg/dL con síntomas o <54 mg/dL sin síntomas',
+      diuresis: `Objetivo local orientativo: ${edad < 2 ? '>2 mL/kg/h' : edad < 12 ? '>1 mL/kg/h' : '>0.5 mL/kg/h'}`,
+      relleno: 'Orientativo: <2 segundos; interpretar en contexto',
+      glasgow: edad < 2 ? 'Orientativo: 15 (escala pediátrica modificada)' : 'Orientativo: 15'
+    };
   }
 
-  obtenerSignosBtn.addEventListener('click', () => {
+  function renderSignos({ announceResult = false } = {}) {
     const { edad } = getPatientData();
-    if (!valid(edad) || edad > 18) {
-      alert('Por favor, ingrese una edad válida (0-18 años)');
-      return;
-    }
+    if (!validAge(edad)) return false;
     const signos = obtenerReferenciasSignosVitales(edad);
     fcElement.textContent = signos.fc;
     frElement.textContent = signos.fr;
@@ -1102,48 +1066,29 @@ function setupSignos(){
     document.getElementById('relleno').textContent = signos.relleno;
     document.getElementById('glasgow').textContent = signos.glasgow;
     show(resultadoSignosDiv);
-    announce(`Signos vitales para ${edad} años: FC ${signos.fc}, FR ${signos.fr}, TA ${signos.pas}/${signos.pad}`);
+    if (announceResult) {
+      announce(`Signos vitales ERC 2025 para ${edad} años: FC ${signos.fc}, FR ${signos.fr}, PAS ${signos.pas}`);
+    }
+    return true;
+  }
+
+  obtenerSignosBtn.addEventListener('click', () => {
+    if (!renderSignos({ announceResult: true })) {
+      alert('Por favor, ingrese una edad válida (0-18 años)');
+    }
   });
   
   // Auto-calculate cuando cambias de tab
   document.addEventListener('tabChanged', (e) => {
     if(e.detail.tabName === 'signos') {
-      const { edad } = getPatientData();
-      if(valid(edad)) {
-        const signos = obtenerReferenciasSignosVitales(edad);
-        fcElement.textContent = signos.fc;
-        frElement.textContent = signos.fr;
-        pasElement.textContent = signos.pas;
-        padElement.textContent = signos.pad;
-        document.getElementById('pam').textContent = signos.pam;
-        document.getElementById('spo2').textContent = signos.spo2;
-        document.getElementById('temperatura').textContent = signos.temperatura;
-        document.getElementById('glucemia').textContent = signos.glucemia;
-        document.getElementById('diuresis').textContent = signos.diuresis;
-        document.getElementById('relleno').textContent = signos.relleno;
-        document.getElementById('glasgow').textContent = signos.glasgow;
-        show(resultadoSignosDiv);
-      }
+      renderSignos();
     }
   });
   
   // Auto-calculate al cambiar peso/edad del paciente
   document.addEventListener('patientDataChanged', () => {
-    const { edad } = getPatientData();
-    if(valid(edad)) {
-      const signos = obtenerReferenciasSignosVitales(edad);
-      fcElement.textContent = signos.fc;
-      frElement.textContent = signos.fr;
-      pasElement.textContent = signos.pas;
-      padElement.textContent = signos.pad;
-      document.getElementById('pam').textContent = signos.pam;
-      document.getElementById('spo2').textContent = signos.spo2;
-      document.getElementById('temperatura').textContent = signos.temperatura;
-      document.getElementById('glucemia').textContent = signos.glucemia;
-      document.getElementById('diuresis').textContent = signos.diuresis;
-      document.getElementById('relleno').textContent = signos.relleno;
-      document.getElementById('glasgow').textContent = signos.glasgow;
-      show(resultadoSignosDiv);
+    if (!renderSignos()) {
+      hide(resultadoSignosDiv);
     }
   });
 }
@@ -1152,298 +1097,64 @@ function setupPerfusiones(){
   const calcBtn = document.getElementById('calcularPerfusiones');
   const clearBtn = document.getElementById('limpiarPerfusiones');
   const resultadoDiv = document.getElementById('resultadoPerfusiones');
-  const inoTableBody = document.getElementById('perfusionesInoTableBody');
-  const sedoTableBody = document.getElementById('perfusionesSedoTableBody');
+  const groups = [
+    { dataGroup: 'inotr\u00f3picos', tableBody: document.getElementById('perfusionesInoTableBody') },
+    { dataGroup: 'sedoanalgesia', tableBody: document.getElementById('perfusionesSedoTableBody') },
+    { dataGroup: 'insulina', tableBody: document.getElementById('perfusionesMetabolicasTableBody') },
+  ];
 
-  // Mapeo de keys en meds.json a keys en DRUGS
-  const INOTROPICOS_MAP = {
-    adrenalina_periferico: 'adrenaline_peripheral',
-    adrenalina_central: 'adrenaline_central',
-    noradrenalina_periferico: 'noradrenaline_peripheral',
-    noradrenalina_central: 'noradrenaline_central',
-    dopamina_periferico: 'dopamine_peripheral',
-    dopamina_central: 'dopamine_central',
-    amiodarona_perf: 'amiodarone',
-    milrinona: 'milrinone',
-    labetalol: 'labetalol',
-  };
+  function renderGroup(group, peso) {
+    group.tableBody.innerHTML = '';
+    const groupMeds = meds?.perfusiones?.[group.dataGroup] || {};
 
-  const SEDOANALGESIA_MAP = {
-    fentanilo_perf: 'fentanyl',
-    ketamina_perf: 'ketamine',
-    midazolam_perf: 'midazolam',
-    rocuronio_perf: 'rocuronium',
-    // La insulina está en un grupo aparte en meds.json ("insulina"). La manejamos abajo.
-  };
+    for (const [medKey, med] of Object.entries(groupMeds)) {
+      const drugKey = PERFUSION_KEY_MAP[medKey];
+      const drugConfig = DRUGS.find((drug) => drug.key === drugKey);
+      if (!drugKey || !drugConfig) {
+        console.warn('Perfusion sin configuracion central:', medKey);
+        continue;
+      }
 
-  // Función para ejecutar el cálculo
+      try {
+        const result = compute(DRUGS, { drugKey, weightKg: peso });
+        const display = formatPerfusionForDisplay(drugConfig, result, peso);
+        const row = [
+          '<tr class="med-row" data-med-key="', medKey, '">',
+          '<td><strong>', result.displayName, '</strong></td>',
+          '<td class="dosis-col">', display.rangeText, '</td>',
+          '<td class="dosis-col">', display.absoluteHourlyText, '</td>',
+          '<td>', display.rateText, '</td>',
+          '<td>', display.presentationText, '</td>',
+          '<td>', display.preparationText, '<br><small><strong>Equivalencia:</strong> ', display.equivalenceText, '</small>',
+          display.rateWarningText ? '<br><small class="perfusion-warning"><strong>Ritmo:</strong> ' + display.rateWarningText + '</small>' : '',
+          med.nota ? '<br><small class="perfusion-warning"><strong>Seguridad:</strong> ' + med.nota + '</small>' : '',
+          '</td>',
+          '</tr>',
+        ].join('');
+        group.tableBody.insertAdjacentHTML('beforeend', row);
+      } catch (error) {
+        console.warn('Error calculando ' + drugKey + ':', error.message);
+      }
+    }
+  }
+
   function doCalculate() {
     const { peso } = getPatientData();
-    if(!peso || !valid(peso)) {
+    if (!validWeight(peso) || !meds?.perfusiones) {
       hide(resultadoDiv);
       return;
     }
-    
-    inoTableBody.innerHTML = '';
-    sedoTableBody.innerHTML = '';
 
-    // ===== INOTRÓPICOS =====
-    for (const [medKey, drugKey] of Object.entries(INOTROPICOS_MAP)) {
-      const med = meds?.perfusiones?.inotrópicos?.[medKey];
-      if (!med) continue;
-
-      try {
-        const result = compute(DRUGS, { drugKey, weightKg: peso });
-        const prep = result.preparation;
-        const drugCfg = DRUGS.find(d => d.key === drugKey);
-        const doseUnit = drugCfg?.doseUnit || med.unidad || '';
-        const range = (med.dosis_min && med.dosis_max)
-          ? `${med.dosis_min}-${med.dosis_max} ${doseUnit}`
-          : (med.rango || '-');
-        
-        // Calcular dosis por hora usando la preparación
-        // Nota: si el doseUnit incluye "/kg/", NO multiplicar por peso (ya está por kg)
-        let dosePerHour = '-';
-        if (med.dosis_min && med.dosis_max) {
-          if (doseUnit.includes('/min')) {
-            const min = (med.dosis_min * 60).toFixed(2);
-            const max = (med.dosis_max * 60).toFixed(2);
-            const unit = doseUnit.replace('/min', '/h');
-            dosePerHour = `${min}-${max} ${unit}`;
-          } else if (doseUnit.includes('/h')) {
-            dosePerHour = `${med.dosis_min.toFixed(2)}-${med.dosis_max.toFixed(2)} ${doseUnit}`;
-          }
-        }
-
-        // Ritmo (mL/h): MULTIPLICAR por peso si la unidad incluye /kg/
-        // Convertir concentración a las mismas unidades que el doseUnit
-        let ritmoText = '-';
-        if (med.dosis_min && med.dosis_max) {
-          let concVal = prep.concentration.value;
-          const concUnit = prep.concentration.unit.split('/')[0]; // mcg, mg, etc.
-          const doseUnitMass = doseUnit.split('/')[0]; // mcg, mg, IU, etc.
-          
-          // Convertir concentración a la unidad del doseUnit si es necesario
-          if (concUnit !== doseUnitMass) {
-            if (concUnit === 'mg' && doseUnitMass === 'mcg') {
-              concVal = concVal * 1000; // mg -> mcg
-            } else if (concUnit === 'mcg' && doseUnitMass === 'mg') {
-              concVal = concVal / 1000; // mcg -> mg
-            }
-          }
-          
-          let minMlH = 0, maxMlH = 0;
-          
-          if (doseUnit.includes('/min')) {
-            // e.g., mcg/kg/min -> convertir a /h Y MULTIPLICAR por peso
-            minMlH = (med.dosis_min * peso * 60) / concVal;
-            maxMlH = (med.dosis_max * peso * 60) / concVal;
-          } else {
-            // e.g., mcg/kg/h, mg/kg/h -> MULTIPLICAR por peso
-            minMlH = (med.dosis_min * peso) / concVal;
-            maxMlH = (med.dosis_max * peso) / concVal;
-          }
-          ritmoText = `${minMlH.toFixed(2)}-${maxMlH.toFixed(2)} mL/h`;
-        }
-
-        // Presentación y Dilución con equivalencia calculada
-        // Mostrar solo la concentración comercial original
-        const presentacion = prep.commercialPresentation || `${prep.concentration.value} ${prep.concentration.unit}`;
-        const diluent = prep.diluent === 'SSF_or_G5' ? 'SSF o G5' : prep.diluent;
-        
-        // Convertir unidades de dilución a las mismas de la presentación comercial
-        let totalValue = prep.total.value;
-        let totalUnit = prep.total.unit;
-        if (prep.commercialPresentation) {
-          const commercialUnit = prep.commercialPresentation.split('/')[0].match(/(mcg|mg|IU)/)?.[0];
-          if (commercialUnit && commercialUnit !== totalUnit) {
-            if (totalUnit === 'mcg' && commercialUnit === 'mg') {
-              totalValue = totalValue / 1000;
-              totalUnit = 'mg';
-            } else if (totalUnit === 'mg' && commercialUnit === 'mcg') {
-              totalValue = totalValue * 1000;
-              totalUnit = 'mcg';
-            }
-          }
-        }
-        
-        // Si es ajustada por peso: "X mg hasta 50 mL", si es fija: "X mg c.s.p. 50 mL"
-        const dilucion = prep.isWeightAdjusted
-          ? `${totalValue.toFixed(2)} ${totalUnit} hasta ${prep.volumeMl} mL de ${diluent}`
-          : `${totalValue.toFixed(1)} ${totalUnit} c.s.p. ${prep.volumeMl} mL de ${diluent}`;
-
-        // Calcular equivalencia: 1 mL/h = ? dosis/kg
-        let concValEq = prep.concentration.value;
-        const concUnitEq = prep.concentration.unit.split('/')[0];
-        const doseUnitMassEq = doseUnit.split('/')[0];
-        
-        if (concUnitEq !== doseUnitMassEq) {
-          if (concUnitEq === 'mg' && doseUnitMassEq === 'mcg') {
-            concValEq = concValEq * 1000;
-          } else if (concUnitEq === 'mcg' && doseUnitMassEq === 'mg') {
-            concValEq = concValEq / 1000;
-          }
-        }
-        
-        let equivalencia = '';
-        if (doseUnit.includes('/min')) {
-          const eqPerH = concValEq;
-          const eqPerMin = (eqPerH / 60).toFixed(2);
-          const eqPerKgMin = (eqPerMin / peso).toFixed(2);
-          equivalencia = `1 mL/h = ${eqPerKgMin} ${doseUnit}`;
-        } else {
-          const eqPerH = concValEq;
-          const eqPerKgH = (eqPerH / peso).toFixed(2);
-          equivalencia = `1 mL/h = ${eqPerKgH} ${doseUnit}`;
-        }
-        
-        let row = `<tr class="med-row" data-med-key="${medKey}"><td><strong>${result.displayName}</strong></td><td class="dosis-col">${range}</td><td class="dosis-col">${dosePerHour}</td><td>${ritmoText}</td><td>${presentacion}</td><td>${dilucion}<br><small><strong>Equivalencia:</strong> ${equivalencia}</small></td></tr>`;
-        inoTableBody.insertAdjacentHTML('beforeend', row);
-      } catch (e) {
-        console.warn(`Error calculando ${drugKey}:`, e.message);
-      }
-    }
-
-    // ===== SEDOANALGESIA =====
-    for (const [medKey, drugKey] of Object.entries(SEDOANALGESIA_MAP)) {
-      const med = meds?.perfusiones?.sedoanalgesia?.[medKey] || meds?.perfusiones?.insulina?.[medKey];
-      if (!med) continue;
-
-      try {
-        const result = compute(DRUGS, { drugKey, weightKg: peso });
-        const prep = result.preparation;
-        const drugCfg = DRUGS.find(d => d.key === drugKey);
-        const doseUnit = drugCfg?.doseUnit || med.unidad || '';
-        const range = (med.dosis_min && med.dosis_max)
-          ? `${med.dosis_min}-${med.dosis_max} ${doseUnit}`
-          : (med.rango || '-');
-        
-        // Calcular dosis por hora
-        // Nota: si el doseUnit incluye "/kg/", NO multiplicar por peso para "dosis/h"
-        let dosePerHour = '-';
-        if (med.dosis_min && med.dosis_max) {
-          if (doseUnit.includes('/min')) {
-            const min = (med.dosis_min * 60).toFixed(2);
-            const max = (med.dosis_max * 60).toFixed(2);
-            const unit = doseUnit.replace('/min', '/h');
-            dosePerHour = `${min}-${max} ${unit}`;
-          } else {
-            dosePerHour = `${med.dosis_min.toFixed(2)}-${med.dosis_max.toFixed(2)} ${doseUnit}`;
-          }
-        }
-
-        // Ritmo (mL/h): MULTIPLICAR por peso si la unidad incluye /kg/
-        // Convertir concentración a las mismas unidades que el doseUnit
-        let ritmoText = '-';
-        if (med.dosis_min && med.dosis_max) {
-          let concVal = prep.concentration.value;
-          const concUnit = prep.concentration.unit.split('/')[0]; // mcg, mg, etc.
-          const doseUnitMass = doseUnit.split('/')[0]; // mcg, mg, IU, etc.
-          
-          // Convertir concentración a la unidad del doseUnit si es necesario
-          if (concUnit !== doseUnitMass) {
-            if (concUnit === 'mg' && doseUnitMass === 'mcg') {
-              concVal = concVal * 1000; // mg -> mcg
-            } else if (concUnit === 'mcg' && doseUnitMass === 'mg') {
-              concVal = concVal / 1000; // mcg -> mg
-            }
-          }
-          
-          let minMlH = 0, maxMlH = 0;
-          
-          if (doseUnit.includes('/min')) {
-            // e.g., mcg/kg/min -> convertir a /h Y MULTIPLICAR por peso
-            minMlH = (med.dosis_min * peso * 60) / concVal;
-            maxMlH = (med.dosis_max * peso * 60) / concVal;
-          } else {
-            // e.g., mcg/kg/h, mg/kg/h -> MULTIPLICAR por peso
-            minMlH = (med.dosis_min * peso) / concVal;
-            maxMlH = (med.dosis_max * peso) / concVal;
-          }
-          ritmoText = `${minMlH.toFixed(2)}-${maxMlH.toFixed(2)} mL/h`;
-        }
-
-        // Presentación y Dilución con equivalencia calculada
-        // Mostrar solo la concentración comercial original
-        const presentacion = prep.commercialPresentation || `${prep.concentration.value} ${prep.concentration.unit}`;
-        const diluent = prep.diluent === 'SSF_or_G5' ? 'SSF o G5' : prep.diluent;
-        
-        // Convertir unidades de dilución a las mismas de la presentación comercial
-        let totalValue = prep.total.value;
-        let totalUnit = prep.total.unit;
-        if (prep.commercialPresentation) {
-          const commercialUnit = prep.commercialPresentation.split('/')[0].match(/(mcg|mg|IU)/)?.[0];
-          if (commercialUnit && commercialUnit !== totalUnit) {
-            if (totalUnit === 'mcg' && commercialUnit === 'mg') {
-              totalValue = totalValue / 1000;
-              totalUnit = 'mg';
-            } else if (totalUnit === 'mg' && commercialUnit === 'mcg') {
-              totalValue = totalValue * 1000;
-              totalUnit = 'mcg';
-            }
-          }
-        }
-        
-        // Si es ajustada por peso: "X mg hasta 50 mL", si es fija: "X mg c.s.p. 50 mL"
-        const dilucion = prep.isWeightAdjusted
-          ? `${totalValue.toFixed(2)} ${totalUnit} hasta ${prep.volumeMl} mL de ${diluent}`
-          : `${totalValue.toFixed(1)} ${totalUnit} c.s.p. ${prep.volumeMl} mL de ${diluent}`;
-
-        // Calcular equivalencia: 1 mL/h = ? dosis/kg
-        let concValEqSedo = prep.concentration.value;
-        const concUnitEqSedo = prep.concentration.unit.split('/')[0];
-        const doseUnitMassEqSedo = doseUnit.split('/')[0];
-        
-        if (concUnitEqSedo !== doseUnitMassEqSedo) {
-          if (concUnitEqSedo === 'mg' && doseUnitMassEqSedo === 'mcg') {
-            concValEqSedo = concValEqSedo * 1000;
-          } else if (concUnitEqSedo === 'mcg' && doseUnitMassEqSedo === 'mg') {
-            concValEqSedo = concValEqSedo / 1000;
-          }
-        }
-        
-        let equivalenciaSedo = '';
-        if (doseUnit.includes('/min')) {
-          const eqPerH = concValEqSedo;
-          const eqPerMin = (eqPerH / 60).toFixed(2);
-          const eqPerKgMin = (eqPerMin / peso).toFixed(2);
-          equivalenciaSedo = `1 mL/h = ${eqPerKgMin} ${doseUnit}`;
-        } else {
-          const eqPerH = concValEqSedo;
-          const eqPerKgH = (eqPerH / peso).toFixed(2);
-          equivalenciaSedo = `1 mL/h = ${eqPerKgH} ${doseUnit}`;
-        }
-        
-        let row = `<tr class="med-row" data-med-key="${medKey}"><td><strong>${result.displayName}</strong></td><td class="dosis-col">${range}</td><td class="dosis-col">${dosePerHour}</td><td>${ritmoText}</td><td>${presentacion}</td><td>${dilucion}<br><small><strong>Equivalencia:</strong> ${equivalenciaSedo}</small></td></tr>`;
-        sedoTableBody.insertAdjacentHTML('beforeend', row);
-      } catch (e) {
-        console.warn(`Error calculando ${drugKey}:`, e.message);
-      }
-    }
-
+    groups.forEach((group) => renderGroup(group, peso));
     show(resultadoDiv);
   }
 
   calcBtn.addEventListener('click', doCalculate);
-  
-  // Auto-calculate cuando cambias de tab
-  document.addEventListener('tabChanged', (e) => {
-    if(e.detail.tabName === 'perfusiones') {
-      doCalculate();
-    }
+  document.addEventListener('tabChanged', (event) => {
+    if (event.detail.tabName === 'perfusiones') doCalculate();
   });
-  
-  // Auto-calculate cuando aplicas peso desde header
-  document.addEventListener('pesoApplied', () => {
-    doCalculate();
-  });
-  
-  // Auto-calculate al cambiar peso
-  document.addEventListener('patientDataChanged', () => {
-    doCalculate();
-  });
-  
-  clearBtn.addEventListener('click', ()=>{ hide(resultadoDiv); });
+  document.addEventListener('patientDataChanged', doCalculate);
+  clearBtn.addEventListener('click', () => hide(resultadoDiv));
 }
 function setupUrgencia(){
   const calcBtn = document.getElementById('calcularUrgencia');
@@ -1453,7 +1164,7 @@ function setupUrgencia(){
   // Función para ejecutar el cálculo
   function doCalculate() {
     const { peso } = getPatientData();
-    if(peso === null || !valid(peso)){ 
+    if(!validWeight(peso) || !meds?.urgencia){
       hide(resultadoDiv);
       return; 
     }
@@ -1472,7 +1183,6 @@ function setupUrgencia(){
         <tbody>`;
     
     const ds = meds?.urgencia ?? null;
-    console.log('Urgencia: meds cargados?', !!meds, 'ds keys:', ds ? Object.keys(ds) : 'null');
     for(const key of Object.keys(urgenciaFormulas)){
       const calc = urgenciaFormulas[key];
       const dosis_valor = calc(peso);
@@ -1489,13 +1199,16 @@ function setupUrgencia(){
       // Calcular volumen
       let volumeML = '-';
       let volumeMLHtml = '-';
+      let volumeIncludesUnit = false;
       if (meta.es_volumen_puro) {
-        // Para medicamentos que se dan en volumen puro (bolos, etc)
-        // Aplicar factor de dilución si existe (ej: gluconato 1:1 = factor 2)
-        const factorDilucion = meta.factor_dilucion || 1;
-        const volFinal = dosis_valor * factorDilucion;
-        volumeML = formatDosis(volFinal);
-        volumeMLHtml = formatDosis(volFinal);
+        const volume = calculatePureVolume(meta, dosis_valor);
+        volumeML = formatDosis(volume.finalVolumeMl);
+        if (volume.diluentVolumeMl > 0) {
+          volumeMLHtml = `<strong>${formatDosis(volume.finalVolumeMl)} mL final</strong><br><small>${formatDosis(volume.drugVolumeMl)} mL de fármaco + ${formatDosis(volume.diluentVolumeMl)} mL de diluyente</small>`;
+          volumeIncludesUnit = true;
+        } else {
+          volumeMLHtml = formatDosis(volume.finalVolumeMl);
+        }
       } else if (meta.concentraciones && Array.isArray(meta.concentraciones)) {
         // Múltiples concentraciones (como manitol 10% y 20%)
         let volumesArray = [];
@@ -1507,6 +1220,7 @@ function setupUrgencia(){
         }
         volumeML = volumesArray.join('\n');
         volumeMLHtml = volumesArray.map(v => `<div>${v}</div>`).join('');
+        volumeIncludesUnit = true;
       } else {
         // Buscar cualquier tipo de concentración (mg_ml, mEq_ml, g_ml, etc)
         let concentracion = meta.concentracion_mg_ml || 
@@ -1537,7 +1251,7 @@ function setupUrgencia(){
                 </div>
                 ${volumeML !== '-' ? `<div class="med-info-row">
                   <div class="med-info-label">Volumen:</div>
-                  <div class="med-info-value">${volumeMLHtml} mL</div>
+                  <div class="med-info-value">${volumeMLHtml}${volumeIncludesUnit ? '' : ' mL'}</div>
                 </div>` : ''}
                 <div class="med-info-row">
                   <div class="med-info-label">Presentación:</div>
@@ -1551,7 +1265,7 @@ function setupUrgencia(){
             </div>
           </td>
           <td class="dosis-col">${dosisDisplay}</td>
-          <td class="dosis-col" style="font-weight: 600; color: #2196F3;">${volumeMLHtml} mL</td>
+          <td class="dosis-col" style="font-weight: 600; color: #2196F3;">${volumeMLHtml}${volumeIncludesUnit ? '' : ' mL'}</td>
           <td>${presentacionText}</td>
           <td><strong>${dilucionText}</strong><br><small>${meta.nota || ''}</small></td>
         </tr>`;
@@ -1575,11 +1289,6 @@ function setupUrgencia(){
     }
   });
   
-  // Auto-calculate cuando aplicas peso desde header
-  document.addEventListener('pesoApplied', () => {
-    doCalculate();
-  });
-  
   // Auto-calculate al cambiar peso
   document.addEventListener('patientDataChanged', () => {
     doCalculate();
@@ -1593,8 +1302,9 @@ function setupUrgencia(){
 function setupAccessibilityTraps() {
   // Setup focus trap para todos los modales
   const modals = [
+    'infoModal',
     'formulasModal',
-    'estimadorPesoModal',
+    'estimadorModal',
     'dosisModal',
     'medDetailModal',
     'disclaimerModal'
@@ -1605,5 +1315,20 @@ function setupAccessibilityTraps() {
     if (modal) {
       setupFocusTrap(modal);
     }
+  });
+
+  const resultRegions = [
+    ['resultadoViaAerea', 'Resultados de vía aérea'],
+    ['resultadoIntubacion', 'Resultados de medicamentos de intubación'],
+    ['resultadoVentilacion', 'Resultados de ventilación'],
+    ['resultadoUrgencia', 'Resultados de medicamentos de urgencia'],
+    ['resultadoPerfusiones', 'Resultados de perfusiones'],
+  ];
+  resultRegions.forEach(([id, label]) => {
+    const region = document.getElementById(id);
+    if (!region) return;
+    region.setAttribute('role', 'region');
+    region.setAttribute('aria-live', 'polite');
+    region.setAttribute('aria-label', label);
   });
 }

@@ -42,6 +42,8 @@ function validateCommon(med, where, errors) {
   numericFields.forEach((k) => {
     if (k in med && med[k] !== null && !isNum(med[k])) {
       err(errors, `${where}.${k}`, 'debe ser numérico');
+    } else if (k in med && isNum(med[k]) && med[k] <= 0) {
+      err(errors, `${where}.${k}`, 'debe ser > 0');
     }
   });
 
@@ -107,6 +109,9 @@ function validatePerfusiones(perfusiones, errors) {
       }
       if (!nonEmptyString(med.unidad || '')) {
         err(errors, where, 'unidad faltante');
+      }
+      if ('dilucion' in med || 'ml_h_equiv' in med) {
+        err(errors, where, 'dilucion/ml_h_equiv obsoletos: la preparación debe proceder del motor central');
       }
     });
   });

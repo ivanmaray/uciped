@@ -6,6 +6,10 @@
 export function setupFocusTrap(modalElement) {
   if (!modalElement) return;
 
+  let isOpen = false;
+  let previouslyFocused = null;
+  let focusTimer = null;
+
   const focusableSelectors = [
     'a[href]',
     'button:not([disabled])',
@@ -52,34 +56,53 @@ export function setupFocusTrap(modalElement) {
     }
   }
 
+  function isModalVisible() {
+    if (modalElement.classList.contains('hidden')) return false;
+    return window.getComputedStyle(modalElement).display !== 'none';
+  }
+
+  function restoreFocus() {
+    if (previouslyFocused?.isConnected && typeof previouslyFocused.focus === 'function') {
+      previouslyFocused.focus();
+    }
+    previouslyFocused = null;
+  }
+
+  function syncModalState() {
+    const visible = isModalVisible();
+
+    if (visible && !isOpen) {
+      isOpen = true;
+      previouslyFocused = document.activeElement;
+      modalElement.addEventListener('keydown', onKeyDown);
+      clearTimeout(focusTimer);
+      focusTimer = setTimeout(() => {
+        const focusable = getFocusableElements();
+        if (focusable.length > 0) focusable[0].focus();
+      }, 0);
+    } else if (!visible && isOpen) {
+      isOpen = false;
+      modalElement.removeEventListener('keydown', onKeyDown);
+      clearTimeout(focusTimer);
+      restoreFocus();
+    }
+  }
+
   // Observar cuando el modal se muestra/oculta
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.attributeName === 'class') {
-        const isVisible = !modalElement.classList.contains('hidden') && 
-                         (modalElement.classList.contains('active') || !modalElement.classList.contains('modal'));
-        
-        if (isVisible) {
-          modalElement.addEventListener('keydown', onKeyDown);
-          // Enfocar el primer elemento enfocable
-          setTimeout(() => {
-            const focusable = getFocusableElements();
-            if (focusable.length > 0) focusable[0].focus();
-          }, 100);
-        } else {
-          modalElement.removeEventListener('keydown', onKeyDown);
-        }
-      }
-    });
-  });
+  const observer = new MutationObserver(syncModalState);
 
   observer.observe(modalElement, {
     attributes: true,
-    attributeFilter: ['class']
+    attributeFilter: ['class', 'style']
   });
+
+  // El aviso legal puede estar ya visible cuando se inicializa el gestor.
+  syncModalState();
 
   return () => {
     observer.disconnect();
     modalElement.removeEventListener('keydown', onKeyDown);
+    clearTimeout(focusTimer);
+    if (isOpen) restoreFocus();
   };
 }
